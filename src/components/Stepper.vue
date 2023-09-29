@@ -26,17 +26,20 @@ const backStep = () => {
       <div
           class="step"
           v-for="stepNumber in steps.steps-1"
-          :class="[currentStep === stepNumber ? 'active-step' : '']"
+          :class="[stepNumber <= currentStep ? 'active-step' : '']"
       >
-        {{stepNumber}}
+        <div v-if="stepNumber != 1" class="hyphen"></div>
+        <div class="number-step">
+          {{stepNumber}}
+        </div>
       </div>
     </div>
     <div class="content">
       <component :is="steps.listStepsComponents[currentStep-1].value"></component>
     </div>
     <div v-show="currentStep < steps.steps" class="actions">
-      <button v-if="!(currentStep === 1)" class="button" @click="backStep">Atrás</button>
-      <button class="button" @click="nextStep">Siguiente</button>
+      <button v-if="!(currentStep === 1)" class="button prev-step" @click="backStep">Atrás</button>
+      <button class="button next-step" @click="nextStep">Siguiente</button>
     </div>
     <div v-show="currentStep===steps.steps" class="actions-return-home">
       <button class="button" @click="nextStep">Volver a inicio</button>
@@ -60,38 +63,70 @@ const backStep = () => {
     display: flex;
     justify-content: center;
     font-size: 1.6rem;
+    gap: 10px;
 
     .step{
-      border: 3px solid var(--color-primary-brown);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--stepper-steps-blur);
+
+      .number-step{
+        font-weight: bold;
+        padding: 0 8px;
+        border: 3px solid var(--stepper-steps-blur);
+        border-radius: 100%;
+      }
+
+      .hyphen {
+        width: 25px;
+        height: 1px;
+        background-color: var(--stepper-steps-blur);
+      }
     }
 
-    & div {
-      margin: 0 10px;
+    .active-step{
+      color: var(--stepper-steps);
+      .number-step{
+        border: 3px solid var(--stepper-steps);
+      }
+      .hyphen {
+        background-color: var(--stepper-steps);
+      }
     }
-  }h1{
-     text-align: center;
-   }
+  }
 
-  .content {
+  & button {
+    font-size: 1.4rem;
+    width: 120px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
   }
 
   .actions {
     display: flex;
-    justify-content: space-evenly;
-    & button {
-      font-size: 1.6rem;
+    justify-content: space-around;
+
+    .prev-step{
+      background-color: var(--color-primary-white);
+      color: var(--primary-button);
+    }
+
+    .next-step{
+      background-color: var(--primary-button);
+      color: var(--color-primary-white);
     }
   }
   .actions-return-home {
-    display: flex;
-    justify-content: space-evenly;
+    margin: 0 auto;
     & button {
-      font-size: 1.6rem;
+      width: 250px;
+      background-color: var(--primary-button);
+      color: var(--color-primary-white);
     }
   }
+
 }
-.active-step{
-  color: red;
-  font-weight: bold;
-}
+
 </style>

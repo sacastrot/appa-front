@@ -10,7 +10,7 @@
 </template>
 
 <style scoped>
-h1{
+div{
   text-align: center;
 }
 </style>

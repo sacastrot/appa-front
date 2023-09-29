@@ -17,14 +17,20 @@ const ThirdStep: StepComponent = {
   finalStep: false,
   value: GenericStep
 }
+
+const FouthStep: StepComponent = {
+  finalStep: false,
+  value: StepOne
+}
+
 const FinalStep: StepComponent = {
   finalStep: true,
   value: FinishStep
 }
 
 const appStep: Steps = {
-  steps: 4,
-  listStepsComponents: [FirstStep, SecondtStep, ThirdStep, FinalStep]
+  steps: 5,
+  listStepsComponents: [FirstStep, SecondtStep, ThirdStep, FouthStep, FinalStep]
 }
 </script>
 
