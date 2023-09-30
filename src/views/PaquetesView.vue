@@ -1,0 +1,11 @@
+<template>
+    <main class="paquetes-page">
+        <h1>Paquetes habitante de nación</h1>
+    </main>
+</template>
+
+<style scoped>
+h1{
+    font-size: 2.5rem;
+}
+</style>
