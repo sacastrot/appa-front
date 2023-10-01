@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import type {StepComponent} from "@/types/intefaces";
+import {usePackagesStore} from "@/stores/packages";
+
+//store
+const packageState = usePackagesStore();
+
+//steps
 const {steps} = defineProps<{
   steps: {
     steps: number;
     listStepsComponents: StepComponent[];
   }
 }>()
+
 const currentStep = ref<number>(1)
 const nextStep = () => {
   if(currentStep.value < steps.steps){
@@ -36,6 +43,8 @@ const backStep = () => {
     </div>
     <div class="content">
       <component :is="steps.listStepsComponents[currentStep-1].value"></component>
+<!--      TODO: Delete-->
+      {{packageState.state}}
     </div>
     <div v-show="currentStep < steps.steps" class="actions">
       <button v-if="!(currentStep === 1)" class="button prev-step" @click="backStep">Atrás</button>
@@ -55,8 +64,8 @@ const backStep = () => {
   justify-content: space-between;
   border: 1px solid black;
   max-width: 900px;
-  max-height: 800px;
-  min-height: 600px;
+  max-height: 600px;
+  min-height: 500px;
   height: 700px;
 
   .steps {
