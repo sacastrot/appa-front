@@ -7,12 +7,13 @@ const isActive =  ref(false);
 </script>
 
 <template>
-    <nav class="navbar is-light is-fixed-top is-transparent is-spaced">
+    <nav class="navbar is-fixed-top has-shadow">
         <div class="container">
             <div class="navbar-brand">
                 <RouterLink to="/">
-                    <img src="/Logotipo.png" alt="Acarreos Appa logo">
+                    <img src="/logo white.png" alt="Acarreos Appa logo">
                 </RouterLink>
+                <RouterLink to="/" class="brand-text"> Acarreos Appa </RouterLink>
                 <div  
                     :aria-expanded="isActive" 
                     :class="{ 'is-active': isActive }"
@@ -33,10 +34,10 @@ const isActive =  ref(false);
                 class="navbar-menu is-paddingless"
             >
                 <div class="navbar-end">
-                    <RouterLink to="/" class="navbar-item">Home</RouterLink>
-                    <RouterLink to="/acarreos" class="navbar-item">Acarreos</RouterLink>
-                    <RouterLink to="/paquetes" class="navbar-item">Paquetes</RouterLink>
-                    <RouterLink to="/perfil" class="navbar-item">Perfil</RouterLink>
+                    <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Home</RouterLink>
+                    <RouterLink to="/acarreos" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
+                    <RouterLink to="/paquetes" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
+                    <RouterLink to="/perfil" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
                 </div>
             </div>
         </div>
@@ -44,27 +45,54 @@ const isActive =  ref(false);
 </template>
 
 <style scoped>
-/* media query */
 .navbar{
     height: 5rem;
-    padding-top: 0.5rem;
+    background-color: var(--navbar);
 }
 
 .navbar-brand .navbar-burger{
-    height: 4.25rem;
+    height: 5rem;
+    color: var(--color-primary-white);
 }
 
 .navbar-brand img{
     height: 4rem;
+    padding-top: 0.5rem;
 }
 
-span{
-    border-radius: 6px;
+.brand-text {
+    padding-top: 1rem;
+    padding-left: 0.7rem;
+    font-size: 2rem;
+    color: var(--color-primary-white);
+    font-family: "Baloo Tamma 2";
 }
 
 .navbar-item{
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-primary-gray);
+    display: flex;
+    align-items: center;
+}
+
+.navbar-item.router-link-exact-active {
+    color: var(--active-menu);
+}
+
+.material-symbols-outlined{
+    padding-top: 0.2rem;
+    padding-bottom: 0.5rem;
+    padding-right: 0.3rem;
+}
+
+@font-face {
+  font-family: 'Baloo Tamma 2';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/balootamma2/v16/vEFE2_hCAgcR46PaajtrYlBbVUMUJgIC5LHTrMscPq-zKl8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 </style>

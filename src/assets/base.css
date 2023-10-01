@@ -27,6 +27,7 @@
 
 html{
   font-size: 62.5%;
+  padding-top: 5rem;
 }
 
 *,
@@ -52,3 +53,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+@media screen and (min-width: 200px){
+  .container {
+      max-width: 92%;
+  }
+}
+
