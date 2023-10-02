@@ -2,6 +2,8 @@
 import {ref} from "vue";
 //@ts-ignore
 import type {StepComponent} from "@/types/intefaces";
+//@ts-ignore
+import {useReturnHomeStore} from "@/stores/returnHome";
 
 //steps
 const {steps} = defineProps<{
@@ -21,8 +23,9 @@ const onValidate = (validate: boolean) => {
 
 //Functions to change step
 //TODO: Change to use router
+const returnHomeStore = useReturnHomeStore();
 const returnHome = () => {
-  currentStep.value = 1;
+  returnHomeStore.setReturnHome(0);
 }
 //Functions to change step to next
 const nextStep = () => {

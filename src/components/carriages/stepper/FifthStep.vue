@@ -1,8 +1,20 @@
 <script setup lang="ts">
 //@ts-ignore
 import  {useCarriagesStore} from "@/stores/carriages";
+import {onBeforeMount} from "vue";
 
 const carriagesStore = useCarriagesStore();
+
+//Event to verify if all fields are filled out
+const emit = defineEmits(["validateStep"]);
+
+const emitValidateStep = (value: boolean) => {
+  emit("validateStep", value);
+}
+
+onBeforeMount(async () => {
+  emitValidateStep(true);
+})
 
 </script>
 

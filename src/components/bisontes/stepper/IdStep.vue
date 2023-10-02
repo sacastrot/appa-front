@@ -5,7 +5,7 @@ import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
 
 const bisonteStore = useBisontesStore();
 
-const idBisonte = ref<string | undefined>(bisonteStore.state.id);
+const idBisonte = ref<number | undefined>(bisonteStore.state.id);
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
@@ -26,7 +26,7 @@ watch(idBisonte, () => {
 
 onBeforeUnmount(async () =>{
   if(idBisonte.value){
-    bisonteStore.setId(parseInt(idBisonte.value));
+    bisonteStore.setId(idBisonte.value);
   }
   emitValidateStep(false);
 })
@@ -49,7 +49,7 @@ onBeforeMount(async () =>{
           <div class="control has-icons-left">
             <input v-model.trim="idBisonte" class="input is-medium" type="number" placeholder="Documento de identidad">
             <span class="icon is-medium is-left">
-              <fa icon="spider"></fa>
+              <fa icon="id-card"></fa>
             </span>
           </div>
         </div>

@@ -1,11 +1,16 @@
 <script setup lang="ts">
 //@ts-ignore
 import {usePackagesStore} from "@/stores/packages";
+import {onBeforeMount} from "vue";
 const packageStore = usePackagesStore()
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
+
+onBeforeMount(async () => {
+  emitValidateStep(true);
+})
 </script>
 
 <template>
