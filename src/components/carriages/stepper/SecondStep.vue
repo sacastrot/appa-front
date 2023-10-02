@@ -1,25 +1,41 @@
 <script setup lang="ts">
-import {onBeforeUnmount, ref, watch} from "vue";
+import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
 import  {useCarriagesStore} from "@/stores/carriages";
 
 const carriagesStore = useCarriagesStore();
+//Take the values from the store if they exist or undefined if not
 const date = ref<Date | undefined>(carriagesStore.currentCarriage.pickUpDate);
 const time = ref<string | undefined>(carriagesStore.currentCarriage.pickUpHour);
 
-const emit = defineEmits(["checkFields"]);
+//Event to verify if all fields are filled out
+const emit = defineEmits(["validateStep"]);
+
+const emitValidateStep = (value: boolean) => {
+  emit("validateStep", value);
+}
 
 watch([date, time], () => {
   if(date.value && time.value){
-    emit("checkFields", true);
+    emitValidateStep(true);
   }else{
-    emit("checkFields", false);
+    emitValidateStep(false);
   }
 })
 
+//Save data in the store before leaving the component
 onBeforeUnmount(async () =>{
-  carriagesStore.setPickUpDate(date?.value);
-  carriagesStore.setPickUpHour(time?.value);
-  emit("checkFields", false);
+  if(date.value){
+    carriagesStore.setPickUpDate(date.value);
+  }
+  if(time.value){
+    carriagesStore.setPickUpHour(time.value);
+  }
+  emitValidateStep(false);
+})
+
+//Verify if the fields was filled out before when the component is mounted
+onBeforeMount(async () =>{
+  emitValidateStep(Boolean(date.value && time.value));
 })
 
 </script>

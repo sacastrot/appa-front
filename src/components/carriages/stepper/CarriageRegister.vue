@@ -1,14 +1,21 @@
 <script setup lang="ts">
 
-import Stepper from "@/components/Stepper.vue";
-import FirstStep from "@/components/carriage/FirstStep.vue";
-import SecondStep from "@/components/carriage/SecondStep.vue";
-import ThirdStep from "@/components/carriage/ThirdStep.vue";
-import FourthStep from "@/components/carriage/FourthStep.vue";
-import FinalStep from "@/components/carriage/FinalStep.vue";
+//@ts-ignore
+import Stepper from "@/components/core/Stepper.vue";
+//@ts-ignore
+import FirstStep from "@/components/carriages/stepper/FirstStep.vue";
+//@ts-ignore
+import SecondStep from "@/components/carriages/stepper/SecondStep.vue";
+//@ts-ignore
+import ThirdStep from "@/components/carriages/stepper/ThirdStep.vue";
+//@ts-ignore
+import FourthStep from "@/components/carriages/stepper/FourthStep.vue";
+//@ts-ignore
+import FinalStep from "@/components/carriages/stepper/FinalStep.vue";
+//@ts-ignore
 import type {Steps, StepComponent} from "@/types/intefaces";
 
-
+//@ts-ignore
 import {useCarriagesStore} from "@/stores/carriages";
 const carriagesStore = useCarriagesStore();
 
@@ -46,8 +53,6 @@ const steps: Steps = {
 
 <template>
   <Stepper :steps="steps"/>
-  {{carriagesStore.currentCarriage}}
-  {{carriagesStore.carriages}}
 </template>
 
 <style scoped>

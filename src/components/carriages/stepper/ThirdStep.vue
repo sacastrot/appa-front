@@ -1,24 +1,40 @@
 <script setup lang="ts">
-import {onBeforeUnmount, ref, watch} from "vue";
+import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+//@ts-ignore
 import  {useCarriagesStore} from "@/stores/carriages";
 
 const carriagesStore = useCarriagesStore();
+//Take the values from the store if they exist or undefined if not
 const description = ref<string | undefined>(carriagesStore.currentCarriage.description);
 
-const emit = defineEmits(["checkFields"]);
+//Event to verify if all fields are filled out
+const emit = defineEmits(["validateStep"]);
+
+const emitValidateStep = (value: boolean) => {
+  emit("validateStep", value);
+}
 
 watch(description, () => {
   if(description.value && description.value){
-    emit("checkFields", true);
+    emitValidateStep(true);
   }else{
-    emit("checkFields", false);
+    emitValidateStep(false);
   }
 })
 
+//Save data in the store before leaving the component
 onBeforeUnmount(async () =>{
-  carriagesStore.setDescription(description.value?.toLowerCase().trim());
-  emit("checkFields", false);
+  if(description.value){
+    carriagesStore.setDescription(description.value);
+  }
+  emitValidateStep(false);
 })
+
+//Verify if the fields was filled out before when the component is mounted
+onBeforeMount(async () =>{
+  emitValidateStep(Boolean(description.value));
+})
+
 </script>
 
 <template>

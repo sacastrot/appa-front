@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import {onBeforeUnmount} from "vue";
+//@ts-ignore
 import  {useCarriagesStore} from "@/stores/carriages";
 
 const carriagesStore = useCarriagesStore();
 
+//Save data in the store before leaving the component and reset the current carriages
 onBeforeUnmount(async () =>{
   carriagesStore.addCarriage();
   carriagesStore.reset();

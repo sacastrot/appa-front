@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
+//@ts-ignore
 import type {StepComponent} from "@/types/intefaces";
-import {usePackagesStore} from "@/stores/packages";
-
-//store
-const packageState = usePackagesStore();
 
 //steps
 const {steps} = defineProps<{
@@ -15,7 +12,7 @@ const {steps} = defineProps<{
 }>()
 
 const currentStep = ref<number>(1)
-const validFields = ref<boolean>(false);
+const validateStep = ref<boolean>(false);
 const nextStep = () => {
   if(currentStep.value < steps.steps){
     currentStep.value ++;
@@ -31,8 +28,8 @@ const resetSteps = () => {
   currentStep.value = 1;
 }
 
-const verifyField = (value: boolean) => {
-  validFields.value = value;
+const onValidate = (value: boolean) => {
+  validateStep.value = value;
 }
 
 </script>
@@ -52,13 +49,13 @@ const verifyField = (value: boolean) => {
       </div>
     </div>
     <div class="content">
-      <component :is="steps.listStepsComponents[currentStep-1].value" @checkFields="verifyField"></component>
+      <component :is="steps.listStepsComponents[currentStep-1].value" @validateStep="onValidate"></component>
 <!--      TODO: Delete-->
 <!--      {{packageState.state}}-->
     </div>
     <div v-show="currentStep < steps.steps" class="actions">
       <button v-if="!(currentStep === 1)" class="button prev-step" @click="backStep">Atrás</button>
-      <button v-if="currentStep < steps.steps-1" class="button next-step" @click="nextStep" :disabled="!validFields">Siguiente</button>
+      <button v-if="currentStep < steps.steps-1" class="button next-step" @click="nextStep" :disabled="!validateStep">Siguiente</button>
       <button v-else class="button next-step" @click="nextStep">Aceptar</button>
     </div>
     <div v-show="currentStep===steps.steps" class="actions-return-home">

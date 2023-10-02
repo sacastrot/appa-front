@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import {onBeforeUnmount, ref, watch} from "vue";
+import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+//@ts-ignore
 import {Nation, Checkpoint} from "@/types/intefaces";
+//@ts-ignore
 import type {Direction} from "@/types/intefaces";
+//@ts-ignore
 import {useCarriagesStore} from "@/stores/carriages";
 
 const carriagesStore = useCarriagesStore();
 const origin = ref<string | undefined>(carriagesStore.currentCarriage.origin?.nation);
 const destiny = ref<string | undefined>(carriagesStore.currentCarriage.destiny?.nation);
 
-const emit = defineEmits(["checkFields"]);
+const emit = defineEmits(["validateStep"]);
 
 watch([origin, destiny], () => {
   console.log(Boolean(origin.value && destiny.value))
   if(origin.value && destiny.value){
-    emit("checkFields", true);
+    emit("validateStep", true);
   }else{
-    emit("checkFields", false);
+    emit("validateStep", false);
   }
 })
 
@@ -47,14 +50,16 @@ onBeforeUnmount(async () => {
   const direction2: Direction = createDirection(destiny.value?.toLowerCase().trim());
   carriagesStore.setOrigin(direction1);
   carriagesStore.setDestiny(direction2);
-  emit("checkFields", false);
+  emit("validateStep", false);
+})
+
+onBeforeMount(async () =>{
+  emit("validateStep", Boolean(destiny.value && origin.value));
 })
 
 </script>
 
 <template>
-  {{ origin }}
-  {{ destiny }}
   <form action="">
     <div class="form-header">
       <h1>Ubicación</h1>

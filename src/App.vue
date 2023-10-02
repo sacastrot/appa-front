@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Stepper from "@/components/Stepper.vue";
-import CarriageRegister from "@/components/carriage/CarriageRegister.vue";
+import Stepper from "@/components/core/Stepper.vue";
+import CarriageRegister from "@/components/carriages/stepper/CarriageRegister.vue";
 import type  { Steps, StepComponent} from "@/types/intefaces";
 import GenericStep from "@/components/StepTwo.vue";
 import StepOne from "@/components/StepOne.vue";
