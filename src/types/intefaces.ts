@@ -33,6 +33,7 @@ interface StepComponent{
     finalStep: boolean;
     value: Component;
 }
+
 interface PackageState{
     created?: Date;
     arrived?: Date;
@@ -46,4 +47,14 @@ interface PackageState{
     weight: number | undefined;
     price: number | undefined;
 }
-export type {Steps, StepComponent, PackageState}
+interface Carriage {
+    id?: number;
+    created?: Date;
+    arrived?: Date;
+    origin?: Direction;
+    destiny?: Direction;
+    pickUpDate?: Date;
+    pickUpHour?: string;
+    description?: string;
+}
+export type {Steps, StepComponent, PackageState, Carriage}
