@@ -4,7 +4,7 @@
 
 <template>
     <main class="acarreos-page">
-        <h1>Acarreos habitante de nación</h1>
+        <h1>Acarreos</h1>
         <NewServiceView />
     </main>
 </template>
@@ -12,5 +12,7 @@
 <style scoped>
 h1{
     font-size: 2.5rem;
+    color: var(--title-section);
+    font-weight: bold;
 }
 </style>

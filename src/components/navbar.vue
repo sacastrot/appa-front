@@ -17,7 +17,7 @@ export default defineComponent({
         <div class="container">
             <div class="navbar-brand">
                 <RouterLink to="/">
-                    <img src="/logo white.png" alt="Acarreos Appa logo">
+                    <img src="/logo-white.svg" alt="Acarreos Appa logo">
                 </RouterLink>
                 <RouterLink to="/" class="brand-text"> Acarreos Appa </RouterLink>
                 <div  
@@ -91,6 +91,12 @@ export default defineComponent({
 
 a.navbar-item:hover{
     color: var(--active-menu);
+}
+
+.navbar-link.is-active, .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, a.navbar-item.is-active, a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover {
+    border-radius: 0.8rem;
+    height: 4rem;
+    margin-top: 0.5rem;
 }
 
 .material-symbols-outlined{

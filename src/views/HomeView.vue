@@ -1,12 +1,51 @@
 <template>
+    <header>
+        <div class="image">
+            <img src="src\assets\img\Logo-background-brown.svg" alt="Appa Logo brown background">
+        </div>
+        <h1>Hola, Toph Beifong</h1>
+        <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
+    </header>
     <main class="home-page">
-        <h1>Inicio habitante de nación</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem commodi illum facere magnam consectetur, fugit nobis qui numquam voluptate, facilis cumque vero. Ullam officiis dignissimos obcaecati, possimus, commodi esse hic itaque neque expedita reiciendis sint nam, odit at facere culpa natus aspernatur exercitationem voluptate dolorem architecto quas. Non recusandae aspernatur fuga, iste quidem modi velit doloribus repudiandae dignissimos cumque eius nam inventore ipsa quis iusto praesentium labore itaque explicabo sit expedita alias similique, nesciunt minus facere. Exercitationem facilis adipisci molestiae quidem, voluptas vitae ab fugiat neque velit fugit unde? Corporis neque expedita exercitationem alias odit numquam fugit necessitatibus quod pariatur maiores voluptate aspernatur officiis sit vel voluptatum dignissimos vitae earum minus nesciunt a, porro impedit repellat eligendi! Eum aspernatur nobis provident officia possimus porro omnis, molestiae tempore, deserunt sint ipsa perferendis odit rem deleniti? Vel, culpa ullam voluptas repudiandae quibusdam eius natus consequuntur nostrum autem, hic magni quas quae nulla illum deserunt itaque quo! Odio possimus, totam molestias consectetur ratione esse laborum iste aperiam natus voluptate, repellendus quae alias pariatur eaque earum veritatis expedita at repellat debitis, nam deleniti. Nobis rem eum unde, esse, dolorem in fuga earum magnam culpa, nihil iusto expedita fugit sunt soluta repellendus ipsam ipsa praesentium? Perferendis facere veniam accusantium! Voluptatem voluptates, nulla libero natus eius adipisci quia eum exercitationem est voluptas quo. Nam maxime voluptate quia, voluptatem rem autem qui voluptatum cumque reprehenderit mollitia perferendis, modi laboriosam alias nesciunt optio enim impedit deleniti a in adipisci repudiandae, omnis veniam. Ex reiciendis quo animi dolorem maxime nemo voluptas exercitationem, fugiat aliquam aut omnis, non repellat at nesciunt quam atque minima laudantium ullam fuga quod itaque voluptate praesentium soluta. Deserunt libero natus, nihil rerum rem error expedita iste dolorem nemo debitis adipisci voluptates soluta esse cumque dolore est saepe doloremque repellat facere et atque vel beatae eos? Vero quisquam maiores porro necessitatibus quaerat, quia illum labore odio qui non suscipit a quasi pariatur, eveniet odit quae dolore quam voluptate. Deleniti repudiandae culpa itaque, error eligendi accusamus magnam sit ut distinctio laborum cumque quod nesciunt, quibusdam quidem temporibus reiciendis repellat a consectetur? Quos eveniet unde hic doloremque consectetur enim ipsa necessitatibus delectus? Totam sequi numquam possimus, ipsum illo nobis eius architecto aliquid omnis suscipit, perferendis aspernatur voluptatum! Dicta, cupiditate porro? Temporibus deleniti ad delectus quibusdam nam architecto, explicabo obcaecati a dolore in doloremque, dolorum labore quia autem quisquam consequuntur ipsam. Consectetur, dicta ipsum. Eligendi odit distinctio provident similique fugiat animi quae voluptas nostrum quia quo culpa voluptatum accusamus voluptates perferendis inventore enim ut amet iusto asperiores, ipsa, facere consequuntur laborum quam nulla! Inventore exercitationem vitae, error temporibus nisi sequi iste obcaecati soluta, at deserunt dolor officia nobis earum optio corrupti hic quia sint, nulla aliquid quaerat commodi repudiandae. Repudiandae officia cupiditate ex sed laudantium a reiciendis, ducimus ipsum iste quasi soluta eius, eaque facilis maxime. Aliquam libero rerum dolore molestias eaque ullam sed! Fugiat ea at reprehenderit ad quaerat aut, reiciendis dolorem a molestiae dolorum impedit dicta eligendi earum tempora fuga voluptates veniam illo ipsam officiis saepe vero provident. Et fugiat officia tempore, in cumque modi. Necessitatibus at eius illum cupiditate libero quo explicabo accusamus beatae labore. Hic ab natus, necessitatibus repellat ducimus alias pariatur incidunt recusandae accusantium sed facilis quisquam illo iste suscipit praesentium minima, quod nam perspiciatis optio eveniet vero. Iste officiis aut quam, quae saepe provident sed doloribus illo pariatur ullam. Vero voluptatum totam, reprehenderit quasi ea eligendi quis commodi neque quidem excepturi obcaecati quibusdam non delectus fugit magnam eos provident fuga nihil consequuntur iure voluptas sequi id. Culpa alias asperiores dicta cupiditate libero porro pariatur quasi? Maxime non magni omnis temporibus dolorum ut animi natus. Odio, illum obcaecati nostrum natus adipisci cumque nihil ut ea iure fuga itaque non quam a assumenda neque nobis perspiciatis expedita fugiat minus excepturi hic. Minima, consectetur quidem dolores exercitationem reiciendis quibusdam necessitatibus vel optio nisi ex nemo eum nihil corrupti nostrum facilis iste dolor obcaecati ut quae odit rem non repudiandae! Dolor doloribus, repellendus dolore, delectus tempore placeat eos quam quasi porro accusantium, nihil fugiat saepe aut ea consequatur asperiores neque rerum dolorum fugit molestiae eum voluptatum? Omnis autem minus adipisci consectetur ab commodi dolorum, corrupti sint vel incidunt iste possimus quo quisquam. Nisi dicta enim praesentium nam optio quibusdam vel nesciunt, laborum obcaecati necessitatibus quasi deleniti placeat quis. Quibusdam impedit, reprehenderit, molestiae ipsum pariatur fugit placeat quasi rerum omnis eos accusantium itaque consequatur officia animi natus sint at quo fuga distinctio qui dolores? Quis, cupiditate earum beatae delectus fuga illo sit laudantium eligendi unde reprehenderit commodi numquam molestiae, deserunt dolorem eaque quos accusamus. Esse facere amet inventore repudiandae! Quisquam minima vel sint hic, unde deleniti excepturi velit, et repellat nesciunt cum aliquam, soluta illo. Distinctio doloribus debitis consequatur suscipit quasi earum, facilis dignissimos esse? Adipisci atque, nihil quo qui iste commodi aperiam dolore voluptatum doloribus? Adipisci vel, odio quasi quisquam numquam esse et cum cupiditate nostrum soluta error, iure quidem. Modi doloribus expedita quia odio voluptate dolores voluptatem temporibus blanditiis laborum accusantium voluptatibus minima repudiandae dicta error quaerat sit labore ipsam ut, commodi, rem iure omnis. Quam reiciendis eaque ratione, similique harum quod ea dignissimos voluptatum, doloremque voluptas quasi quidem minus rerum nostrum deleniti veniam consequuntur laboriosam, recusandae ducimus et quas optio odio aliquid laudantium? Dolor, aperiam quisquam corporis sint blanditiis rem minus quas dolorem ipsa maiores quia? Mollitia reiciendis minus deleniti, voluptas ad tempore praesentium quas soluta, commodi iste voluptatem quidem nihil nostrum asperiores assumenda fuga quis. Maxime totam consequuntur deleniti sint iusto tempore, cupiditate alias atque esse dolores, dicta voluptatem temporibus! Alias illum corrupti aut magni repellat, iusto nisi facilis ab? Fugiat facere eveniet accusantium corrupti, soluta labore fugit pariatur asperiores earum voluptate atque suscipit. Ipsa autem sint pariatur perferendis sunt, reprehenderit maiores aperiam itaque non ad natus dolor, doloremque velit a suscipit repellat tempora fuga expedita officia ut deserunt id architecto sed. Est rerum eos id excepturi repudiandae veritatis temporibus consectetur reprehenderit laborum mollitia repellendus deleniti, ut ducimus dolorem quae voluptates exercitationem alias possimus doloribus iste dolore non. Laudantium sequi nobis cumque omnis libero.</p>
+        <div class="rastrear">
+            <br>
+            <h1 style="color: var(--primary-text)">Rastrear envío</h1>
+            <div class="field">
+                <p class="control has-icons-left">
+                    <span class="icon is-left material-symbols-outlined">search</span>
+                    <input class="input is-medium" type="text" placeholder="Número de guía">
+                </p>
+            </div>
+        </div>
     </main>
 </template>
 
 <style scoped>
 h1{
     font-size: 2.5rem;
+    color: var(--title-section);
+    font-weight: bold;
+}
+
+p {
+    font-size: 2rem;
+}
+
+header .image {
+    padding-top: 2rem;
+    height: 12rem;
+    width: 10rem;
+}
+
+.icon {
+    padding-left: 0.5rem;
+    padding-top: 0.8rem;
+}
+
+.control.has-icons-left .input {
+    padding-left: 3rem;
+    width: 50%;
+    background-color: var(--input-field);
+    font-size: 1.5rem;
 }
 </style>

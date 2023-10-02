@@ -6,14 +6,25 @@ const serviceRoute = ref("");
 </script>
 
 <template>
-    <div class="card">
+    <div class="card" v-if="$route.name == 'acarreos'" style="background: linear-gradient(0deg, rgba(155,191,225,0) 0%, rgba(155,191,225,1) 100%);">
         <div class="card-content">
             <figure class="image">
-                <img src="../assets/img/new-acarreos.png" alt="Service image">
+                <img src="../assets/img/new-acarreos.svg" alt="Acarreos image">
             </figure>
             <div class="card-text">
-                <span class="material-symbols-outlined">add_circle</span>
-                <p class="title is-2">Nuevo servicio de {{ $route.name }}</p>
+                <span class="material-symbols-outlined"  style="color: var(--title-section);">add_circle</span>
+                <p class="title is-2"  style="color: var(--title-section); background-image: linear-gradient(var(--title-section) 0 0);">Nuevo servicio de {{ $route.name }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="card" v-else-if="$route.name == 'paquetes'" style="background: linear-gradient(0deg, rgba(228,113,32,0) 0%, rgba(228,113,32,1) 100%);">
+        <div class="card-content">
+            <figure class="image">
+                <img src="../assets/img/new-paquetes.svg" alt="Paquetes image">
+            </figure>
+            <div class="card-text">
+                <span class="material-symbols-outlined"  style="color: var(--color-primary-orange);">add_circle</span>
+                <p class="title is-2" style="color: var(--color-primary-orange); background-image: linear-gradient(var(--color-primary-orange) 0 0);">Nuevo servicio de {{ $route.name }}</p>
             </div>
         </div>
     </div>
@@ -21,7 +32,6 @@ const serviceRoute = ref("");
 
 <style scoped>
 .card {
-    background: linear-gradient(0deg, rgba(155,191,225,0) 0%, rgba(155,191,225,1) 100%);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -36,22 +46,24 @@ const serviceRoute = ref("");
     font-size: 3rem;
 }
 
+.card-content.image {
+    width: 50rem;
+    height: 50rem;
+}
+
 .card-text {
     display: flex;
 }
 
 .card-text p {
-    color: var(--primary-text);
     padding-top: 0.1rem;
     padding-bottom: 1rem;
-    background-image: linear-gradient(var(--primary-text) 0 0);
     background-position: 0 100%; 
     background-size: 0% 0.2rem;
     background-repeat: no-repeat;
     transition:
         background-size 0.3s,
         background-position 0s 0.3s;
-
 }
 
 .card-text p:hover {
