@@ -48,7 +48,6 @@ interface PackageState{
     price: number | undefined;
 }
 interface Carriage {
-    id?: number;
     created?: Date;
     arrived?: Date;
     originNation: NationType,
@@ -59,4 +58,12 @@ interface Carriage {
     pickUpHour?: string;
     description?: string;
 }
-export type {Steps, StepComponent, PackageState, Carriage}
+
+interface Bisonte {
+    id: number | undefined
+    created: Date | undefined;
+    name: string | undefined;
+    email: string | undefined;
+    vehicle: string | undefined;
+}
+export type {Steps, StepComponent, PackageState, Carriage, Bisonte}

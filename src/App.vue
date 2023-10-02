@@ -4,6 +4,7 @@ import {onBeforeMount, ref} from "vue";
 import CarriageRegister from "@/components/carriages/stepper/CarriageRegister.vue";
 //@ts-ignore
 import PackageRegister from "@/components/packages/stepper/PackageRegister.vue";
+import BisonteRegister from "@/components/bisontes/stepper/BisonteRegister.vue";
 
 const random = ref<number>(0);
 
@@ -13,8 +14,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
- <CarriageRegister v-if="random<0.51"/>
- <PackageRegister v-else/>
+  <BisonteRegister />
 </template>
 
 <style scoped>

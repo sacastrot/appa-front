@@ -63,7 +63,7 @@ const backStep = () => {
       <button class="button next-step" v-if="currentStep < steps.steps-1" @click="nextStep" :disabled="!validateStep">
         Siguiente
       </button>
-      <button v-else class="button next-step" @click="nextStep">Aceptar</button>
+      <button v-else class="button next-step" @click="nextStep" :disabled="!validateStep">Aceptar</button>
     </div>
     <div v-show="currentStep===steps.steps" class="actions-return-home">
       <!--      Success Step-->
@@ -83,6 +83,8 @@ const backStep = () => {
   max-height: 600px;
   min-height: 500px;
   height: 700px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
 
   .steps {
     display: flex;
