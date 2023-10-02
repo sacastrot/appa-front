@@ -15,6 +15,7 @@ const {steps} = defineProps<{
 }>()
 
 const currentStep = ref<number>(1)
+const validFields = ref<boolean>(false);
 const nextStep = () => {
   if(currentStep.value < steps.steps){
     currentStep.value ++;
@@ -25,6 +26,15 @@ const backStep = () => {
     currentStep.value --;
   }
 }
+
+const resetSteps = () => {
+  currentStep.value = 1;
+}
+
+const verifyField = (value: boolean) => {
+  validFields.value = value;
+}
+
 </script>
 
 <template>
@@ -42,16 +52,17 @@ const backStep = () => {
       </div>
     </div>
     <div class="content">
-      <component :is="steps.listStepsComponents[currentStep-1].value"></component>
+      <component :is="steps.listStepsComponents[currentStep-1].value" @checkFields="verifyField"></component>
 <!--      TODO: Delete-->
-      {{packageState.state}}
+<!--      {{packageState.state}}-->
     </div>
     <div v-show="currentStep < steps.steps" class="actions">
       <button v-if="!(currentStep === 1)" class="button prev-step" @click="backStep">Atrás</button>
-      <button class="button next-step" @click="nextStep">Siguiente</button>
+      <button v-if="currentStep < steps.steps-1" class="button next-step" @click="nextStep" :disabled="!validFields">Siguiente</button>
+      <button v-else class="button next-step" @click="nextStep">Aceptar</button>
     </div>
     <div v-show="currentStep===steps.steps" class="actions-return-home">
-      <button class="button" @click="nextStep">Volver a inicio</button>
+      <button class="button" @click="resetSteps">Volver a inicio</button>
     </div>
   </div>
 </template>

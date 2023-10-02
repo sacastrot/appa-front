@@ -1,10 +1,10 @@
 import type {Component} from "vue";
 
 export enum Nation {
-    Air,
-    Fire,
-    Water,
-    Earth
+    Air= "Aire",
+    Fire = "Fuego",
+    Water = "Agua",
+    Earth = "Tierra",
 }
 
 export enum Checkpoint {
@@ -39,11 +39,22 @@ interface PackageState{
     id?: number;
     created?: Date;
     arrived?: Date;
-    origin?: Direction;
+    origin: Direction | undefined;
     destiny?: Direction;
     height?: number;
     width?: number;
     length?: number;
     weight?: number;
 }
-export type {Steps, StepComponent, PackageState, Direction}
+
+interface Carriage {
+    id?: number;
+    created?: Date;
+    arrived?: Date;
+    origin?: Direction;
+    destiny?: Direction;
+    pickUpDate?: Date;
+    pickUpHour?: string;
+    description?: string;
+}
+export type {Steps, StepComponent, PackageState, Direction, Carriage}
