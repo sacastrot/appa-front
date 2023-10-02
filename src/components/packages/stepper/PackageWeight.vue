@@ -1,5 +1,34 @@
 <script setup lang="ts">
+import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+//@ts-ignore
+import {usePackagesStore} from "@/stores/packages";
 
+const packageStore = usePackagesStore()
+const emit = defineEmits(["validateStep"]);
+const emitValidateStep = (validateValue: boolean) => {
+  emit("validateStep", validateValue)
+}
+const weight = ref(packageStore.state.weight);
+
+watch(weight, (newWeight) => {
+  if (newWeight !== undefined) {
+    if (newWeight > 0 && newWeight < 500) {
+      emitValidateStep(true)
+    } else {
+      emitValidateStep(false)
+    }
+  }
+})
+onBeforeUnmount(async () => {
+  if (weight.value !== undefined) {
+    packageStore.setWeight(weight.value);
+  }
+  packageStore.setPrice();
+})
+onBeforeMount(() => {
+  weight.value = packageStore.state.weight;
+  emitValidateStep(Boolean(weight.value !== undefined))
+})
 </script>
 
 <template>
@@ -11,31 +40,15 @@
     <div class="form-content">
       <div class="form-image">
         <figure class="image is-96x96">
-          <img src="/stepper/package/package.png" alt="">
+          <img src="/stepper/package/package-weight.png" alt="">
         </figure>
       </div>
       <div class="form-inputs">
         <div class="field">
           <p class="control has-icons-left">
-            <input class="input" type="number" placeholder="Height">
+            <input name="weight" class="input is-medium" type="number" placeholder="Weight" v-model="weight">
             <span class="icon is-small is-left">
             <fa icon="ruler-vertical"></fa>
-          </span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control has-icons-left">
-            <input class="input" type="number" placeholder="Width">
-            <span class="icon is-small is-left">
-            <fa icon="ruler"></fa>
-          </span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control has-icons-left">
-            <input class="input" type="number" placeholder="Length">
-            <span class="icon is-small is-left">
-            <fa icon="ruler-horizontal"></fa>
           </span>
           </p>
         </div>
@@ -46,7 +59,7 @@
 
 <style scoped>
 form {
-  .form-header{
+  .form-header {
     margin-bottom: 30px;
     text-align: center;
 
@@ -61,18 +74,18 @@ form {
 
   .form-content {
     margin: 0 auto;
-    max-width: 80%;
     display: grid;
     grid-template-columns: 1fr 1fr;
+
     .form-image {
-      place-self: center;
       & figure {
         margin: 0;
       }
     }
+
     .form-inputs {
-      justify-self: center;
-      width: 90%;
+      place-self: center;
+      width: 100%;
       margin: 0 auto;
 
       .input {

@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
+//@ts-ignore
 import type {StepComponent} from "@/types/intefaces";
-import {usePackagesStore} from "@/stores/packages";
-
-//store
-const packageState = usePackagesStore();
 
 //steps
 const {steps} = defineProps<{
@@ -15,14 +12,31 @@ const {steps} = defineProps<{
 }>()
 
 const currentStep = ref<number>(1)
+const validateStep = ref(false);
+
+//Function to validate step
+const onValidate = (validate: boolean) => {
+  validateStep.value = validate;
+}
+
+//Functions to change step
+//TODO: Change to use router
+const returnHome = () => {
+  currentStep.value = 1;
+}
+//Functions to change step to next
 const nextStep = () => {
-  if(currentStep.value < steps.steps){
-    currentStep.value ++;
+  if (currentStep.value < steps.steps) {
+    currentStep.value++;
   }
 }
+/** Functions to change step to back
+ * @description change step to back
+ * @returns {void} a void return
+ * */
 const backStep = () => {
-  if(currentStep.value > 1){
-    currentStep.value --;
+  if (currentStep.value > 1) {
+    currentStep.value--;
   }
 }
 </script>
@@ -37,21 +51,23 @@ const backStep = () => {
       >
         <div v-if="stepNumber != 1" class="hyphen"></div>
         <div class="number-step">
-          {{stepNumber}}
+          {{ stepNumber }}
         </div>
       </div>
     </div>
     <div class="content">
-      <component :is="steps.listStepsComponents[currentStep-1].value"></component>
-<!--      TODO: Delete-->
-      {{packageState.state}}
+      <component :is="steps.listStepsComponents[currentStep-1].value" @validateStep="onValidate"></component>
     </div>
     <div v-show="currentStep < steps.steps" class="actions">
       <button v-if="!(currentStep === 1)" class="button prev-step" @click="backStep">Atrás</button>
-      <button class="button next-step" @click="nextStep">Siguiente</button>
+      <button class="button next-step" v-if="currentStep < steps.steps-1" @click="nextStep" :disabled="!validateStep">
+        Siguiente
+      </button>
+      <button v-else class="button next-step" @click="nextStep">Aceptar</button>
     </div>
     <div v-show="currentStep===steps.steps" class="actions-return-home">
-      <button class="button" @click="nextStep">Volver a inicio</button>
+      <!--      Success Step-->
+      <button class="button" @click="returnHome">Volver a inicio</button>
     </div>
   </div>
 </template>
@@ -74,13 +90,13 @@ const backStep = () => {
     font-size: 1.6rem;
     gap: 10px;
 
-    .step{
+    .step {
       display: flex;
       align-items: center;
       gap: 4px;
       color: var(--stepper-steps-blur);
 
-      .number-step{
+      .number-step {
         font-weight: bold;
         padding: 0 8px;
         border: 3px solid var(--stepper-steps-blur);
@@ -94,11 +110,13 @@ const backStep = () => {
       }
     }
 
-    .active-step{
+    .active-step {
       color: var(--stepper-steps);
-      .number-step{
+
+      .number-step {
         border: 3px solid var(--stepper-steps);
       }
+
       .hyphen {
         background-color: var(--stepper-steps);
       }
@@ -117,18 +135,20 @@ const backStep = () => {
     display: flex;
     justify-content: space-around;
 
-    .prev-step{
+    .prev-step {
       background-color: var(--color-primary-white);
       color: var(--primary-button);
     }
 
-    .next-step{
+    .next-step {
       background-color: var(--primary-button);
       color: var(--color-primary-white);
     }
   }
+
   .actions-return-home {
     margin: 0 auto;
+
     & button {
       width: 250px;
       background-color: var(--primary-button);

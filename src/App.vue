@@ -1,41 +1,48 @@
 <script setup lang="ts">
-import Stepper from "@/components/Stepper.vue";
+//@ts-ignore
+import Stepper from "@/components/core/Stepper.vue";
+//@ts-ignore
 import type  { Steps, StepComponent} from "@/types/intefaces";
-import GenericStep from "@/components/StepTwo.vue";
-import StepOne from "@/components/StepOne.vue";
-import FinishStep from "@/components/FinishStep.vue";
-import StepTwo from "@/components/StepTwo.vue";
-import {usePackagesStore} from "@/stores/packages";
-const packageStore = usePackagesStore();
+//@ts-ignore
+import LocationOrigin from "@/components/packages/stepper/LocationOrigin.vue";
+//@ts-ignore
+import LocationDestiny from "@/components/packages/stepper/LocationDestiny.vue";
+//@ts-ignore
+import PackageDimensions from "@/components/packages/stepper/PackageDimensions.vue";
+//@ts-ignore
+import PackageWeight from "@/components/packages/stepper/PackageWeight.vue";
+//@ts-ignore
+import Ticket from "@/components/packages/stepper/Ticket.vue";
+//@ts-ignore
+import Success from "@/components/packages/stepper/Success.vue";
 
-// console.log(packageStore.state)
-
-const FirstStep: StepComponent = {
+const firstStep: StepComponent = {
   finalStep: false,
-  value: StepOne
+  value: LocationOrigin,
 }
-const SecondtStep: StepComponent = {
+const secondtStep: StepComponent = {
   finalStep: false,
-  value: StepTwo
+  value: LocationDestiny
 }
-const ThirdStep: StepComponent = {
+const thirdStep: StepComponent = {
   finalStep: false,
-  value: GenericStep
+  value: PackageDimensions
 }
-
-const FouthStep: StepComponent = {
+const fourthStep: StepComponent = {
   finalStep: false,
-  value: StepOne
+  value: PackageWeight
 }
-
-const FinalStep: StepComponent = {
+const fifthStep: StepComponent = {
   finalStep: true,
-  value: FinishStep
+  value: Ticket
 }
-
+const finalStep: StepComponent = {
+  finalStep: false,
+  value: Success
+}
 const appStep: Steps = {
-  steps: 3,
-  listStepsComponents: [FirstStep, SecondtStep, FinalStep]
+  steps: 6,
+  listStepsComponents: [firstStep, secondtStep, thirdStep, fourthStep, fifthStep, finalStep]
 }
 </script>
 
