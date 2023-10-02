@@ -1,60 +1,52 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-//@ts-ignore
-import {Nation, Checkpoint} from "@/types/intefaces";
-//@ts-ignore
-import type {Direction} from "@/types/intefaces";
-//@ts-ignore
+import {Checkpoint, NationType} from "@/types/intefaces";
+import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
 import {useCarriagesStore} from "@/stores/carriages";
+//Store to packages
+const carriageStore = useCarriagesStore()
 
-const carriagesStore = useCarriagesStore();
-const origin = ref<string | undefined>(carriagesStore.currentCarriage.origin?.nation);
-const destiny = ref<string | undefined>(carriagesStore.currentCarriage.destiny?.nation);
+//Data to send store
+const originNation = ref<NationType>(carriageStore.state.originNation)
+const originCheckpoint = ref<Checkpoint>(carriageStore.state.originCheckpoint)
 
+//Validate form
 const emit = defineEmits(["validateStep"]);
-
-watch([origin, destiny], () => {
-  console.log(Boolean(origin.value && destiny.value))
-  if(origin.value && destiny.value){
-    emit("validateStep", true);
-  }else{
-    emit("validateStep", false);
-  }
-})
-
-function createDirection(place: string): Direction {
-  let nation: Nation | undefined = undefined;
-  switch (place) {
-    case "aire":
-      nation = Nation.Air;
-      break;
-    case "fuego":
-      nation = Nation.Fire;
-      break;
-    case "agua":
-      nation = Nation.Water;
-      break;
-    case "tierra":
-      nation = Nation.Earth;
-      break;
-  }
-
-  return {
-    nation: nation,
-    checkpoint: Checkpoint.SiWong
-  }
+const emitValidateStep = (validateValue: boolean) => {
+  emit("validateStep", validateValue)
 }
-
-onBeforeUnmount(async () => {
-  const direction1: Direction = createDirection(origin.value?.toLowerCase().trim());
-  const direction2: Direction = createDirection(destiny.value?.toLowerCase().trim());
-  carriagesStore.setOrigin(direction1);
-  carriagesStore.setDestiny(direction2);
-  emit("validateStep", false);
+//Function to validate form
+watch([originNation, originCheckpoint], ([newOriginNation, newOriginCheckpoint]) => {
+  if(newOriginNation !== NationType.Unknown && newOriginCheckpoint !== Checkpoint.Unknown) {
+    emitValidateStep(true)
+  }else {
+    emitValidateStep(false)
+  }
 })
 
-onBeforeMount(async () =>{
-  emit("validateStep", Boolean(destiny.value && origin.value));
+//Get checkpoints by nation
+const checkpointList = ref<Checkpoint[]>()
+const getCheckpointsList = () => {
+  checkpointList.value = getCheckpoints(originNation.value);
+  originCheckpoint.value = Checkpoint.Unknown;
+}
+/*
+* Save origin into store
+* Set validate to false for the next step
+* */
+onBeforeUnmount( async () => {
+  carriageStore.setOrigin(originNation.value, originCheckpoint.value)
+  emitValidateStep(false)
+})
+
+onBeforeMount(() => {
+  //Charge values of package origin location
+  originNation.value = carriageStore.state.originNation;
+  originCheckpoint.value = carriageStore.state.originCheckpoint;
+  checkpointList.value = getCheckpoints(originNation.value);
+
+  //Validate form if is already filled
+  emitValidateStep(Boolean(originNation.value != NationType.Unknown && originCheckpoint.value !== Checkpoint.Unknown))
 })
 
 </script>
@@ -62,30 +54,20 @@ onBeforeMount(async () =>{
 <template>
   <form action="">
     <div class="form-header">
-      <h1>Ubicación</h1>
-      <p>
-        Ingrese el lugar de origen, y el lugar de destino del acarreo
-      </p>
+      <h1>Ubicación de origen</h1>
+      <p>Ingrese el lugar del cual saldrá el paquete</p>
     </div>
     <div class="form-content">
       <div class="form-inputs">
-        <div class="field">
-          <label class="label">Origen</label>
-          <div class="control has-icons-left">
-            <input v-model="origin" class="input is-medium" type="text" placeholder="Origen">
-            <span class="icon is-left">
-              <fa icon="map-marker-alt"></fa>
-            </span>
-          </div>
+        <div class="select is-medium">
+          <select v-model="originNation" @change="getCheckpointsList">
+            <option v-for="value in NationType" :value="stringToNation[value]"> {{ value }}</option>
+          </select>
         </div>
-        <div class="field">
-          <label class="label">Destino</label>
-          <div class="control has-icons-left">
-            <input v-model="destiny" class="input is-medium" type="text" placeholder="Destino">
-            <span class="icon is-left">
-              <fa icon="map-marker-alt"></fa>
-            </span>
-          </div>
+        <div class="select is-medium">
+          <select v-model="originCheckpoint">
+            <option v-for="value in checkpointList" :value="stringToCheckpoint[value]">{{value}}</option>
+          </select>
         </div>
       </div>
     </div>
@@ -93,47 +75,35 @@ onBeforeMount(async () =>{
 </template>
 
 <style scoped>
-.form-header {
-  margin: 0 auto 60px auto;
-  max-width: 80%;
-  text-align: center;
+form {
+  .form-header {
+    max-width: 80%;
+    margin: 0 auto 30px auto;
+    text-align: center;
 
-  & h1 {
-    font-size: 1.6rem;
+    & h1 {
+      font-size: 1.6rem;
+    }
+
+    & p {
+      font-size: 1.2rem;
+    }
   }
 
-  & p {
-    font-size: 1.2rem;
-  }
+  .form-content {
+    margin: 0 auto;
 
-}
-
-.form-content {
-  max-width: 100%;
-  margin: 0 auto;
-
-  .form-inputs {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px 50px;
-    flex-wrap: wrap;
-
-    .field {
-      flex: 1;
-      min-width: 200px;
-
-      & label {
-        font-size: 1.2rem;
+    .form-inputs {
+      margin: 0 auto;
+      .select{
+        width: 100%;
+        margin-bottom: 10px;
+        & select{
+          width: 100%;
+          background-color: var(--color-seconday-orange);
+        }
       }
-
-      & input {
-        font-size: 1.2rem;
-        background-color: var(--color-seconday-orange);
-        align-items: center;
-      }
-
     }
   }
 }
-
 </style>

@@ -15,6 +15,7 @@ import PackageWeight from "@/components/packages/stepper/PackageWeight.vue";
 import Ticket from "@/components/packages/stepper/Ticket.vue";
 //@ts-ignore
 import Success from "@/components/packages/stepper/Success.vue";
+import CarriageRegister from "@/components/carriages/stepper/CarriageRegister.vue";
 
 const firstStep: StepComponent = {
   finalStep: false,
@@ -47,7 +48,7 @@ const appStep: Steps = {
 </script>
 
 <template>
-  <Stepper :steps="appStep"/>
+  <CarriageRegister />
 </template>
 
 <style scoped>

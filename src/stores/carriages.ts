@@ -1,6 +1,9 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import type {Carriage, Direction} from "@/types/intefaces";
+//@ts-ignore
+import type {Carriage} from "@/types/intefaces";
+//@ts-ignore
+import {Checkpoint, NationType} from "@/types/intefaces";
 
 /**
  * @name useCarriagesStore
@@ -10,11 +13,12 @@ export const useCarriagesStore = defineStore("carriages", () => {
 
     //states
     const currentCarriage = ref<Carriage>({
-        id: undefined,
         created: undefined,
         arrived: undefined,
-        origin: undefined,
-        destiny: undefined,
+        originNation: NationType.Unknown,
+        originCheckpoint: Checkpoint.Unknown,
+        destinyNation: NationType.Unknown,
+        destinyCheckpoint: Checkpoint.Unknown,
         pickUpDate: undefined,
         pickUpHour: undefined,
         description: undefined,
@@ -38,16 +42,22 @@ export const useCarriagesStore = defineStore("carriages", () => {
      * @param {Direction}  origin - A Direction param.
      * @returns {void} A void return.
      */
-    function setOrigin(origin: Direction) :void {
-        currentCarriage.value.origin = origin
+    function setOrigin(originNation: NationType, originCheckpoint: Checkpoint) {
+        if (originNation !== NationType.Unknown && originCheckpoint !== Checkpoint.Unknown) {
+            currentCarriage.value.originNation = originNation;
+            currentCarriage.value.originCheckpoint = originCheckpoint;
+        }
     }
 
     /** Set the destiny direction of the current carriages
      * @param {Direction}  destiny - A Direction param.
      * @returns {void} A void return.
      */
-    function setDestiny(destiny: Direction) :void {
-        currentCarriage.value.destiny = destiny
+    function setDestiny(destinyNation: NationType, destinyCheckpoint: Checkpoint) {
+        if (destinyNation !== NationType.Unknown && destinyCheckpoint !== Checkpoint.Unknown) {
+            currentCarriage.value.destinyNation = destinyNation;
+            currentCarriage.value.destinyCheckpoint = destinyCheckpoint;
+        }
     }
 
     /** Set the pick-up date of the current carriages
@@ -89,8 +99,10 @@ export const useCarriagesStore = defineStore("carriages", () => {
             id: undefined,
             created: undefined,
             arrived: undefined,
-            origin: undefined,
-            destiny: undefined,
+            originNation: NationType.Unknown,
+            originCheckpoint: Checkpoint.Unknown,
+            destinyNation: NationType.Unknown,
+            destinyCheckpoint: Checkpoint.Unknown,
             pickUpDate: undefined,
             pickUpHour: undefined,
             description: undefined,

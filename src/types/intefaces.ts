@@ -51,8 +51,10 @@ interface Carriage {
     id?: number;
     created?: Date;
     arrived?: Date;
-    origin?: Direction;
-    destiny?: Direction;
+    originNation: NationType,
+    originCheckpoint: Checkpoint,
+    destinyNation: NationType,
+    destinyCheckpoint: Checkpoint,
     pickUpDate?: Date;
     pickUpHour?: string;
     description?: string;
