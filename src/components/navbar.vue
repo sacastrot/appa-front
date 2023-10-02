@@ -94,6 +94,7 @@ a.navbar-item:hover{
 }
 
 .navbar-link.is-active, .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, a.navbar-item.is-active, a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover {
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 0.8rem;
     height: 4rem;
     margin-top: 0.5rem;

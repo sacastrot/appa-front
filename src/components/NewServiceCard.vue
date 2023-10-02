@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
-const serviceRoute = ref("");
-
 </script>
 
 <template>
     <div class="card" v-if="$route.name == 'acarreos'" style="background: linear-gradient(0deg, rgba(155,191,225,0) 0%, rgba(155,191,225,1) 100%);">
         <div class="card-content">
-            <figure class="image">
+            <figure>
                 <img src="../assets/img/new-acarreos.svg" alt="Acarreos image">
             </figure>
             <div class="card-text">
@@ -19,7 +15,7 @@ const serviceRoute = ref("");
     </div>
     <div class="card" v-else-if="$route.name == 'paquetes'" style="background: linear-gradient(0deg, rgba(228,113,32,0) 0%, rgba(228,113,32,1) 100%);">
         <div class="card-content">
-            <figure class="image">
+            <figure>
                 <img src="../assets/img/new-paquetes.svg" alt="Paquetes image">
             </figure>
             <div class="card-text">
@@ -46,9 +42,8 @@ const serviceRoute = ref("");
     font-size: 3rem;
 }
 
-.card-content.image {
-    width: 50rem;
-    height: 50rem;
+.card-content img {
+    width: 40rem;
 }
 
 .card-text {
