@@ -1,41 +1,55 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-import  {useCarriagesStore} from "@/stores/carriages";
+//@ts-ignore
+import {Checkpoint, NationType} from "@/types/intefaces";
+//@ts-ignore
+import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
+//@ts-ignore
+import {useCarriagesStore} from "@/stores/carriages";
+//Store to packages
+const carriageStore = useCarriagesStore()
 
-const carriagesStore = useCarriagesStore();
-//Take the values from the store if they exist or undefined if not
-const date = ref<Date | undefined>(carriagesStore.currentCarriage.pickUpDate);
-const time = ref<string | undefined>(carriagesStore.currentCarriage.pickUpHour);
+//Data to send store
+const destinyNation = ref<NationType>(carriageStore.currentCarriage.destinyNation)
+const destinyCheckpoint = ref<Checkpoint>(carriageStore.currentCarriage.destinyCheckpoint)
 
-//Event to verify if all fields are filled out
+//Validate form
 const emit = defineEmits(["validateStep"]);
-
-const emitValidateStep = (value: boolean) => {
-  emit("validateStep", value);
+const emitValidateStep = (validateValue: boolean) => {
+  emit("validateStep", validateValue)
 }
-
-watch([date, time], () => {
-  if(date.value && time.value){
-    emitValidateStep(true);
-  }else{
-    emitValidateStep(false);
+//Function to validate form
+watch([destinyNation, destinyCheckpoint], ([newDestinyNation, newDestinyCheckpoint]) => {
+  if(newDestinyNation !== NationType.Unknown && newDestinyCheckpoint !== Checkpoint.Unknown) {
+    emitValidateStep(true)
+  }else {
+    emitValidateStep(false)
   }
 })
 
-//Save data in the store before leaving the component
-onBeforeUnmount(async () =>{
-  if(date.value){
-    carriagesStore.setPickUpDate(date.value);
-  }
-  if(time.value){
-    carriagesStore.setPickUpHour(time.value);
-  }
-  emitValidateStep(false);
+//Get checkpoints by nation
+const checkpointList = ref<Checkpoint[]>()
+const getCheckpointsList = () => {
+  checkpointList.value = getCheckpoints(destinyNation.value);
+  destinyCheckpoint.value = Checkpoint.Unknown;
+}
+/*
+* Save destiny into store
+* Set validate to false for the next step
+* */
+onBeforeUnmount( async () => {
+  carriageStore.setDestiny(destinyNation.value, destinyCheckpoint.value)
+  emitValidateStep(false)
 })
 
-//Verify if the fields was filled out before when the component is mounted
-onBeforeMount(async () =>{
-  emitValidateStep(Boolean(date.value && time.value));
+onBeforeMount(() => {
+  //Charge values of package destiny location
+  destinyNation.value = carriageStore.currentCarriage.destinyNation;
+  destinyCheckpoint.value = carriageStore.currentCarriage.destinyCheckpoint;
+  checkpointList.value = getCheckpoints(destinyNation.value);
+
+  //Validate form if is already filled
+  emitValidateStep(Boolean(destinyNation.value != NationType.Unknown && destinyCheckpoint.value !== Checkpoint.Unknown))
 })
 
 </script>
@@ -43,28 +57,20 @@ onBeforeMount(async () =>{
 <template>
   <form action="">
     <div class="form-header">
-      <h1>Fecha y hora</h1>
-      <p>¿Cuándo y a qué hora necesitas el servicio?</p>
+      <h1>Ubicación de destino</h1>
+      <p>Ingrese el lugar donde quiere que entreguemos el acarreo</p>
     </div>
     <div class="form-content">
       <div class="form-inputs">
-        <div class="field">
-          <label class="label">Fecha</label>
-          <div class="control has-icons-left">
-            <input v-model="date" class="input is-medium" type="date" placeholder="Fecha">
-            <span class="icon is-left">
-              <fa icon="calendar-plus"></fa>
-            </span>
-          </div>
+        <div class="select is-medium">
+          <select v-model="destinyNation" @change="getCheckpointsList">
+            <option v-for="value in NationType" :value="stringToNation[value]"> {{ value }}</option>
+          </select>
         </div>
-        <div class="field">
-          <label class="label">Hora</label>
-          <div class="control has-icons-left">
-            <input v-model="time" class="input is-medium" type="time" placeholder="Hora">
-            <span class="icon is-left">
-              <fa icon="clock"></fa>
-            </span>
-          </div>
+        <div class="select is-medium">
+          <select v-model="destinyCheckpoint">
+            <option v-for="value in checkpointList" :value="stringToCheckpoint[value]">{{value}}</option>
+          </select>
         </div>
       </div>
     </div>
@@ -72,47 +78,35 @@ onBeforeMount(async () =>{
 </template>
 
 <style scoped>
-.form-header{
-  margin: 0 auto 60px auto;
-  max-width: 80%;
-  text-align: center;
+form {
+  .form-header {
+    max-width: 80%;
+    margin: 0 auto 30px auto;
+    text-align: center;
 
-  & h1{
-    font-size: 1.6rem;
+    & h1 {
+      font-size: 1.6rem;
+    }
+
+    & p {
+      font-size: 1.2rem;
+    }
   }
 
-  & p{
-    font-size: 1.2rem;
-  }
+  .form-content {
+    margin: 0 auto;
 
-}
-
-.form-content{
-  max-width: 100%;
-  margin: 0 auto;
-
-  .form-inputs{
-    display: flex;
-    justify-content: space-between;
-    gap: 15px 50px;
-    flex-wrap: wrap;
-
-    .field{
-      flex: 1;
-      min-width: 200px;
-
-      & label{
-        font-size: 1.2rem;
+    .form-inputs {
+      margin: 0 auto;
+      .select{
+        width: 100%;
+        margin-bottom: 10px;
+        & select{
+          width: 100%;
+          background-color: var(--color-seconday-orange);
+        }
       }
-
-      & input {
-        font-size: 1.2rem;
-        background-color: var(--color-seconday-orange);
-        align-items: center;
-      }
-
     }
   }
 }
-
 </style>

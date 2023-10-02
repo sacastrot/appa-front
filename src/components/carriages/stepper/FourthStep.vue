@@ -1,111 +1,91 @@
 <script setup lang="ts">
-import {onBeforeUnmount} from "vue";
+import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
 //@ts-ignore
 import  {useCarriagesStore} from "@/stores/carriages";
 
 const carriagesStore = useCarriagesStore();
+//Take the values from the store if they exist or undefined if not
+const description = ref<string | undefined>(carriagesStore.currentCarriage.description);
 
-//Save data in the store before leaving the component and reset the current carriages
-onBeforeUnmount(async () =>{
-  carriagesStore.addCarriage();
-  carriagesStore.reset();
+//Event to verify if all fields are filled out
+const emit = defineEmits(["validateStep"]);
+
+const emitValidateStep = (value: boolean) => {
+  emit("validateStep", value);
+}
+
+watch(description, () => {
+  if(description.value && description.value){
+    emitValidateStep(true);
+  }else{
+    emitValidateStep(false);
+  }
 })
+
+//Save data in the store before leaving the component
+onBeforeUnmount(async () =>{
+  if(description.value){
+    carriagesStore.setDescription(description.value);
+  }
+  emitValidateStep(false);
+})
+
+//Verify if the fields was filled out before when the component is mounted
+onBeforeMount(async () =>{
+  emitValidateStep(Boolean(description.value));
+})
+
 </script>
 
 <template>
-  <div class="bill">
-    <div class="bill-header">
-      <h1>Tu factura</h1>
+  <form action="">
+    <div class="form-header">
+      <h1>Descripción</h1>
+      <p>
+        Describe las características del servicio.
+        número de camas, sillas entre otros
+      </p>
     </div>
-    <div class="content">
-      <div class="bill-section">
-        <h1>Origen</h1>
-        <p>
-          {{carriagesStore.currentCarriage.origin?.nation}}
-        </p>
-        <hr>
-      </div>
-      <div class="bill-section">
-        <h1>Destino</h1>
-        <p>
-          {{carriagesStore.currentCarriage.destiny?.nation}}
-        </p>
-        <hr>
-      </div>
-      <div class="bill-section">
-        <h1>Descripción</h1>
-        <p>
-          {{carriagesStore.currentCarriage.description}}
-        </p>
-      </div>
-      <div class="price-section">
-        <p>Precio máximo $2’230.000</p>
+    <div class="form-content">
+      <div class="form-inputs">
+        <div class="field">
+          <label class="label">Descripción</label>
+          <div class="control has-icons-left">
+            <textarea v-model.trim="description" class="textarea" placeholder="Descripción"></textarea>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </form>
 </template>
 
 <style scoped>
-.bill {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: space-between;
+.form-header {
+  margin: 0 auto 60px auto;
+  max-width: 80%;
+  text-align: center;
 
-  .bill-header{
-    margin: 0 auto 60px auto;
-    text-align: center;
-
-    & h1{
-      font-size: 1.6rem;
-    }
+  & h1 {
+    font-size: 1.6rem;
   }
 
-  .content{
-    max-height: 80%;
-    min-width: 20%;
-    max-width: 80%;
-    display: flex;
-    flex-direction: column;
-    padding: 30px 20px 20px 20px;
-    background-color: #FFFFFF;
-    box-shadow: 5px 8px 3px rgba(0,0,0,0.09);
-    border: 1px solid #80918D1D;
-    border-radius: 12px 12px 0 0;
+  & p {
+    font-size: 1.2rem;
+  }
+}
 
-    .bill-section{
-      flex: 1;
+.form-content {
+  margin: 0 auto;
+  max-width: 100%;
 
-      & h1{
-        font-size: 1.2rem;
-        max-width: 80%;
-      }
+  & label{
+    display: none;
+  }
 
-      & p{
-        font-size: 1.2rem;
-        text-align: left;
-        max-width: 80%;
-        color: #80918D;
-        margin-bottom: 3px;
-      }
-
-      & hr{
-        border-top: 1px solid #96A29E;
-        border-radius: 3px;
-        margin-top: 0;
-        margin-bottom: 15px;
-      }
-    }
-
-    .price-section{
-      font-size: 1.6rem;
-      margin-top: 25px;
-      color: var(--color-primary-orange);
-
-      & p{
-        font-weight: bold;
-      }
-    }
+  & textarea {
+    font-size: 1.2rem;
+    background-color: var(--color-seconday-orange);
+    box-shadow: 5px 5px 3px rgba(0,0,0,0.05);
   }
 }
 </style>

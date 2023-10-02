@@ -11,12 +11,15 @@ import ThirdStep from "@/components/carriages/stepper/ThirdStep.vue";
 //@ts-ignore
 import FourthStep from "@/components/carriages/stepper/FourthStep.vue";
 //@ts-ignore
+import FifthStep from "@/components/carriages/stepper/FifthStep.vue";
+//@ts-ignore
 import FinalStep from "@/components/carriages/stepper/FinalStep.vue";
 //@ts-ignore
 import type {Steps, StepComponent} from "@/types/intefaces";
 
 //@ts-ignore
 import {useCarriagesStore} from "@/stores/carriages";
+
 const carriagesStore = useCarriagesStore();
 
 const firstStep: StepComponent = {
@@ -39,14 +42,19 @@ const fouthStep: StepComponent = {
   value: FourthStep
 }
 
+const fiftStep: StepComponent = {
+  finalStep: false,
+  value: FifthStep
+}
+
 const finalStep: StepComponent = {
   finalStep: true,
   value: FinalStep
 }
 
 const steps: Steps = {
-  steps: 5,
-  listStepsComponents: [firstStep, secondStep, thirdtStep, fouthStep, finalStep]
+  steps: 6,
+  listStepsComponents: [firstStep, secondStep, thirdtStep, fouthStep, fiftStep, finalStep]
 }
 
 </script>

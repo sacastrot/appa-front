@@ -34,12 +34,13 @@ export const useCarriagesStore = defineStore("carriages", () => {
      * @param {Date}  date - A date param.
      * @returns {void} A void return.
      */
-    function setArrived(date:Date) :void {
+    function setArrived(date: Date): void {
         currentCarriage.value.arrived = date
     }
 
     /** Set the origin direction of the current carriages
-     * @param {Direction}  origin - A Direction param.
+     * @param {NationType}  originNation - A NationType param.
+     * @param {Checkpoint}  originCheckpoint - A Checkpoint param.
      * @returns {void} A void return.
      */
     function setOrigin(originNation: NationType, originCheckpoint: Checkpoint) {
@@ -49,8 +50,9 @@ export const useCarriagesStore = defineStore("carriages", () => {
         }
     }
 
-    /** Set the destiny direction of the current carriages
-     * @param {Direction}  destiny - A Direction param.
+    /** Set the origin direction of the current carriages
+     * @param {NationType}  destinyNation - A NationType param.
+     * @param {Checkpoint}  destinyCheckpoint - A Checkpoint param.
      * @returns {void} A void return.
      */
     function setDestiny(destinyNation: NationType, destinyCheckpoint: Checkpoint) {
@@ -61,10 +63,10 @@ export const useCarriagesStore = defineStore("carriages", () => {
     }
 
     /** Set the pick-up date of the current carriages
-     * @param {Direction}  date - A Date param.
+     * @param {Date}  date - A Date param.
      * @returns {void} A void return.
      */
-    function setPickUpDate(date: Date) :void {
+    function setPickUpDate(date: Date): void {
         currentCarriage.value.pickUpDate = date
     }
 
@@ -72,7 +74,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
      * @param {string}  hour - A string param.
      * @returns {void} A void return.
      */
-    function setPickUpHour(hour: string) :void {
+    function setPickUpHour(hour: string): void {
         currentCarriage.value.pickUpHour = hour
     }
 
@@ -80,21 +82,22 @@ export const useCarriagesStore = defineStore("carriages", () => {
      * @param {string}  description - A string param.
      * @returns {void} A void return.
      */
-    function setDescription(description: string) :void {
+    function setDescription(description: string): void {
         currentCarriage.value.description = description
     }
 
     /** Add the current carriages to the carriages list
      * @returns {void} A void return.
      */
-    function addCarriage() :void {
+    function addCarriage(): void {
         carriages.value.push(currentCarriage.value)
     }
 
     /** Reset the  current carriages to its initial state
      * @returns {void} A void return.
      */
-    function reset() :void {
+    function reset(): void {
+        console.log("reset")
         currentCarriage.value = {
             id: undefined,
             created: undefined,
@@ -109,5 +112,16 @@ export const useCarriagesStore = defineStore("carriages", () => {
         }
     }
 
-    return {currentCarriage, setArrived, setOrigin, setDestiny, setPickUpDate, setPickUpHour, setDescription, addCarriage, carriages, reset}
+    return {
+        currentCarriage,
+        setArrived,
+        setOrigin,
+        setDestiny,
+        setPickUpDate,
+        setPickUpHour,
+        setDescription,
+        addCarriage,
+        carriages,
+        reset
+    }
 })

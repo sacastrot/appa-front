@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+//@ts-ignore
 import {Checkpoint, NationType} from "@/types/intefaces";
+//@ts-ignore
 import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
+//@ts-ignore
 import {useCarriagesStore} from "@/stores/carriages";
 //Store to packages
 const carriageStore = useCarriagesStore()
 
 //Data to send store
-const originNation = ref<NationType>(carriageStore.state.originNation)
-const originCheckpoint = ref<Checkpoint>(carriageStore.state.originCheckpoint)
+const originNation = ref<NationType>(carriageStore.currentCarriage.originNation)
+const originCheckpoint = ref<Checkpoint>(carriageStore.currentCarriage.originCheckpoint)
 
 //Validate form
 const emit = defineEmits(["validateStep"]);
@@ -41,8 +44,8 @@ onBeforeUnmount( async () => {
 
 onBeforeMount(() => {
   //Charge values of package origin location
-  originNation.value = carriageStore.state.originNation;
-  originCheckpoint.value = carriageStore.state.originCheckpoint;
+  originNation.value = carriageStore.currentCarriage.originNation;
+  originCheckpoint.value = carriageStore.currentCarriage.originCheckpoint;
   checkpointList.value = getCheckpoints(originNation.value);
 
   //Validate form if is already filled
@@ -55,7 +58,7 @@ onBeforeMount(() => {
   <form action="">
     <div class="form-header">
       <h1>Ubicación de origen</h1>
-      <p>Ingrese el lugar del cual saldrá el paquete</p>
+      <p>Ingrese el lugar del cual saldrá el accarreo</p>
     </div>
     <div class="form-content">
       <div class="form-inputs">

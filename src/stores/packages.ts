@@ -57,7 +57,7 @@ export const usePackagesStore = defineStore("package", () => {
     }
 
     function setWeight(weight: number) {
-        if (state.value.weight !== undefined) {
+        if (weight !== undefined) {
             state.value.weight = weight;
         }
     }

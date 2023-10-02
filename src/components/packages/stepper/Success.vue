@@ -38,8 +38,8 @@ onBeforeUnmount(async () => {
   align-items: center;
   .title{
     & h1{
-      font-size: 3rem;
-      font-weight: bolder;
+      font-size: 3.5rem;
+      font-weight: bold;
       color: var(--color-primary-orange);
     }
   }

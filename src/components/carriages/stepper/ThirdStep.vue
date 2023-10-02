@@ -5,7 +5,8 @@ import  {useCarriagesStore} from "@/stores/carriages";
 
 const carriagesStore = useCarriagesStore();
 //Take the values from the store if they exist or undefined if not
-const description = ref<string | undefined>(carriagesStore.currentCarriage.description);
+const date = ref<Date | undefined>(carriagesStore.currentCarriage.pickUpDate);
+const time = ref<string | undefined>(carriagesStore.currentCarriage.pickUpHour);
 
 //Event to verify if all fields are filled out
 const emit = defineEmits(["validateStep"]);
@@ -14,8 +15,8 @@ const emitValidateStep = (value: boolean) => {
   emit("validateStep", value);
 }
 
-watch(description, () => {
-  if(description.value && description.value){
+watch([date, time], () => {
+  if(date.value && time.value){
     emitValidateStep(true);
   }else{
     emitValidateStep(false);
@@ -24,15 +25,18 @@ watch(description, () => {
 
 //Save data in the store before leaving the component
 onBeforeUnmount(async () =>{
-  if(description.value){
-    carriagesStore.setDescription(description.value);
+  if(date.value){
+    carriagesStore.setPickUpDate(date.value);
+  }
+  if(time.value){
+    carriagesStore.setPickUpHour(time.value);
   }
   emitValidateStep(false);
 })
 
 //Verify if the fields was filled out before when the component is mounted
 onBeforeMount(async () =>{
-  emitValidateStep(Boolean(description.value));
+  emitValidateStep(Boolean(date.value && time.value));
 })
 
 </script>
@@ -40,18 +44,27 @@ onBeforeMount(async () =>{
 <template>
   <form action="">
     <div class="form-header">
-      <h1>Descripción</h1>
-      <p>
-        Describe las características del servicio.
-        número de camas, sillas entre otros
-      </p>
+      <h1>Fecha y hora</h1>
+      <p>¿Cuándo y a qué hora necesitas el servicio?</p>
     </div>
     <div class="form-content">
       <div class="form-inputs">
         <div class="field">
-          <label class="label">Descripción</label>
+          <label class="label">Fecha</label>
           <div class="control has-icons-left">
-            <textarea v-model.trim="description" class="textarea" placeholder="Descripción"></textarea>
+            <input v-model="date" class="input is-medium" type="date" placeholder="Fecha">
+            <span class="icon is-left">
+              <fa icon="calendar-plus"></fa>
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Hora</label>
+          <div class="control has-icons-left">
+            <input v-model="time" class="input is-medium" type="time" placeholder="Hora">
+            <span class="icon is-left">
+              <fa icon="clock"></fa>
+            </span>
           </div>
         </div>
       </div>
@@ -60,32 +73,47 @@ onBeforeMount(async () =>{
 </template>
 
 <style scoped>
-.form-header {
+.form-header{
   margin: 0 auto 60px auto;
   max-width: 80%;
   text-align: center;
 
-  & h1 {
+  & h1{
     font-size: 1.6rem;
   }
 
-  & p {
+  & p{
     font-size: 1.2rem;
   }
+
 }
 
-.form-content {
-  margin: 0 auto;
+.form-content{
   max-width: 100%;
+  margin: 0 auto;
 
-  & label{
-    display: none;
-  }
+  .form-inputs{
+    display: flex;
+    justify-content: space-between;
+    gap: 15px 50px;
+    flex-wrap: wrap;
 
-  & textarea {
-    font-size: 1.2rem;
-    background-color: var(--color-seconday-orange);
-    box-shadow: 5px 5px 3px rgba(0,0,0,0.05);
+    .field{
+      flex: 1;
+      min-width: 200px;
+
+      & label{
+        font-size: 1.2rem;
+      }
+
+      & input {
+        font-size: 1.2rem;
+        background-color: var(--color-seconday-orange);
+        align-items: center;
+      }
+
+    }
   }
 }
+
 </style>
