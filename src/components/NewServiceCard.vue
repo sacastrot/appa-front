@@ -63,7 +63,7 @@
 
 .card-text p:hover {
   background-position: 100% 100%; 
-  background-size: 100% 2px;
+  background-size: 100% 0.2rem;
 }
 
 /* @media screen and (min-width: 1024px) {

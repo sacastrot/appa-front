@@ -1,21 +1,28 @@
 <template>
     <header>
-        <div class="image">
-            <img src="src\assets\img\Logo-background-brown.svg" alt="Appa Logo brown background">
+        <div class="avatar">
+            <div class="image">
+                <img src="src\assets\img\Logo-background-brown.svg" alt="Appa Logo brown background">
+            </div>
+            <h1>Hola, </h1>
+            <h1>Toph Beifong</h1>
         </div>
-        <h1>Hola, Toph Beifong</h1>
         <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
     </header>
     <main class="home-page">
         <div class="rastrear">
             <br>
-            <h1 style="color: var(--primary-text)">Rastrear envío</h1>
+            <h2>Rastrear envío</h2>
             <div class="field">
                 <p class="control has-icons-left">
                     <span class="icon is-left material-symbols-outlined">search</span>
                     <input class="input is-medium" type="text" placeholder="Número de guía">
                 </p>
             </div>
+        </div>
+        <div class="pedido">
+            <br>
+            <h2>Último pedido</h2>
         </div>
     </main>
 </template>
@@ -27,14 +34,26 @@ h1{
     font-weight: bold;
 }
 
-p {
+h2 {
     font-size: 2rem;
+    color: var(--primary-text);
+    font-weight: bold;
+    padding: 1rem 1rem 1.5rem 0;
+}
+
+p {
+    font-size: 1.7rem;
 }
 
 header .image {
-    padding-top: 2rem;
+    padding: 2rem 1.5rem 0 0;
     height: 12rem;
     width: 10rem;
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
 }
 
 .icon {
@@ -44,7 +63,7 @@ header .image {
 
 .control.has-icons-left .input {
     padding-left: 3rem;
-    width: 50%;
+    width: 80rem;
     background-color: var(--input-field);
     font-size: 1.5rem;
 }

@@ -39,7 +39,7 @@ export default defineComponent({
                 :class="{ 'is-active': isActive }"
                 class="navbar-menu is-paddingless"
             >
-                <div class="navbar-end">
+                <div class="navbar-end" @click="isActive = !isActive">
                     <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
                     <RouterLink to="/acarreos" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
                     <RouterLink to="/paquetes" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
@@ -51,6 +51,9 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.container {
+    max-width: 100%;
+}
 .navbar{
     height: 5rem;
     background-color: var(--navbar);
@@ -59,17 +62,18 @@ export default defineComponent({
 
 .navbar-brand .navbar-burger{
     height: 5rem;
+    width: 5rem;
     color: var(--color-primary-white);
 }
 
 .navbar-brand img{
     height: 4rem;
-    padding-top: 0.5rem;
+    padding: 0.6rem 0.5rem 0 1rem;
 }
 
 .brand-text {
     padding-top: 1rem;
-    padding-left: 0.7rem;
+    padding-left: 0.5rem;
     font-size: 2rem;
     color: var(--color-primary-white);
     font-family: "Baloo Tamma 2";
@@ -98,7 +102,9 @@ a.navbar-item:hover{
     border-radius: 0.8rem;
     height: 4rem;
     margin-top: 0.5rem;
+    
 }
+
 
 .material-symbols-outlined{
     padding-top: 0.2rem;
