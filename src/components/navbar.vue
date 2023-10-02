@@ -1,8 +1,14 @@
-<script setup lang="ts">
+<script lang="ts">
 import { RouterLink } from 'vue-router';
-import { ref } from "vue";
+import { defineComponent } from "vue";
 
-const isActive =  ref(false);
+export default defineComponent({
+    data()  {
+        return {
+            isActive: false
+        }
+    }
+})
 
 </script>
 
@@ -34,7 +40,7 @@ const isActive =  ref(false);
                 class="navbar-menu is-paddingless"
             >
                 <div class="navbar-end">
-                    <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Home</RouterLink>
+                    <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
                     <RouterLink to="/acarreos" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
                     <RouterLink to="/paquetes" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
                     <RouterLink to="/perfil" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
@@ -48,6 +54,7 @@ const isActive =  ref(false);
 .navbar{
     height: 5rem;
     background-color: var(--navbar);
+    border-radius: 0.8rem;
 }
 
 .navbar-brand .navbar-burger{
@@ -79,6 +86,10 @@ const isActive =  ref(false);
 }
 
 .navbar-item.router-link-exact-active {
+    color: var(--active-menu);
+}
+
+a.navbar-item:hover{
     color: var(--active-menu);
 }
 

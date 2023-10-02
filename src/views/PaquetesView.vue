@@ -1,6 +1,11 @@
+<script setup lang="ts">
+    import NewServiceView from "../components/NewServiceCard.vue";
+</script>
+
 <template>
     <main class="paquetes-page">
         <h1>Paquetes habitante de nación</h1>
+        <NewServiceView />
     </main>
 </template>
 
@@ -8,4 +13,4 @@
 h1{
     font-size: 2.5rem;
 }
-</style>
+</style>    

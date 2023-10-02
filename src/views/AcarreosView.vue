@@ -1,6 +1,11 @@
+<script setup lang="ts">
+    import NewServiceView from "../components/NewServiceCard.vue";
+</script>
+
 <template>
     <main class="acarreos-page">
         <h1>Acarreos habitante de nación</h1>
+        <NewServiceView />
     </main>
 </template>
 
