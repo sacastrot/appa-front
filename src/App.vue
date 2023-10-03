@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="formulario">
-        <h1 class="title is-4 has-text-centered ">Detalles del Perfil</h1>
+        <h1 class="title is-4 has-text-centered">Detalles del Perfil</h1>
         <div class="field">
           <label class="label">Nombre</label>
           <div class="control has-icons-left">
@@ -81,25 +81,19 @@
 </template>
 
 <style scoped>
-/* Estilo para el input con línea debajo */
-/* Estilo para el input con línea debajo */
-/* Estilo para el input con línea debajo */
 .custom-input {
-  border: none; /* Elimina el borde predeterminado del input */
-  border-bottom: 0.1rem solid gray; /* Agrega una línea debajo del input */
-  box-shadow: none; /* Elimina la sombra predeterminada del input */
-  border-radius: 0; /* Elimina cualquier borde redondeado */
-  padding: 0; /* Elimina el relleno predeterminado */
-  font-size: 1rem; /* Ajusta el tamaño de fuente según tus preferencias */
-  outline: none; /* Elimina el resaltado predeterminado en el enfoque */
-  background-color: transparent; /* Hace que el fondo sea transparente */
+  border: none;
+  border-bottom: 0.1rem solid gray;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: 1rem;
+  outline: none;
+  background-color: transparent;
 }
 
-/* Cambiar color de la línea cuando el input está enfocado */
 .custom-input:focus {
-  border-color: var(
-    --color-primary-orange
-  ); /* Cambia el color de la línea cuando el input está enfocado */
+  border-color: var(--color-primary-orange);
 }
 
 .field {
@@ -133,7 +127,7 @@
 .rotate {
   position: absolute;
   margin-left: 1.5rem;
-  left: 55%; /* Posiciona el div2 en la mitad del contenedor */
+  left: 55%;
   width: 0;
   height: 0;
   border-right: 7rem solid transparent;
@@ -166,9 +160,9 @@
   font-size: 1rem;
 }
 .avatar_container {
-  width: 10rem; /* Cambia el tamaño del contenedor según tus necesidades */
-  height: 10rem; /* Cambia el tamaño del contenedor según tus necesidades */
-  border-radius: 50%; /* Esto crea un círculo */
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
   overflow: hidden;
   margin-right: 40%;
 }
@@ -198,5 +192,4 @@
   margin-left: 3rem;
   margin-right: 3rem;
 }
-
 </style>
