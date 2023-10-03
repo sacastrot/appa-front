@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import AcarreosView from "../views/AcarreosView.vue";
-import PaquetesView from "../views/PaquetesView.vue";
-import PerfilView from "../views/PerfilView.vue";
+import CarriagesView from "../views/CarriagesView.vue";
+import PackagesView from "../views/PackagesView.vue";
+import ProfileView from "../views/ProfileView.vue";
+import RegisterPackageView from "../views/RegisterPackageView.vue";
+import RegisterCarriageView from "../views/RegisterCarriageView.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -14,17 +16,27 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/acarreos",
         name: "acarreos",
-        component: AcarreosView
+        component: CarriagesView
     },
     {
         path: "/paquetes",
         name: "paquetes",
-        component: PaquetesView
+        component: PackagesView
     },
     {
         path: "/perfil",
         name: "perfil",
-        component: PerfilView
+        component: ProfileView
+    },
+    {
+        path: "/paquetes/registrar",
+        name: "registrar-paquetes",
+        component: RegisterPackageView
+    },
+    {
+        path: "/acarreos/registrar",
+        name: "registrar-acarreos",
+        component: RegisterCarriageView
     }
 ];
 

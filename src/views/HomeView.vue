@@ -9,7 +9,7 @@
         <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
     </header>
     <main class="home-page">
-        <div class="rastrear">
+        <div class="track-order">
             <h2>Rastrear envío</h2>
             <div class="field">
                 <p class="control has-icons-left">
@@ -18,13 +18,13 @@
                 </p>
             </div>
         </div>
-        <div class="pedido">
+        <div class="last-order">
             <h2>Último pedido</h2>
             <div class="box">
-                <div id="estado-pedido">
+                <div id="order-state">
                     <p>Entregado</p>
                 </div>
-                <div id="detalle-pedido">
+                <div id="order-detail">
                     <p><b>Acarreo<br>Destino:</b> Nación del fuego<br>Entregado el: 15 de Septiembre de 2023</p>
                 </div>
             </div>
@@ -82,19 +82,19 @@ header .image {
 }
 
 /* Fix the fact that to center the text it had to be done with padding, so rn it's not dynamic*/
-.box #estado-pedido {
+.box #order-state {
     background-color: var(--primary-button);
     padding: 1.25rem;
     border-radius: 0.6rem 0 0 0.6rem;
 }
 
-#estado-pedido p {
+#order-state p {
     color: var(--color-primary-white);
     font-size: 1.5rem;
     padding-top: 25%;
 }
 
-#detalle-pedido p {
+#order-detail p {
     color: var(--primary-text);
     font-size: 1.25rem;
     padding: 1.25rem;

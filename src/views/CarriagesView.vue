@@ -5,7 +5,9 @@
 <template>
     <main class="acarreos-page">
         <h1>Acarreos</h1>
-        <NewServiceView />
+        <RouterLink to="/acarreos/registrar">
+            <NewServiceView />
+        </RouterLink>
     </main>
 </template>
 

@@ -5,7 +5,9 @@
 <template>
     <main class="paquetes-page">
         <h1>Paquetes</h1>
-        <NewServiceView />
+        <RouterLink to="/paquetes/registrar">
+            <NewServiceView />
+        </RouterLink>
     </main>
 </template>
 
