@@ -12,7 +12,10 @@
         <div class="rotate"></div>
         <div class="habitante-informacion">
           <Span>Toph Beifong</Span>
-          <p>correo@acarreosappa.com</p>
+          <span class="icon is-small is-left">
+            <img src="/form_icons/mail_gray_icon.svg" />
+            <p>correo@acarreosappa.com</p>
+          </span>
         </div>
       </div>
       <div class="formulario">
@@ -26,20 +29,16 @@
               value="Toph Beifong"
             />
             <span class="icon is-small is-left">
-              <i class="user"></i>
+              <img src="/form_icons/user_icon.svg" />
             </span>
           </div>
         </div>
         <div class="field">
           <label class="label">Teléfono</label>
           <div class="control has-icons-left">
-            <input
-              class="input custom-input"
-              type="tel"
-              value="8746945234"
-            />
+            <input class="input custom-input" type="tel" value="8746945234" />
             <span class="icon is-small is-left">
-              <i class="fas fa-phone"></i>
+              <img src="/form_icons/phone_icon.svg" />
             </span>
           </div>
         </div>
@@ -52,7 +51,7 @@
               value="tophbei@acarreosappa.com"
             />
             <span class="icon is-small is-left">
-              <i class="fas fa-envelope"></i>
+              <img src="/form_icons/mail_icon.svg" />
             </span>
           </div>
         </div>
@@ -65,16 +64,22 @@
               value="Escribe tu contraseña"
             />
             <span class="icon is-small is-left">
-              <i class="fas fa-lock"></i>
+              <img src="/form_icons/lock_icon.svg" />
             </span>
           </div>
         </div>
       </div>
       <button class="button is-fullwidth editar_perfil_boton">
-        Editar perfil
+        <span class="icon is-small is-left">
+          <img src="/form_icons/edit_user_icon.svg" />
+        </span>
+        <p>Editar perfil</p>
       </button>
       <button class="button is-fullwidth eliminar_perfil_boton">
-        Eliminar cuenta
+        <span class="icon is-small is-left">
+          <img src="/form_icons/trash_icon.svg" />
+        </span>
+        <p>Eliminar cuenta</p>
       </button>
     </div>
   </div>
