@@ -23,10 +23,10 @@
             <input
               class="input custom-input"
               type="text"
-              placeholder="Escribe tu nombre"
+              value="Toph Beifong"
             />
             <span class="icon is-small is-left">
-              <i class="fas fa-user"></i>
+              <i class="user"></i>
             </span>
           </div>
         </div>
@@ -36,7 +36,7 @@
             <input
               class="input custom-input"
               type="tel"
-              placeholder="Escribe tu teléfono"
+              value="8746945234"
             />
             <span class="icon is-small is-left">
               <i class="fas fa-phone"></i>
@@ -49,7 +49,7 @@
             <input
               class="input custom-input"
               type="email"
-              placeholder="Escribe tu correo electrónico"
+              value="tophbei@acarreosappa.com"
             />
             <span class="icon is-small is-left">
               <i class="fas fa-envelope"></i>
@@ -62,7 +62,7 @@
             <input
               class="input custom-input"
               type="password"
-              placeholder="Escribe tu contraseña"
+              value="Escribe tu contraseña"
             />
             <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
@@ -82,6 +82,7 @@
 
 <style scoped>
 .custom-input {
+  pointer-events: none;
   border: none;
   border-bottom: 0.1rem solid gray;
   box-shadow: none;
