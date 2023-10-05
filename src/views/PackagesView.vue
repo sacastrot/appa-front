@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import NewServiceView from "../components/NewServiceCard.vue";
+    import NewServiceView from "../components/core/NewServiceCard.vue";
 </script>
 
 <template>

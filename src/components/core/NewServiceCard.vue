@@ -5,7 +5,7 @@
     <div class="card" v-if="$route.name == 'acarreos'" style="background: linear-gradient(0deg, rgba(155,191,225,0) 0%, rgba(155,191,225,1) 100%);">
         <div class="card-content">
             <figure>
-                <img src="../assets/img/new-acarreos.svg" alt="Acarreos image">
+                <img src="/img/new-acarreos.svg" alt="Acarreos image">
             </figure>
             <div class="card-text">
                 <span class="material-symbols-outlined"  style="color: var(--title-section);">add_circle</span>
@@ -16,7 +16,7 @@
     <div class="card" v-else-if="$route.name == 'paquetes'" style="background: linear-gradient(0deg, rgba(228,113,32,0) 0%, rgba(228,113,32,1) 100%);">
         <div class="card-content">
             <figure>
-                <img src="../assets/img/new-paquetes.svg" alt="Paquetes image">
+                <img src="/img/new-paquetes.svg" alt="Paquetes image">
             </figure>
             <div class="card-text">
                 <span class="material-symbols-outlined"  style="color: var(--color-primary-orange);">add_circle</span>
@@ -54,7 +54,7 @@
     padding-top: 0.1rem;
     padding-bottom: 1rem;
     background-position: 0 100%; 
-    background-size: 0% 0.2rem;
+    background-size: 0 0.2rem;
     background-repeat: no-repeat;
     transition:
         background-size 0.3s,

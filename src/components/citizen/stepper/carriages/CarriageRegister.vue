@@ -1,24 +1,18 @@
 <script setup lang="ts">
 
-//@ts-ignore
-import Stepper from "@/components/core/Stepper.vue";
-//@ts-ignore
-import FirstStep from "@/components/carriages/stepper/FirstStep.vue";
-//@ts-ignore
-import SecondStep from "@/components/carriages/stepper/SecondStep.vue";
-//@ts-ignore
-import ThirdStep from "@/components/carriages/stepper/ThirdStep.vue";
-//@ts-ignore
-import FourthStep from "@/components/carriages/stepper/FourthStep.vue";
-//@ts-ignore
-import FifthStep from "@/components/carriages/stepper/FifthStep.vue";
-//@ts-ignore
-import FinalStep from "@/components/carriages/stepper/FinalStep.vue";
+
 //@ts-ignore
 import type {Steps, StepComponent} from "@/types/intefaces";
 
 //@ts-ignore
 import {useCarriagesStore} from "@/stores/carriages";
+import FirstStep from "@/components/citizen/stepper/carriages/FirstStep.vue";
+import SecondStep from "@/components/citizen/stepper/carriages/SecondStep.vue";
+import ThirdStep from "@/components/citizen/stepper/carriages/ThirdStep.vue";
+import FourthStep from "@/components/citizen/stepper/carriages/FourthStep.vue";
+import FifthStep from "@/components/citizen/stepper/carriages/FifthStep.vue";
+import FinalStep from "@/components/citizen/stepper/carriages/FinalStep.vue";
+import Stepper from "@/components/core/Stepper.vue";
 
 const carriagesStore = useCarriagesStore();
 

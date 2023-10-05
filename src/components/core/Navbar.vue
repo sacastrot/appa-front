@@ -17,7 +17,7 @@ export default defineComponent({
         <div class="container">
             <div class="navbar-brand">
                 <RouterLink to="/">
-                    <img src="/logo-white.svg" alt="Acarreos Appa logo">
+                    <img src="/img/logo-white.svg" alt="Acarreos Appa logo">
                 </RouterLink>
                 <RouterLink to="/" class="brand-text"> Acarreos Appa </RouterLink>
                 <div  
@@ -51,9 +51,6 @@ export default defineComponent({
 </template>
 
 <style scoped>
-.container {
-    max-width: 100%;
-}
 .navbar{
     height: 5rem;
     background-color: var(--navbar);
@@ -84,7 +81,7 @@ export default defineComponent({
     padding-bottom: 0.5rem;
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--color-primary-gray);
+    color: var(--color-primary-white);
     display: flex;
     align-items: center;
 }

@@ -3,19 +3,13 @@
 import Stepper from "@/components/core/Stepper.vue";
 //@ts-ignore
 import type  { Steps, StepComponent} from "@/types/intefaces";
-//@ts-ignore
-import LocationOrigin from "@/components/packages/stepper/LocationOrigin.vue";
-//@ts-ignore
-import LocationDestiny from "@/components/packages/stepper/LocationDestiny.vue";
-//@ts-ignore
-import PackageDimensions from "@/components/packages/stepper/PackageDimensions.vue";
-//@ts-ignore
-import PackageWeight from "@/components/packages/stepper/PackageWeight.vue";
-//@ts-ignore
-import Ticket from "@/components/packages/stepper/Ticket.vue";
-//@ts-ignore
-import Success from "@/components/packages/stepper/Success.vue";
-//@ts-ignore
+import LocationOrigin from "@/components/citizen/stepper/packages/LocationOrigin.vue";
+import LocationDestiny from "@/components/citizen/stepper/packages/LocationDestiny.vue";
+import PackageDimensions from "@/components/citizen/stepper/packages/PackageDimensions.vue";
+import PackageWeight from "@/components/citizen/stepper/packages/PackageWeight.vue";
+import Ticket from "@/components/citizen/stepper/packages/Ticket.vue";
+import Success from "@/components/citizen/stepper/packages/Success.vue";
+
 
 const firstStep: StepComponent = {
   finalStep: false,

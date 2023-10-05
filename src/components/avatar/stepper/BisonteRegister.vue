@@ -1,18 +1,11 @@
 <script setup lang="ts">
-//@ts-ignore
-import {StepComponent, Steps} from "@/types/intefaces";
-//@ts-ignore
+import NameStep from "@/components/avatar/stepper/NameStep.vue";
+import IdStep from "@/components/avatar/stepper/IdStep.vue";
+import EmailStep from "@/components/avatar/stepper/EmailStep.vue";
+import VehicleStep from "@/components/avatar/stepper/VehicleStep.vue";
+import Success from "@/components/citizen/stepper/packages/Success.vue";
+import type {StepComponent, Steps} from "@/types/intefaces";
 import Stepper from "@/components/core/Stepper.vue";
-//@ts-ignore
-import NameStep from "@/components/bisontes/stepper/NameStep.vue";
-//@ts-ignore
-import IdStep from "@/components/bisontes/stepper/IdStep.vue";
-//@ts-ignore
-import EmailStep from "@/components/bisontes/stepper/EmailStep.vue";
-//@ts-ignore
-import VehicleStep from "@/components/bisontes/stepper/VehicleStep.vue";
-//@ts-ignore
-import Success from "@/components/bisontes/stepper/Success.vue";
 
 const nameStep: StepComponent = {
   finalStep: false,
