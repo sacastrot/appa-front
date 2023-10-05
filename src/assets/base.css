@@ -2,6 +2,8 @@
   --color-primary-orange: #E47120;
   --color-primary-brown: #964738;
   --color-primary-blue: #9BBFE1;
+  --color-secondary-brown: #5A1807;
+  --color-secondary-brown-blur: rgba(90, 24, 7, 0.5);
   --color-soft-blue: #F5F8FB;
   --color-seconday-orange: #FFF5EA;
   --color-primary-white: #FFFFFF;
@@ -16,7 +18,8 @@
   --active-menu: var(--color-primary-orange);
   --confirm-messagge: var(--color-primary-orange);
   --title-section: var(--color-primary-brown);
-  --stepper-steps: var(--color-primary-brown);
+  --stepper-steps: var(--color-secondary-brown);
+  --stepper-steps-blur: var(--color-secondary-brown-blur);
   --navbar: var(--color-primary-blue);
   --card-section: var(--color-primary-blue);
   --background: var(--color-soft-blue);
