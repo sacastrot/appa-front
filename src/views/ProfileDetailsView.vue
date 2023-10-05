@@ -1,8 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="columns is-centered">
-    <div class="column is-half">
+  <div class="columns is-centered ">
+    <div class="column is-5">
       <div class="card">
         <div class="squared">
           <div class="avatar_container">
@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="rotate"></div>
-        <div class="habitante-informacion">
+        <div class="citizen_information">
           <Span>Toph Beifong</Span>
           <span class="icon is-small is-left">
             <img src="/form_icons/mail_gray_icon.svg" />
@@ -18,7 +18,7 @@
           </span>
         </div>
       </div>
-      <div class="formulario">
+      <div class="form">
         <h1 class="title is-4 has-text-centered">Detalles del Perfil</h1>
         <div class="field">
           <label class="label">Nombre</label>
@@ -69,13 +69,13 @@
           </div>
         </div>
       </div>
-      <button class="button is-fullwidth editar_perfil_boton">
+      <button class="button is-fullwidth edit_profile_buttom">
         <span class="icon is-small is-left">
           <img src="/form_icons/edit_user_icon.svg" />
         </span>
         <p>Editar perfil</p>
       </button>
-      <button class="button is-fullwidth eliminar_perfil_boton">
+      <button class="button is-fullwidth delete_profile_buttom">
         <span class="icon is-small is-left">
           <img src="/form_icons/trash_icon.svg" />
         </span>
@@ -93,7 +93,7 @@
   box-shadow: none;
   border-radius: 0;
   padding: 0;
-  font-size: 1rem;
+  font-size: 1.5rem;
   outline: none;
   background-color: transparent;
 }
@@ -146,7 +146,7 @@
   border-bottom-left-radius: 0.8rem;
 }
 
-.habitante-informacion {
+.citizen_information {
   margin: auto;
   display: flex;
   width: 50%;
@@ -158,11 +158,11 @@
   justify-content: center;
 }
 
-.habitante-informacion span {
+.citizen_information span {
   font-size: 2rem;
   font-weight: bold;
 }
-.habitante-informacion p {
+.citizen_information p {
   font-size: 1rem;
 }
 .avatar_container {
@@ -182,20 +182,32 @@
   background-position: center;
   background-image: url("/avatar/logo-card-beifong.svg");
 }
-.editar_perfil_boton {
+.edit_profile_buttom {
   background-color: var(--color-primary-gray);
   color: white;
   font-weight: bold;
+  font-size: 1.5rem;
 }
-.eliminar_perfil_boton {
+.delete_profile_buttom {
   margin-top: 0.5rem;
   background-color: var(--color-primary-orange);
   color: white;
   font-weight: bold;
+  font-size: 1.5rem;
 }
 
-.formulario {
+.form{
   margin-left: 3rem;
   margin-right: 3rem;
 }
+
+.icon{
+  margin-top: 0.6rem;
+}
+
+/*.column{
+  max-width: 80%;
+  margin: 0 auto;
+}*/
 </style>
+	
