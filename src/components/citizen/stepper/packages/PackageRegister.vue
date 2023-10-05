@@ -1,0 +1,50 @@
+<script setup lang="ts">
+//@ts-ignore
+import Stepper from "@/components/core/Stepper.vue";
+//@ts-ignore
+import type  { Steps, StepComponent} from "@/types/intefaces";
+import LocationOrigin from "@/components/citizen/stepper/packages/LocationOrigin.vue";
+import LocationDestiny from "@/components/citizen/stepper/packages/LocationDestiny.vue";
+import PackageDimensions from "@/components/citizen/stepper/packages/PackageDimensions.vue";
+import PackageWeight from "@/components/citizen/stepper/packages/PackageWeight.vue";
+import Ticket from "@/components/citizen/stepper/packages/Ticket.vue";
+import Success from "@/components/citizen/stepper/packages/Success.vue";
+
+
+const firstStep: StepComponent = {
+  finalStep: false,
+  value: LocationOrigin,
+}
+const secondtStep: StepComponent = {
+  finalStep: false,
+  value: LocationDestiny
+}
+const thirdStep: StepComponent = {
+  finalStep: false,
+  value: PackageDimensions
+}
+const fourthStep: StepComponent = {
+  finalStep: false,
+  value: PackageWeight
+}
+const fifthStep: StepComponent = {
+  finalStep: true,
+  value: Ticket
+}
+const finalStep: StepComponent = {
+  finalStep: false,
+  value: Success
+}
+const appStep: Steps = {
+  steps: 6,
+  listStepsComponents: [firstStep, secondtStep, thirdStep, fourthStep, fifthStep, finalStep]
+}
+</script>
+
+<template>
+  <Stepper :steps="appStep"/>
+</template>
+
+<style scoped>
+
+</style>

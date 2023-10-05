@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host --port 5173",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -11,12 +11,16 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
+<<<<<<< HEAD
     "@fortawesome/free-brands-svg-icons": "^6.4.2",
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
+=======
+>>>>>>> develop
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "pinia": "^2.1.6",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",
