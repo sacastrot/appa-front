@@ -1,6 +1,10 @@
+<script setup lang="ts">
+import ProfileDetailsView from "./ProfileDetailsView.vue";
+</script>
+
 <template>
     <main class="profile-page">
-        <h1>Perfil habitante de nación</h1>
+        <ProfileDetailsView />
     </main>
 </template>
 
