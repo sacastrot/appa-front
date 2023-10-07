@@ -102,6 +102,9 @@ a.navbar-item:hover{
     
 }
 
+.navbar-menu {
+    background-color: var(--navbar);
+}
 
 .material-symbols-outlined{
     padding-top: 0.2rem;

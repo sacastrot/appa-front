@@ -9,7 +9,7 @@
             </figure>
             <div class="card-text">
                 <span class="material-symbols-outlined"  style="color: var(--title-section);">add_circle</span>
-                <p class="title is-2"  style="color: var(--title-section); background-image: linear-gradient(var(--title-section) 0 0);">Nuevo servicio de {{ $route.name }}</p>
+                <p class="title is-2"  style="color: var(--title-section); background-image: linear-gradient(var(--title-section) 0 0);">Nuevo servicio de acarreos</p>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
             </figure>
             <div class="card-text">
                 <span class="material-symbols-outlined"  style="color: var(--color-primary-orange);">add_circle</span>
-                <p class="title is-2" style="color: var(--color-primary-orange); background-image: linear-gradient(var(--color-primary-orange) 0 0);">Nuevo servicio de {{ $route.name }}</p>
+                <p class="title is-2" style="color: var(--color-primary-orange); background-image: linear-gradient(var(--color-primary-orange) 0 0);">Nuevo servicio de paquetes</p>
             </div>
         </div>
     </div>
