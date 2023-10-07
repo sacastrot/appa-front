@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="card" v-if="$route.name == 'acarreos'" style="background: linear-gradient(0deg, rgba(155,191,225,0) 0%, rgba(155,191,225,1) 100%);">
+    <div class="card" v-if="$route.name == 'carriages'" style="background: linear-gradient(0deg, rgba(155,191,225,0) 0%, rgba(155,191,225,1) 100%);">
         <div class="card-content">
             <figure>
                 <img src="/img/new-acarreos.svg" alt="Acarreos image">
@@ -13,7 +13,7 @@
             </div>
         </div>
     </div>
-    <div class="card" v-else-if="$route.name == 'paquetes'" style="background: linear-gradient(0deg, rgba(228,113,32,0) 0%, rgba(228,113,32,1) 100%);">
+    <div class="card" v-else-if="$route.name == 'packages'" style="background: linear-gradient(0deg, rgba(228,113,32,0) 0%, rgba(228,113,32,1) 100%);">
         <div class="card-content">
             <figure>
                 <img src="/img/new-paquetes.svg" alt="Paquetes image">

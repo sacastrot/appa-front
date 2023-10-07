@@ -9,32 +9,32 @@ import NewServiceView from "../views/NewServiceView.vue";
 const routes: RouteRecordRaw[] = [
     {
         path: "/",
-        name: "inicio",
+        name: "home",
         component: HomeView
     },
     {
-        path: "/acarreos",
-        name: "acarreos",
+        path: "/carriages",
+        name: "carriages",
         component: CarriagesView
     },
     {
-        path: "/paquetes",
-        name: "paquetes",
+        path: "/packages",
+        name: "packages",
         component: PackagesView
     },
     {
-        path: "/perfil",
-        name: "perfil",
+        path: "/profile",
+        name: "profile",
         component: ProfileView
     },
     {
-        path: "/paquetes/registrar",
-        name: "registrar-paquetes",
+        path: "/packages/register",
+        name: "register-packages",
         component: NewServiceView
     },
     {
-        path: "/acarreos/registrar",
-        name: "registrar-acarreos",
+        path: "/carriages/register",
+        name: "register-carriages",
         component: NewServiceView
     }
 ];
