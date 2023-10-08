@@ -1,5 +1,4 @@
 <script setup lang="ts">
-//@ts-ignore
 import {useBisontesStore} from "@/stores/bisontes";
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
 

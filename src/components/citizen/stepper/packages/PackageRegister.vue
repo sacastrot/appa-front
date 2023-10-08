@@ -1,7 +1,5 @@
 <script setup lang="ts">
-//@ts-ignore
 import Stepper from "@/components/core/Stepper.vue";
-//@ts-ignore
 import type  { Steps, StepComponent} from "@/types/intefaces";
 import LocationOrigin from "@/components/citizen/stepper/packages/LocationOrigin.vue";
 import LocationDestiny from "@/components/citizen/stepper/packages/LocationDestiny.vue";

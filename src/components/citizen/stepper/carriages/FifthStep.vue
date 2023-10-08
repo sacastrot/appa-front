@@ -1,5 +1,4 @@
 <script setup lang="ts">
-//@ts-ignore
 import  {useCarriagesStore} from "@/stores/carriages";
 import {onBeforeMount} from "vue";
 

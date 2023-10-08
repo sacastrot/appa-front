@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import {onBeforeUnmount} from "vue";
-//@ts-ignore
 import {useCarriagesStore} from "@/stores/carriages";
 
 const carriagesStore = useCarriagesStore()

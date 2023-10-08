@@ -1,8 +1,6 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-//@ts-ignore
 import type {Carriage} from "@/types/intefaces";
-//@ts-ignore
 import {Checkpoint, NationType} from "@/types/intefaces";
 
 /**

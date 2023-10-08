@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-//@ts-ignore
 import type {StepComponent} from "@/types/intefaces";
-//@ts-ignore
 //steps
 const {steps} = defineProps<{
   steps: {

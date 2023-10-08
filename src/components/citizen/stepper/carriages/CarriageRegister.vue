@@ -1,10 +1,8 @@
 <script setup lang="ts">
 
 
-//@ts-ignore
 import type {Steps, StepComponent} from "@/types/intefaces";
 
-//@ts-ignore
 import {useCarriagesStore} from "@/stores/carriages";
 import FirstStep from "@/components/citizen/stepper/carriages/FirstStep.vue";
 import SecondStep from "@/components/citizen/stepper/carriages/SecondStep.vue";
