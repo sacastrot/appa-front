@@ -2,25 +2,25 @@
 </script>
 
 <template>
-    <div class="card" v-if="$route.name == 'acarreos'" style="background: linear-gradient(0deg, rgba(155,191,225,0) 0%, rgba(155,191,225,1) 100%);">
+    <div class="card" v-if="$route.name == 'carriages'" style="background: linear-gradient(0deg, rgba(155,191,225,0) 0%, rgba(155,191,225,1) 100%);">
         <div class="card-content">
             <figure>
                 <img src="/img/new-acarreos.svg" alt="Acarreos image">
             </figure>
             <div class="card-text">
                 <span class="material-symbols-outlined"  style="color: var(--title-section);">add_circle</span>
-                <p class="title is-2"  style="color: var(--title-section); background-image: linear-gradient(var(--title-section) 0 0);">Nuevo servicio de {{ $route.name }}</p>
+                <p class="title is-2"  style="color: var(--title-section); background-image: linear-gradient(var(--title-section) 0 0);">Nuevo servicio de acarreos</p>
             </div>
         </div>
     </div>
-    <div class="card" v-else-if="$route.name == 'paquetes'" style="background: linear-gradient(0deg, rgba(228,113,32,0) 0%, rgba(228,113,32,1) 100%);">
+    <div class="card" v-else-if="$route.name == 'packages'" style="background: linear-gradient(0deg, rgba(228,113,32,0) 0%, rgba(228,113,32,1) 100%);">
         <div class="card-content">
             <figure>
                 <img src="/img/new-paquetes.svg" alt="Paquetes image">
             </figure>
             <div class="card-text">
                 <span class="material-symbols-outlined"  style="color: var(--color-primary-orange);">add_circle</span>
-                <p class="title is-2" style="color: var(--color-primary-orange); background-image: linear-gradient(var(--color-primary-orange) 0 0);">Nuevo servicio de {{ $route.name }}</p>
+                <p class="title is-2" style="color: var(--color-primary-orange); background-image: linear-gradient(var(--color-primary-orange) 0 0);">Nuevo servicio de paquetes</p>
             </div>
         </div>
     </div>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-    import NewServiceView from "../components/core/NewServiceCard.vue";
+    import NewServiceCard from "../components/core/NewServiceCard.vue";
 </script>
 
 <template>
-    <main class="acarreos-page">
+    <main class="carriages-page">
         <h1>Acarreos</h1>
-        <RouterLink to="/acarreos/registrar">
-            <NewServiceView />
+        <RouterLink to="/carriages/register">
+            <NewServiceCard />
         </RouterLink>
     </main>
 </template>
