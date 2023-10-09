@@ -5,6 +5,7 @@ import CarriagesView from "@/views/CarriagesView.vue";
 import PackagesView from "@/views/PackagesView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import NewServiceView from "@/views/NewServiceView.vue";
+import NewCarriageView from "@/views/NewCarriageView.vue";
 
 
 const routes: RouteRecordRaw[] = [
@@ -36,7 +37,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/acarreos/registrar",
         name: "registrar-acarreos",
-        component: NewServiceView
+        component: NewCarriageView
     }
 ];
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
+import {useRouter} from "vue-router";
 import type {StepComponent} from "@/types/intefaces";
 //steps
 const {steps} = defineProps<{
@@ -9,6 +10,7 @@ const {steps} = defineProps<{
   }
 }>()
 
+const router = useRouter();
 const currentStep = ref<number>(1)
 const validateStep = ref(false);
 
@@ -20,6 +22,7 @@ const onValidate = (validate: boolean) => {
 //Functions to change step
 //TODO: Change to use router
 const returnHome = () => {
+  router.push("/");
 }
 //Functions to change step to next
 const nextStep = () => {
@@ -75,7 +78,6 @@ const backStep = () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid black;
   max-width: 900px;
   max-height: 600px;
   min-height: 500px;
@@ -85,9 +87,10 @@ const backStep = () => {
 
   .steps {
     display: flex;
+    max-width: 100%;
     justify-content: center;
     font-size: 1.6rem;
-    gap: 10px;
+    gap: 7px;
 
     .step {
       display: flex;
