@@ -37,7 +37,7 @@ const toggleGuide = () => {
         </div>
         <div class="location-destination">
           <h1>{{ carriage.destinyNation}}</h1>
-          <p>{{ carriage.arrived?  carriage.arrived.toLocaleDateString("en-US", {day: 'numeric', month: 'short', year: 'numeric'}): "....."}}</p>
+          <p>{{ carriage.arrived?  carriage.arrived.toLocaleDateString("en-US", {day: 'numeric', month: 'short', year: 'numeric'}): ""}}</p>
         </div>
       </div>
     </div>
@@ -65,7 +65,9 @@ const toggleGuide = () => {
 </template>
 
 <style scoped>
+
 ::-webkit-scrollbar {display: none;}
+
 .carriages-card {
   position: relative;
   display: flex;
@@ -74,7 +76,7 @@ const toggleGuide = () => {
   width: 100%;
   height: 150px;
   border-radius: 10px;
-  padding: 0 0 0 1rem;
+  padding: 0 0 0 10px;
   margin-bottom: 30px;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
   background-color: var(--color-primary-white);

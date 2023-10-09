@@ -73,6 +73,8 @@ const backStep = () => {
 </template>
 
 <style scoped>
+::-webkit-scrollbar {display: none;}
+
 .container {
   padding: 20px 0;
   display: flex;

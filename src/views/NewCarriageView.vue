@@ -8,9 +8,6 @@ import FourthStep from "@/components/citizen/stepper/carriages/FourthStep.vue";
 import FifthStep from "@/components/citizen/stepper/carriages/FifthStep.vue";
 import FinalStep from "@/components/citizen/stepper/carriages/FinalStep.vue";
 import Stepper from "@/components/core/Stepper.vue";
-import {useCarriagesStore} from "@/stores/carriages";
-
-const carriagesStore = useCarriagesStore();
 
 
 const firstStep: StepComponent = {
