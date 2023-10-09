@@ -39,6 +39,8 @@ const isActive = ref(false);
           </div>
         </div>
 
+        <h2>Calculadora</h2>
+        <p>Te damos un estimado del valor de tu paquete</p>
         <PriceCalculator/>
 
         <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
