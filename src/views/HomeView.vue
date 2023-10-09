@@ -44,13 +44,13 @@ const isActive = ref(false);
         <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
           <span class="add">+</span>
           <ul>
-            <RouterLink to="/acarreos/registrar">
+            <RouterLink to="/carriages/register">
               <li>
                 <p>Nuevo Acarreo&nbsp;</p>
                 <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
               </li>
             </RouterLink>
-            <RouterLink to="/paquetes/registrar">
+            <RouterLink to="/packages/register">
               <li>
                 <p>Nuevo Paquete</p>
                 <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>

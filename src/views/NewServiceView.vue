@@ -10,8 +10,10 @@ const routeName = String(route.name);
 
 <template>
     <main class="register-package-page">
-        <h1>Registrar {{ routeName.split("-")[1] }}</h1>
-        <div class="register-carriage" v-if="routeName.split('-')[1] == 'acarreos'">
+        <h1 v-if="routeName.split('-')[1] == 'carriages'">Registrar acarreos</h1>
+        <h1 v-else>Registrar paquetes</h1>
+
+        <div class="register-carriage" v-if="routeName.split('-')[1] == 'carriages'">
             <CarriagesRegister />
         </div>
         <div class="register-package" v-else>

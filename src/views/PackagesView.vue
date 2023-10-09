@@ -1,12 +1,12 @@
 <script setup lang="ts">
-    import NewServiceView from "../components/core/NewServiceCard.vue";
+    import NewServiceCard from "../components/core/NewServiceCard.vue";
 </script>
 
 <template>
-    <main class="paquetes-page">
+    <main class="packages-page">
         <h1>Paquetes</h1>
-        <RouterLink to="/paquetes/registrar">
-            <NewServiceView />
+        <RouterLink to="/packages/register">
+            <NewServiceCard />
         </RouterLink>
     </main>
 </template>
