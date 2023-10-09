@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
+import PriceCalculator from "../components/citizen/PriceCalculator.vue"
 
 const isActive = ref(false);
 
@@ -37,6 +38,8 @@ const isActive = ref(false);
             </div>
           </div>
         </div>
+
+        <PriceCalculator/>
 
         <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
           <span class="add">+</span>
