@@ -33,27 +33,55 @@ const getDestinationCheckpointsList = () => {
             <div class="form-content">
                 <div class="form-inputs">
                     <h2>Lugar de origen</h2>
-                    <div class="select is-medium">
-                        <select v-model="originNation" @change="getOriginCheckpointsList">
-                            <option v-for="value in NationType" :value="stringToNation[value]" required> {{ value }}</option>
-                        </select>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <span class="select is-medium">
+                                <select v-model="originNation" @change="getOriginCheckpointsList">
+                                    <option v-for="value in NationType" :value="stringToNation[value]" required> {{ value }}</option>
+                                </select>
+                            </span>
+                            <span class="icon is-small is-left">
+                                <fa icon="map"></fa>
+                            </span>
+                        </p>
                     </div>
-                    <div class="select is-medium">
-                        <select v-model="originCheckpoint">
-                            <option v-for="value in origincheckpointList" :value="stringToCheckpoint[value]" required>{{value}}</option>
-                        </select>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <span class="select is-medium">
+                                <select v-model="originCheckpoint">
+                                    <option v-for="value in origincheckpointList" :value="stringToCheckpoint[value]">{{value}}</option>
+                                </select>
+                            </span>
+                            <span class="icon is-small is-left">
+                                <fa icon="location-dot"></fa>
+                            </span>
+                        </p>
                     </div>
 
                     <h2>Lugar de destino</h2>
-                    <div class="select is-medium">
-                        <select v-model="destinationNation" @change="getDestinationCheckpointsList">
-                            <option v-for="value in NationType" :value="stringToNation[value]"> {{ value }}</option>
-                        </select>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <span class="select is-medium">
+                                <select v-model="destinationNation" @change="getDestinationCheckpointsList">
+                                    <option v-for="value in NationType" :value="stringToNation[value]"> {{ value }}</option>
+                                </select>
+                            </span>
+                            <span class="icon is-small is-left">
+                                <fa icon="map"></fa>
+                            </span>
+                        </p>
                     </div>
-                    <div class="select is-medium">
-                        <select v-model="destinationCheckpoint">
-                            <option v-for="value in destinationcheckpointList" :value="stringToCheckpoint[value]">{{value}}</option>
-                        </select>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            <span class="select is-medium">
+                                <select v-model="destinationCheckpoint">
+                                    <option v-for="value in destinationcheckpointList" :value="stringToCheckpoint[value]">{{value}}</option>
+                                </select>
+                            </span>
+                            <span class="icon is-small is-left">
+                                <fa icon="location-dot"></fa>
+                            </span>
+                        </p>
                     </div>
 
                     <h2>Dimensiones del paquete</h2>
@@ -83,7 +111,7 @@ const getDestinationCheckpointsList = () => {
                         <p class="control has-icons-left">
                             <input name="weight" class="input is-medium" type="number" placeholder="Peso estimado" v-model="weight">
                             <span class="icon is-small is-left">
-                                <fa icon="ruler-vertical"></fa>
+                                <fa icon="weight-hanging"></fa>
                             </span>
                         </p>
                     </div>
@@ -107,6 +135,7 @@ const getDestinationCheckpointsList = () => {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--input-field);
 }
 form {
     align-self: center;
@@ -136,7 +165,7 @@ form {
             }
         }
 
-        .field.is-grouped.calculate-action {
+        .calculate-action {
             justify-content: space-between;
             .button {
                 background-color: var(--color-primary-orange);
