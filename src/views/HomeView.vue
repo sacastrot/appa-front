@@ -103,16 +103,10 @@ main {
     }
   } 
   .track-order {
-    .icon {
-      padding-left: 0.5rem;
-      padding-top: 0.8rem;
-    }
     .control.has-icons-left {
       .input {
-        /* padding-left: 3rem; */
         width: 80rem;
         background-color: var(--input-field);
-        font-size: 1.5rem;
         box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
       }
     } 
