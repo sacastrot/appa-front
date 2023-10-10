@@ -49,7 +49,7 @@ const calculateDistance = computed(() => {
 const calculatePriceDimensions = computed(() => {
     // how big the package is
     const packageVolume = width.value * length.value * height.value
-    if (packageVolume != 0 && weight.value != 0)
+    if (packageVolume != 0 && (weight.value != 0 && weight.value != null))
     {
         // if the package is big and it weights little the base price is 10000
         return packageVolume > weight.value ? 10000 : 7000
@@ -67,15 +67,25 @@ const calculatePrice = computed(() => {
     return 0
 })
 
+// const buttonHelp = ref("Hay campos obligatorios sin llenar.")
+// const buttonShowHelp = ref(false)
 const showPrice = () => {
-    if (calculatePrice.value != 0)
-    {
-        isActive.value = true
-    } else {
-        isActive.value = false
-    }
+    isActive.value = calculatePrice.value != 0 ? true : false
+    // buttonShowHelp.value = (originNationShowHelp || destinationNationShowHelp || originCheckpointShowHelp || destinationCheckpointShowHelp || dimensionsShowHelp || weightShowHelp) ? true : false
     return isActive.value
 }
+
+// show error messages
+const nationHelp = ref("Seleccione una nación.")
+const originNationShowHelp = computed(() => originNation.value != NationType.Unknown ? false : true)
+const destinationNationShowHelp = computed(() => destinationNation.value != NationType.Unknown ? false : true)
+const checkpointHelp = ref("Seleccione un punto de referencia de esa nación.")
+const originCheckpointShowHelp = computed(() => originCheckpoint.value != Checkpoint.Unknown ? false : true)
+const destinationCheckpointShowHelp = computed(() => destinationCheckpoint.value != Checkpoint.Unknown ? false : true)
+const dimensionsHelp = ref("Estos campos son obligatorios.")
+const dimensionsShowHelp = computed(() => (width.value != null && length.value != null && height.value != null) ? false : true)
+const weightHelp = ref("Este campo es obligatorio.")
+const weightShowHelp = computed(() => (weight.value != null) ? false : true)
 
 //Get checkpoints by nation
 const origincheckpointList = ref<Checkpoint[]>()
@@ -103,6 +113,7 @@ const getDestinationCheckpointsList = () => {
                                 <select v-model="originNation" @change="getOriginCheckpointsList">
                                     <option v-for="value in NationType" :value="stringToNation[value]" required> {{ value }}</option>
                                 </select>
+                                <p v-if="originNationShowHelp" class="help">{{nationHelp}}</p>
                             </span>
                             <span class="icon is-small is-left">
                                 <fa icon="map"></fa>
@@ -115,6 +126,7 @@ const getDestinationCheckpointsList = () => {
                                 <select v-model="originCheckpoint">
                                     <option v-for="value in origincheckpointList" :value="stringToCheckpoint[value]" required>{{value}}</option>
                                 </select>
+                                <p v-if="originCheckpointShowHelp" class="help">{{checkpointHelp}}</p>
                             </span>
                             <span class="icon is-small is-left">
                                 <fa icon="location-dot"></fa>
@@ -129,6 +141,7 @@ const getDestinationCheckpointsList = () => {
                                 <select v-model="destinationNation" @change="getDestinationCheckpointsList" required>
                                     <option v-for="value in NationType" :value="stringToNation[value]"> {{ value }}</option>
                                 </select>
+                                <p v-if="destinationNationShowHelp" class="help">{{nationHelp}}</p>
                             </span>
                             <span class="icon is-small is-left">
                                 <fa icon="map"></fa>
@@ -141,6 +154,7 @@ const getDestinationCheckpointsList = () => {
                                 <select v-model="destinationCheckpoint">
                                     <option v-for="value in destinationcheckpointList" :value="stringToCheckpoint[value]" required>{{value}}</option>
                                 </select>
+                                <p v-if="destinationCheckpointShowHelp" class="help">{{checkpointHelp}}</p>
                             </span>
                             <span class="icon is-small is-left">
                                 <fa icon="location-dot"></fa>
@@ -152,6 +166,7 @@ const getDestinationCheckpointsList = () => {
                     <div class="field is-grouped">
                         <p class="control has-icons-left">
                             <input name="height" class="input is-medium" type="number" placeholder="Alto" v-model="height" min="1" max="500" required>
+                            <p v-if="dimensionsShowHelp" class="help">{{dimensionsHelp}}</p>
                             <span class="icon is-small is-left">
                                 <fa icon="ruler-vertical"></fa>
                             </span>
@@ -169,11 +184,13 @@ const getDestinationCheckpointsList = () => {
                             </span>
                         </p>
                     </div>
+                    
 
                     <h2>Peso estimado</h2>
                     <div class="field">
                         <p class="control has-icons-left">
                             <input name="weight" class="input is-medium" type="number" placeholder="Peso estimado" v-model="weight" required>
+                            <p v-if="weightShowHelp" class="help">{{weightHelp}}</p>
                             <span class="icon is-small is-left">
                                 <fa icon="weight-hanging"></fa>
                             </span>
@@ -183,9 +200,10 @@ const getDestinationCheckpointsList = () => {
                     <div class="field is-grouped calculate-action">
                         <div class="control">
                             <button class="button is-link" type="button" @click="showPrice">Calcular</button>
+                            <!-- <p v-if="buttonShowHelp" class="help">{{buttonHelp}}</p> -->
                         </div>
                         <div class="estimated-calculation">
-                            <p v-if="calculatePrice != 0 && isActive">$ {{ calculatePrice.toLocaleString('es-CO') }}</p>
+                            <p v-if="isActive">$ {{ calculatePrice.toLocaleString('es-CO') }}</p>
                         </div>
                     </div>
                 </div>
@@ -215,7 +233,7 @@ form {
         .form-inputs {
             width: 100%;
             margin: 0 auto;
-            .select{
+            .select {
                 width: 100%;
                 margin-bottom: 10px;
                 & select{
@@ -227,6 +245,10 @@ form {
                 font-size: 1.2rem;
                 background-color: var(--color-primary-white);
             }
+        }
+
+        .help {
+            color: var(--color-primary-orange);
         }
 
         .calculate-action {
