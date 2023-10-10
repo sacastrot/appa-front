@@ -51,6 +51,7 @@ interface PackageState{
 interface Carriage {
     created?: Date;
     arrived?: Date;
+    guideNumber?: number;
     originNation: NationType,
     originCheckpoint: Checkpoint,
     destinyNation: NationType,

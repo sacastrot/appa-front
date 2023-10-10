@@ -13,6 +13,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
     const currentCarriage = ref<Carriage>({
         created: undefined,
         arrived: undefined,
+        guideNumber: undefined,
         originNation: NationType.Unknown,
         originCheckpoint: Checkpoint.Unknown,
         destinyNation: NationType.Unknown,
@@ -24,11 +25,22 @@ export const useCarriagesStore = defineStore("carriages", () => {
 
     const carriages = ref<Carriage[]>([])
 
+    const currentGuideNumber = ref<number>(0)
+
     //TODO: create a getter that computed the minimum price to a carriages based on origin and destiny
     //getters
 
     //actions
-    /** Set the arrived date of the current carriages
+
+    /** Set the created date of the current carriage
+     * @param {Date}  date - A date param.
+     * @returns {void} A void return.
+     */
+    function setCreated(date: Date): void {
+        currentCarriage.value.created = date
+    }
+
+    /** Set the arrived date of the current carriage
      * @param {Date}  date - A date param.
      * @returns {void} A void return.
      */
@@ -36,7 +48,15 @@ export const useCarriagesStore = defineStore("carriages", () => {
         currentCarriage.value.arrived = date
     }
 
-    /** Set the origin direction of the current carriages
+    /** Set the guide number of the current carriage
+     * @param {number}  guideNumber - A number param.
+     * @returns {void} A void return.
+     */
+    function setGuide(guideNumber: number): void {
+        currentCarriage.value.guideNumber = guideNumber
+    }
+
+    /** Set the origin direction of the current carriage
      * @param {NationType}  originNation - A NationType param.
      * @param {Checkpoint}  originCheckpoint - A Checkpoint param.
      * @returns {void} A void return.
@@ -48,7 +68,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
         }
     }
 
-    /** Set the origin direction of the current carriages
+    /** Set the origin direction of the current carriage
      * @param {NationType}  destinyNation - A NationType param.
      * @param {Checkpoint}  destinyCheckpoint - A Checkpoint param.
      * @returns {void} A void return.
@@ -60,7 +80,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
         }
     }
 
-    /** Set the pick-up date of the current carriages
+    /** Set the pick-up date of the current carriage
      * @param {Date}  date - A Date param.
      * @returns {void} A void return.
      */
@@ -68,7 +88,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
         currentCarriage.value.pickUpDate = date
     }
 
-    /** Set the pick-up hour of the current carriages
+    /** Set the pick-up hour of the current carriage
      * @param {string}  hour - A string param.
      * @returns {void} A void return.
      */
@@ -76,7 +96,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
         currentCarriage.value.pickUpHour = hour
     }
 
-    /** Set the description of the current carriages
+    /** Set the description of the current carriage
      * @param {string}  description - A string param.
      * @returns {void} A void return.
      */
@@ -84,22 +104,26 @@ export const useCarriagesStore = defineStore("carriages", () => {
         currentCarriage.value.description = description
     }
 
-    /** Add the current carriages to the carriages list
+    /** Add the current carriage to the carriages list
      * @returns {void} A void return.
      */
     function addCarriage(): void {
+        setCreated(new Date())
+        const random = Math.random()
+        if (random > 0.5)  setArrived(new Date())
+        setGuide(currentGuideNumber.value)
+        currentGuideNumber.value++
         carriages.value.push(currentCarriage.value)
     }
 
-    /** Reset the  current carriages to its initial state
+    /** Reset the  current carriage to its initial state
      * @returns {void} A void return.
      */
     function reset(): void {
-        console.log("reset")
         currentCarriage.value = {
-            id: undefined,
             created: undefined,
             arrived: undefined,
+            guideNumber: undefined,
             originNation: NationType.Unknown,
             originCheckpoint: Checkpoint.Unknown,
             destinyNation: NationType.Unknown,
