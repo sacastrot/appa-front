@@ -14,7 +14,7 @@ const emitValidateStep = (value: boolean) => {
 }
 
 watch(description, () => {
-  if(description.value && description.value){
+  if(description.value){
     emitValidateStep(true);
   }else{
     emitValidateStep(false);

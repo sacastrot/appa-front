@@ -1,12 +1,12 @@
 <script setup lang="ts">
 
 import type {Steps, StepComponent} from "@/types/intefaces";
-import FirstStep from "@/components/citizen/stepper/carriages/FirstStep.vue";
-import SecondStep from "@/components/citizen/stepper/carriages/SecondStep.vue";
-import ThirdStep from "@/components/citizen/stepper/carriages/ThirdStep.vue";
-import FourthStep from "@/components/citizen/stepper/carriages/FourthStep.vue";
-import FifthStep from "@/components/citizen/stepper/carriages/FifthStep.vue";
-import FinalStep from "@/components/citizen/stepper/carriages/FinalStep.vue";
+import FirstStep from "@/components/citizen/stepper/carriages/LocationOrigin.vue";
+import SecondStep from "@/components/citizen/stepper/carriages/LocationDestiny.vue";
+import ThirdStep from "@/components/citizen/stepper/carriages/DateHour.vue";
+import FourthStep from "@/components/citizen/stepper/carriages/Description.vue";
+import FifthStep from "@/components/citizen/stepper/carriages/Bill.vue";
+import FinalStep from "@/components/citizen/stepper/carriages/Success.vue";
 import Stepper from "@/components/core/Stepper.vue";
 
 
