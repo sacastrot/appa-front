@@ -31,7 +31,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/paquetes/registrar",
         name: "registrar-paquetes",
-        component: NewServiceView
+        component: () => import("@/views/NewPackageView.vue")
     },
     {
         path: "/acarreos/registrar",

@@ -1,10 +1,31 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import {Checkpoint, NationType} from "@/types/intefaces";
+import {usePackagesStore} from "@/stores/packages";
+const packagesStore = usePackagesStore();
 
 const expand = ref<boolean>(false);
 const toggleExpand = () => {
   expand.value = !expand.value
 };
+
+const {packageValue} = defineProps<{
+  packageValue: {
+    created?: Date;
+    arrived?: Date;
+    originNation: NationType,
+    originCheckpoint: Checkpoint,
+    destinyNation: NationType,
+    destinyCheckpoint: Checkpoint,
+    guide: number,
+    length: number | undefined,
+    width: number | undefined,
+    height: number | undefined,
+    weight: number | undefined;
+    price: number | undefined;
+  }
+}>()
+
 </script>
 
 <template>
@@ -14,37 +35,37 @@ const toggleExpand = () => {
       <Transition name="fade-location">
         <div v-if="!expand" class="location-text">
           <div class="location-origin">
-            <h1>Nación de la Tierra</h1>
-            <p>7 de Ag, 2022</p>
+            <h1>{{ packageValue.originNation }}</h1>
+            <p>{{ packagesStore.getCreatedDate(packageValue) }}</p>
           </div>
           <div class="location-destination">
-            <h1>Nación de la Tierra</h1>
-            <p>7 de Ag, 2022</p>
+            <h1>{{ packageValue.destinyNation }}</h1>
+            <p>{{ packagesStore.formatDate(packageValue.arrived) }}</p>
           </div>
         </div>
       </Transition>
     </div>
     <div @click="toggleExpand" class="package-details" :class="[expand ? 'package-active' : 'package-inactive']">
       <Transition name="fade-details">
-        <span v-if="!expand" class="material-symbols-outlined" style="'wght': 200">package_2</span>
+        <span v-if="!expand" class="material-symbols-outlined" :style="{'color': 'white'}" >package_2</span>
         <div v-else class="content">
-          <div  class="features">
-            <span class="material-symbols-outlined" style="'wght': 200">package_2</span>
+          <div class="features">
+            <span class="material-symbols-outlined">package_2</span>
             <div class="price">
               <h1>Precio</h1>
-              <h1>$ XXX.XXX.XXX</h1>
+              <h1>{{ packageValue.price }}</h1>
             </div>
             <h1>Alto</h1>
-            <p>20 cm</p>
+            <p>{{ packageValue.height }} cm</p>
             <h1>Largo</h1>
-            <p>20 cm</p>
+            <p>{{ packageValue.length }} cm</p>
             <h1>Ancho</h1>
-            <p>20 cm</p>
+            <p>{{ packageValue.width }} cm</p>
             <h1>Peso</h1>
-            <p>20 kg</p>
+            <p>{{ packageValue.weight }} kg</p>
           </div>
           <div class="guide">
-            <p>Guía No. 123456164</p>
+            <p>Guía No. {{ packageValue.guide }}</p>
           </div>
         </div>
       </Transition>
@@ -110,8 +131,9 @@ const toggleExpand = () => {
   height: 100%;
   border-radius: 1rem;
   background-color: var(--color-primary-blue);
+
   .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0,  'wght' 200, 'GRAD' 0,  'opsz' 24;
+    font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
     font-size: 5rem;
     color: var(--color-primary-white);
   }
@@ -145,9 +167,14 @@ const toggleExpand = () => {
       .material-symbols-outlined {
         justify-self: center;
         grid-area: 1/ 1 / 2 span/ 2;
-        font-variation-settings: 'FILL' 0,  'wght' 200, 'GRAD' 0,  'opsz' 24;
+        font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
         font-size: 5rem;
-        color: var(--color-primary-orange);
+        .package-pending {
+          color: var(--pending-state);
+        }
+        .package-delivered {
+          color: var(--delivered-state);
+        }
       }
 
       .price {
@@ -177,11 +204,11 @@ const toggleExpand = () => {
   }
 }
 
+
+
 .package-details.package-inactive:hover {
   background-color: rgba(155, 191, 225, 0.27);
-  .material-symbols-outlined {
-    color: var(--card-section);
-  }
+
 }
 
 .package-active {

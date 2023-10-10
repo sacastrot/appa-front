@@ -75,19 +75,17 @@ const backStep = () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid black;
   max-width: 900px;
-  max-height: 600px;
+  max-height: 400px;
   min-height: 500px;
   height: 700px;
-  overflow-y: scroll;
   scroll-behavior: smooth;
 
   .steps {
     display: flex;
     justify-content: center;
     font-size: 1.6rem;
-    gap: 10px;
+    gap: 2px;
 
     .step {
       display: flex;

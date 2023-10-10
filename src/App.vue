@@ -4,7 +4,7 @@
 </script>
 
 <template>
-    <div class="container">
+    <div>
         <Navbar/>
         <RouterView />
     </div>

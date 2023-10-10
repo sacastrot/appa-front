@@ -41,6 +41,7 @@ interface PackageState{
     originCheckpoint: Checkpoint,
     destinyNation: NationType,
     destinyCheckpoint: Checkpoint,
+    guide: number;
     length: number | undefined,
     width: number | undefined,
     height: number | undefined,
