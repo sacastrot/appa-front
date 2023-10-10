@@ -13,12 +13,12 @@ const routeName = String(route.name);
         <h1 v-if="routeName.split('-')[1] == 'carriages'">Registrar acarreos</h1>
         <h1 v-else>Registrar paquetes</h1>
 
-        <div class="register-carriage" v-if="routeName.split('-')[1] == 'carriages'">
+        <!-- <div class="register-carriage" v-if="routeName.split('-')[1] == 'carriages'">
             <CarriagesRegister />
         </div>
         <div class="register-package" v-else>
             <PackagesRegister />
-        </div>
+        </div> -->
     </main>
 </template>
 
