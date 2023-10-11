@@ -1,20 +1,15 @@
 <script setup lang="ts">
 
-
-//@ts-ignore
 import type {Steps, StepComponent} from "@/types/intefaces";
-
-//@ts-ignore
-import {useCarriagesStore} from "@/stores/carriages";
-import FirstStep from "@/components/citizen/stepper/carriages/FirstStep.vue";
-import SecondStep from "@/components/citizen/stepper/carriages/SecondStep.vue";
-import ThirdStep from "@/components/citizen/stepper/carriages/ThirdStep.vue";
-import FourthStep from "@/components/citizen/stepper/carriages/FourthStep.vue";
-import FifthStep from "@/components/citizen/stepper/carriages/FifthStep.vue";
-import FinalStep from "@/components/citizen/stepper/carriages/FinalStep.vue";
+import FirstStep from "@/components/citizen/stepper/carriages/LocationOrigin.vue";
+import SecondStep from "@/components/citizen/stepper/carriages/LocationDestiny.vue";
+import ThirdStep from "@/components/citizen/stepper/carriages/DateHour.vue";
+import FourthStep from "@/components/citizen/stepper/carriages/Description.vue";
+import FifthStep from "@/components/citizen/stepper/carriages/Bill.vue";
+import FinalStep from "@/components/citizen/stepper/carriages/Success.vue";
 import Stepper from "@/components/core/Stepper.vue";
+import Hero from "@/components/core/Hero.vue";
 
-const carriagesStore = useCarriagesStore();
 
 const firstStep: StepComponent = {
   finalStep: false,
@@ -54,9 +49,19 @@ const steps: Steps = {
 </script>
 
 <template>
-  <Stepper :steps="steps"/>
+  <main>
+    <Hero :title="'Registrar Acarreo'"/>
+    <div class="content">
+      <Stepper :steps="steps"/>
+    </div>
+  </main>
 </template>
 
 <style scoped>
 
+.content {
+  width: 92%;
+  margin: 0 auto;
+  max-width: 80rem;
+}
 </style>

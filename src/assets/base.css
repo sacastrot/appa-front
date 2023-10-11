@@ -10,6 +10,7 @@
   /* Text */
   --color-primary-gray: #505050;
   --color-secondary-green: #349F91;
+  --color-primary-red: #D22200;
 }
 
 /* Semantic colors */
@@ -26,6 +27,8 @@
   --input-field: var(--color-seconday-orange);
   --primary-text: var(--color-primary-gray);
   --seconday-text: var(--color-secondary-green);
+  --pending-state: var(--color-primary-red);
+  --delivered-state: var(--color-secondary-green);
 }
 
 html{
@@ -42,24 +45,17 @@ html{
 }
 
 body {
-  min-height: 100vh;
+  min-height: calc(100vh - 5rem);
   color: var(--primary-text);
   background: var(--background);
   transition:
     color 0.5s,
     background-color 0.5s;
-  line-height: 1.6;
   font-family:
     Inter,
     sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-@media screen and (min-width: 200px){
-  .container {
-      max-width: 92%;
-  }
 }
 

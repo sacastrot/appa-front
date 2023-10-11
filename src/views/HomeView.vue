@@ -1,65 +1,74 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from "vue";
+import PriceCalculator from "../components/core/PriceCalculator.vue"
 
 const isActive = ref(false);
 
 </script>
 
 <template>
-  <div class="container">
-      <main class="home-page">
-      <header>
-        <div class="avatar">
-          <div class="image">
-            <img src="/img/Logo-background-brown.svg" alt="Appa Logo brown background">
-          </div>
-          <h1>Hola,<br>Toph Beifong</h1>
+  <main class="home-page">
+    <header>
+      <div class="avatar">
+        <div class="image">
+          <img src="/img/Logo-background-brown.svg" alt="Appa Logo brown background">
         </div>
-        <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
-      </header>
-        <div class="track-order">
-          <h2>Rastrear envío</h2>
-          <div class="field">
-            <p class="control has-icons-left">
-              <span class="icon is-left material-symbols-outlined">search</span>
-              <input class="input is-medium" type="text" placeholder="Número de guía">
-            </p>
-          </div>
+        <h1>Hola,<br>Toph Beifong</h1>
+      </div>
+      <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
+    </header>
+    <div class="track-order">
+      <h2>Rastrear envío</h2>
+      <div class="field">
+        <p class="control has-icons-left">
+          <span class="icon is-left material-symbols-outlined">search</span>
+          <input class="input is-medium" type="text" placeholder="Número de guía">
+        </p>
+      </div>
+    </div>
+    <div class="last-order">
+      <h2>Último pedido</h2>
+      <div class="box">
+        <div id="order-state">
+          <p>Entregado</p>
         </div>
-        <div class="last-order">
-          <h2>Último pedido</h2>
-          <div class="box">
-            <div id="order-state">
-              <p>Entregado</p>
-            </div>
-            <div id="order-detail">
-              <p><b>Acarreo<br>Destino:</b> Nación del fuego<br>Entregado el: 15 de Septiembre de 2023</p>
-            </div>
-          </div>
+        <div id="order-detail">
+          <p><b>Acarreo<br>Destino:</b> Nación del fuego<br>Entregado el: 15 de Septiembre de 2023</p>
         </div>
+      </div>
+    </div>
 
-        <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
-          <span class="add">+</span>
-          <ul>
-            <RouterLink to="/acarreos/registrar">
-              <li>
-                <p>Nuevo Acarreo&nbsp;</p>
-                <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
-              </li>
-            </RouterLink>
-            <RouterLink to="/paquetes/registrar">
-              <li>
-                <p>Nuevo Paquete</p>
-                <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
-              </li>
-            </RouterLink>
-          </ul>
-        </div>
-      </main>
-  </div>
+    <h2>Calculadora</h2>
+    <p>Te damos un estimado del valor de tu paquete</p>
+    <PriceCalculator/>
+
+    <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
+      <span class="add">+</span>
+      <ul>
+        <RouterLink to="/carriages/register">
+          <li>
+            <p>Nuevo Acarreo&nbsp;</p>
+            <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
+          </li>
+        </RouterLink>
+        <RouterLink to="/packages/register">
+          <li>
+            <p>Nuevo Paquete</p>
+            <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
+          </li>
+        </RouterLink>
+      </ul>
+    </div>
+  </main>
 </template>
 
 <style scoped>
+.home-page {
+  width: 92%;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
 h1 {
   font-size: 2.5rem;
   color: var(--title-section);
@@ -208,32 +217,5 @@ header .image {
   justify-content: center;
   align-items: center;
   color: var(--color-primary-white);
-}
-
-@media screen and (min-width: 1408px) {
-  .container:not(.is-max-desktop):not(.is-max-widescreen) {
-    max-width: 80rem;
-  }
-
-}
-
-@media screen and (min-width: 1216px) {
-  .container:not(.is-max-desktop):not(.is-max-widescreen) {
-    max-width: 80rem;
-  }
-
-}
-
-@media screen and (min-width: 1024px) {
-  .container:not(.is-max-desktop):not(.is-max-widescreen) {
-    max-width: 80rem;
-  }
-
-}
-@media screen and (min-width: 769px) {
-  .container:not(.is-max-desktop):not(.is-max-widescreen) {
-    max-width: 80rem;
-  }
-
 }
 </style>

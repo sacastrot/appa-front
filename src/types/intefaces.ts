@@ -41,6 +41,7 @@ interface PackageState{
     originCheckpoint: Checkpoint,
     destinyNation: NationType,
     destinyCheckpoint: Checkpoint,
+    guide: number;
     length: number | undefined,
     width: number | undefined,
     height: number | undefined,
@@ -50,6 +51,7 @@ interface PackageState{
 interface Carriage {
     created?: Date;
     arrived?: Date;
+    guideNumber?: number;
     originNation: NationType,
     originCheckpoint: Checkpoint,
     destinyNation: NationType,
@@ -66,4 +68,9 @@ interface Bisonte {
     email: string | undefined;
     vehicle: string | undefined;
 }
-export type {Steps, StepComponent, PackageState, Carriage, Bisonte}
+
+interface CheckpointCoordinates {
+    x: number;
+    y: number;
+}
+export type {Steps, StepComponent, PackageState, Carriage, Bisonte, CheckpointCoordinates}

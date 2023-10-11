@@ -172,7 +172,7 @@ function hidePassword() {
           </span>
         </div>
       </div>
-      <RouterLink to="/perfil">
+      <RouterLink to="/profile">
         <button
           class="button is-fullwidth save_changes_buttom"
           @click="editProfile()"
