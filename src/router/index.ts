@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import CarriagesView from "../views/CarriagesView.vue";
 import PackagesView from "../views/PackagesView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import EditProfileView from "../views/EditProfileView.vue";
 import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
 
@@ -32,6 +33,11 @@ const routes: RouteRecordRaw[] = [
         path: "/packages/register",
         name: "register-packages",
         component: NewPackageView
+    },
+    {
+        path: "/profile/edit",
+        name: "edit-profile",
+        component: EditProfileView
     },
     {
         path: "/carriages/register",
