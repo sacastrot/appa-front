@@ -55,7 +55,7 @@ const backStep = () => {
         </div>
       </div>
     </div>
-    <div class="content">
+    <div class="content-header">
       <component :is="steps.listStepsComponents[currentStep-1].value" @validateStep="onValidate"></component>
     </div>
     <div v-show="currentStep < steps.steps" class="actions">
@@ -76,13 +76,13 @@ const backStep = () => {
 ::-webkit-scrollbar {display: none;}
 
 .container {
-  padding: 20px 0;
+  padding: 20px 0 5px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   max-width: 900px;
-  max-height: 600px;
-  min-height: 500px;
+  max-height: 450px;
+  min-height: 200px;
   height: 700px;
   overflow-y: scroll;
   scroll-behavior: smooth;
@@ -92,7 +92,7 @@ const backStep = () => {
     max-width: 100%;
     justify-content: center;
     font-size: 1.6rem;
-    gap: 7px;
+    gap: 5px;
 
     .step {
       display: flex;

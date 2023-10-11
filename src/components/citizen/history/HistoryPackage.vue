@@ -9,6 +9,11 @@ const toggleExpand = () => {
   expand.value = !expand.value
 };
 
+let colorStatus = '';
+
+
+
+
 const {packageValue} = defineProps<{
   packageValue: {
     created?: Date;
@@ -26,6 +31,11 @@ const {packageValue} = defineProps<{
   }
 }>()
 
+if (packageValue.arrived) {
+  colorStatus = '#349F91FF';
+} else {
+  colorStatus = '#D22200';
+};
 </script>
 
 <template>
@@ -47,10 +57,10 @@ const {packageValue} = defineProps<{
     </div>
     <div @click="toggleExpand" class="package-details" :class="[expand ? 'package-active' : 'package-inactive']">
       <Transition name="fade-details">
-        <span v-if="!expand" class="material-symbols-outlined" :style="{'color': 'white'}" >package_2</span>
-        <div v-else class="content">
+        <span v-if="!expand" class="material-symbols-outlined" :style="{color: colorStatus}" >package_2</span>
+        <div v-else class="content-header">
           <div class="features">
-            <span class="material-symbols-outlined">package_2</span>
+            <span class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
             <div class="price">
               <h1>Precio</h1>
               <h1>{{ packageValue.price }}</h1>
@@ -69,7 +79,6 @@ const {packageValue} = defineProps<{
           </div>
         </div>
       </Transition>
-
     </div>
   </div>
 </template>
@@ -138,7 +147,7 @@ const {packageValue} = defineProps<{
     color: var(--color-primary-white);
   }
 
-  .content {
+  .content-header {
     width: 100%;
 
     .features {

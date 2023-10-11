@@ -42,7 +42,7 @@ const toggleGuide = () => {
       </div>
     </div>
     <div class="description">
-      <div class="content">
+      <div class="content-header">
         <h1>Descripción</h1>
         <p>
           {{ carriage.description }}
@@ -124,7 +124,7 @@ const toggleGuide = () => {
     overflow: hidden;
     color: var(--primary-text);
 
-    .content {
+    .content-header {
       height: 80%;
       overflow: auto;
       margin-top: 6px;

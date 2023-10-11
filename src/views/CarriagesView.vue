@@ -33,7 +33,7 @@ const showInfromation = ref<boolean>(false);
               </p>
             </header>
             <div class="card-content">
-              <div class="content">
+              <div class="content-header">
                 <div class="completed-carriage information">
                   <span class="material-symbols-outlined" >
                     local_shipping
@@ -59,6 +59,7 @@ const showInfromation = ref<boolean>(false);
 
 <style scoped>
 .carriages-container {
+  width: 92%;
   margin: 0 auto;
   max-width: 80rem;
 
@@ -116,7 +117,7 @@ const showInfromation = ref<boolean>(false);
       }
 
       .card-content {
-        .content {
+        .content-header {
           display: flex;
           flex-direction: column;
           justify-content: space-between;

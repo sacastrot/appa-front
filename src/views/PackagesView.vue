@@ -7,14 +7,6 @@ import {packagesData} from "@/data/packagesData";
 
 const packagesStore = usePackagesStore();
 
-onBeforeMount(() => {
-  packagesStore.setPackages(packagesData);
-});
-
-onBeforeUnmount(() => {
-  packagesStore.resetPackagesList();
-});
-
 const modalActive = ref<boolean>(false);
 </script>
 
@@ -28,7 +20,7 @@ const modalActive = ref<boolean>(false);
       <h1>Historial</h1>
       <span class="material-symbols-outlined" @click="modalActive = true">help</span>
     </div>
-    <p>Tus acarreos anteriores</p>
+    <p>Tus paquetes anteriores</p>
     <transition name="fade">
       <div class="modal is-clipped" :class="[modalActive ? 'is-active' : '']">
         <div class="modal-background" @click="modalActive = false"></div>
@@ -131,7 +123,7 @@ p {
 .packages-container {
   margin: 0 auto;
   max-width: 80rem;
-  
+  width: 92%;
 }
 
 .fade-enter-active,

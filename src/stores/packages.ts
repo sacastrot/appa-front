@@ -24,23 +24,28 @@ export const usePackagesStore = defineStore("package", () => {
         price: undefined,
     })
 
-    const packages: PackageState[] = [];
+
+
+    const packages = ref<PackageState[]>([]);
 
     //actions
     function addPackage() {
+        const random = Math.random();
+        if (random < 0.5) {
+            setArrived(new Date());
+        }
         setCreatedDate();
-
-        packages.push(state.value);
+        packages.value.push(state.value);
     }
 
     function setPackages(packagesData: PackageState[]) {
         packagesData.forEach((packageData) => {
-            packages.push(packageData);
+            packages.value.push(packageData);
         });
     }
 
     function resetPackagesList() {
-        packages.splice(0, packages.length);
+        packages.value.splice(0, 4);
     }
 
     function setArrived(date: Date): void {
@@ -106,7 +111,8 @@ export const usePackagesStore = defineStore("package", () => {
         }
     }
 
-    function formatDate(date: Date) {
+    function formatDate(date: Date | undefined) {
+        if (date === undefined) return;
         const namesDate = [
             "Ene", "Feb", "Mar", "Abr", "May", "Jun",
             "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
