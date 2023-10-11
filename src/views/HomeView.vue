@@ -37,24 +37,24 @@ const isActive = ref(false);
       </div>
     </div>
 
-    <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
-      <span class="add">+</span>
-      <ul>
-        <RouterLink to="/acarreos/registrar">
-          <li>
-            <p>Nuevo Acarreo&nbsp;</p>
-            <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
-          </li>
-        </RouterLink>
-        <RouterLink to="/paquetes/registrar">
-          <li>
-            <p>Nuevo Paquete</p>
-            <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
-          </li>
-        </RouterLink>
-      </ul>
-    </div>
-  </main>
+        <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
+          <span class="add">+</span>
+          <ul>
+            <RouterLink to="/carriages/register">
+              <li>
+                <p>Nuevo Acarreo&nbsp;</p>
+                <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
+              </li>
+            </RouterLink>
+            <RouterLink to="/packages/register">
+              <li>
+                <p>Nuevo Paquete</p>
+                <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
+              </li>
+            </RouterLink>
+          </ul>
+        </div>
+      </main>
 </template>
 
 <style scoped>

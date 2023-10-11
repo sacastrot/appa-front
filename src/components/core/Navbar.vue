@@ -41,9 +41,9 @@ export default defineComponent({
             >
                 <div class="navbar-end" @click="isActive = !isActive">
                     <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
-                    <RouterLink to="/acarreos" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
-                    <RouterLink to="/paquetes" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
-                    <RouterLink to="/perfil" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
+                    <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
+                    <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
+                    <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
                 </div>
             </div>
         </div>
@@ -104,6 +104,9 @@ a.navbar-item:hover{
     
 }
 
+.navbar-menu {
+    background-color: var(--navbar);
+}
 
 .material-symbols-outlined{
     padding-top: 0.2rem;

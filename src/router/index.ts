@@ -1,42 +1,41 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from "vue-router";
-import HomeView from "@/views/HomeView.vue";
-import CarriagesView from "@/views/CarriagesView.vue";
-import PackagesView from "@/views/PackagesView.vue";
-import ProfileView from "@/views/ProfileView.vue";
-import NewServiceView from "@/views/NewServiceView.vue";
+import HomeView from "../views/HomeView.vue";
+import CarriagesView from "../views/CarriagesView.vue";
+import PackagesView from "../views/PackagesView.vue";
+import ProfileView from "../views/ProfileView.vue";
+import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
-
 
 const routes: RouteRecordRaw[] = [
     {
         path: "/",
-        name: "inicio",
+        name: "home",
         component: HomeView
     },
     {
-        path: "/acarreos",
-        name: "acarreos",
+        path: "/carriages",
+        name: "carriages",
         component: CarriagesView
     },
     {
-        path: "/paquetes",
-        name: "paquetes",
+        path: "/packages",
+        name: "packages",
         component: PackagesView
     },
     {
-        path: "/perfil",
-        name: "perfil",
+        path: "/profile",
+        name: "profile",
         component: ProfileView
     },
     {
-        path: "/paquetes/registrar",
-        name: "registrar-paquetes",
-        component: () => import("@/views/NewPackageView.vue")
+        path: "/packages/register",
+        name: "register-packages",
+        component: NewPackageView
     },
     {
-        path: "/acarreos/registrar",
-        name: "registrar-acarreos",
+        path: "/carriages/register",
+        name: "register-carriages",
         component: NewCarriageView
     }
 ];
