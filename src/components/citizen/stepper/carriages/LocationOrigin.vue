@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-//@ts-ignore
 import {Checkpoint, NationType} from "@/types/intefaces";
-//@ts-ignore
 import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
-//@ts-ignore
 import {useCarriagesStore} from "@/stores/carriages";
 //Store to packages
 const carriageStore = useCarriagesStore()

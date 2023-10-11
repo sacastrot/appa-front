@@ -1,5 +1,4 @@
 <script setup lang="ts">
-//@ts-ignore
 import  {useCarriagesStore} from "@/stores/carriages";
 import {onBeforeMount} from "vue";
 
@@ -23,7 +22,7 @@ onBeforeMount(async () => {
     <div class="bill-header">
       <h1>Tu factura</h1>
     </div>
-    <div class="content">
+    <div class="content-header">
       <div class="bill-section">
         <h1>Origen</h1>
         <p>
@@ -67,7 +66,7 @@ onBeforeMount(async () => {
     }
   }
 
-  .content{
+  .content-header{
     max-height: 80%;
     min-width: 20%;
     max-width: 80%;

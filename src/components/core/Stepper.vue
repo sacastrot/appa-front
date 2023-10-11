@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
-//@ts-ignore
+import {useRouter} from "vue-router";
 import type {StepComponent} from "@/types/intefaces";
-//@ts-ignore
 //steps
 const {steps} = defineProps<{
   steps: {
@@ -11,6 +10,7 @@ const {steps} = defineProps<{
   }
 }>()
 
+const router = useRouter();
 const currentStep = ref<number>(1)
 const validateStep = ref(false);
 
@@ -22,6 +22,7 @@ const onValidate = (validate: boolean) => {
 //Functions to change step
 //TODO: Change to use router
 const returnHome = () => {
+  router.push("/");
 }
 //Functions to change step to next
 const nextStep = () => {
@@ -54,7 +55,7 @@ const backStep = () => {
         </div>
       </div>
     </div>
-    <div class="content">
+    <div class="content-header">
       <component :is="steps.listStepsComponents[currentStep-1].value" @validateStep="onValidate"></component>
     </div>
     <div v-show="currentStep < steps.steps" class="actions">
@@ -72,24 +73,26 @@ const backStep = () => {
 </template>
 
 <style scoped>
+::-webkit-scrollbar {display: none;}
+
 .container {
-  padding: 20px 0;
+  padding: 20px 0 5px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid black;
   max-width: 900px;
-  max-height: 600px;
-  min-height: 500px;
+  max-height: 450px;
+  min-height: 200px;
   height: 700px;
   overflow-y: scroll;
   scroll-behavior: smooth;
 
   .steps {
     display: flex;
+    max-width: 100%;
     justify-content: center;
     font-size: 1.6rem;
-    gap: 10px;
+    gap: 5px;
 
     .step {
       display: flex;

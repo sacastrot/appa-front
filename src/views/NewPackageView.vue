@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import Stepper from "@/components/core/Stepper.vue";
-import type  { Steps, StepComponent} from "@/types/intefaces";
+import type {Steps, StepComponent} from "@/types/intefaces";
 import LocationOrigin from "@/components/citizen/stepper/packages/LocationOrigin.vue";
 import LocationDestiny from "@/components/citizen/stepper/packages/LocationDestiny.vue";
 import PackageDimensions from "@/components/citizen/stepper/packages/PackageDimensions.vue";
 import PackageWeight from "@/components/citizen/stepper/packages/PackageWeight.vue";
 import Ticket from "@/components/citizen/stepper/packages/Ticket.vue";
 import Success from "@/components/citizen/stepper/packages/Success.vue";
+import Hero from "@/components/core/Hero.vue";
 
 
 const firstStep: StepComponent = {
@@ -40,9 +41,19 @@ const appStep: Steps = {
 </script>
 
 <template>
-  <Stepper :steps="appStep"/>
+  <main>
+    <Hero :title="'Registrar Paquete'"/>
+    <div class="content">
+      <Stepper :steps="appStep"/>
+    </div>
+  </main>
 </template>
 
 <style scoped>
+.content {
+  width: 92%;
+  max-width: 80rem;
+  margin: 0 auto;
+}
 
 </style>

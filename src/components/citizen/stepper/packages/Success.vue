@@ -1,5 +1,4 @@
 <script setup lang="ts">
-//@ts-ignore
 import {usePackagesStore} from "@/stores/packages";
 import {onBeforeUnmount} from "vue";
 const emit = defineEmits(["validateStep"]);

@@ -1,4 +1,3 @@
-// @ts-ignore
 import {Checkpoint, NationType} from "@/types/intefaces";
 
 const airCheckpoints:   Checkpoint[] = [Checkpoint.NorthernAir, Checkpoint.SouthernAir, Checkpoint.EasternAir, Checkpoint.WesternAir];
