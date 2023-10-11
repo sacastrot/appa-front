@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { onBeforeMount, computed, ref } from 'vue';
 import {Checkpoint, NationType} from "@/types/intefaces";
 import type {CheckpointCoordinates} from "@/types/intefaces";
 import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
@@ -62,16 +62,13 @@ const calculatePrice = computed(() => {
     if (calculateDistance.value != 0 && calculatePriceDimensions.value != 0)
     {
         // 80 is an estimate of the shortest distance range between checkpoints
-        return calculateDistance.value >= 80 ?  basePriceLongDistance.value + calculatePriceDimensions.value : basePriceShortDistance.value + calculatePriceDimensions.value
+        return calculateDistance.value >= 80 ?  basePriceLongDistance.value + (calculateDistance.value * 3.141592) : basePriceShortDistance.value + calculatePriceDimensions.value
     }
     return 0
 })
 
-// const buttonHelp = ref("Hay campos obligatorios sin llenar.")
-// const buttonShowHelp = ref(false)
 const showPrice = () => {
     isActive.value = calculatePrice.value != 0 ? true : false
-    // buttonShowHelp.value = (originNationShowHelp || destinationNationShowHelp || originCheckpointShowHelp || destinationCheckpointShowHelp || dimensionsShowHelp || weightShowHelp) ? true : false
     return isActive.value
 }
 
@@ -82,10 +79,6 @@ const destinationNationShowHelp = computed(() => destinationNation.value != Nati
 const checkpointHelp = ref("Seleccione un punto de referencia de esa nación.")
 const originCheckpointShowHelp = computed(() => originCheckpoint.value != Checkpoint.Unknown ? false : true)
 const destinationCheckpointShowHelp = computed(() => destinationCheckpoint.value != Checkpoint.Unknown ? false : true)
-const dimensionsHelp = ref("Estos campos son obligatorios.")
-const dimensionsShowHelp = computed(() => (width.value != null && length.value != null && height.value != null) ? false : true)
-const weightHelp = ref("Este campo es obligatorio.")
-const weightShowHelp = computed(() => (weight.value != null) ? false : true)
 
 //Get checkpoints by nation
 const origincheckpointList = ref<Checkpoint[]>()
@@ -99,11 +92,18 @@ const getDestinationCheckpointsList = () => {
     destinationcheckpointList.value = getCheckpoints(destinationNation.value);
     destinationCheckpoint.value = Checkpoint.Unknown;
 }
+
+onBeforeMount(() => {
+  //Charge values of package origin location
+  origincheckpointList.value = getCheckpoints(originNation.value);
+  destinationcheckpointList.value = getCheckpoints(destinationNation.value);
+})
+
 </script>
 
 <template>
     <div class="box">
-        <form action="">
+        <form @submit.prevent="showPrice">
             <div class="form-content">
                 <div class="form-inputs">
                     <h2>Lugar de origen</h2>
@@ -162,11 +162,10 @@ const getDestinationCheckpointsList = () => {
                         </p>
                     </div>
 
-                    <h2>Dimensiones del paquete</h2>
+                    <h2>Dimensiones del paquete (cm)</h2>
                     <div class="field is-grouped">
                         <p class="control has-icons-left">
                             <input name="height" class="input is-medium" type="number" placeholder="Alto" v-model="height" min="1" max="500" required>
-                            <p v-if="dimensionsShowHelp" class="help">{{dimensionsHelp}}</p>
                             <span class="icon is-small is-left">
                                 <fa icon="ruler-vertical"></fa>
                             </span>
@@ -186,11 +185,10 @@ const getDestinationCheckpointsList = () => {
                     </div>
                     
 
-                    <h2>Peso estimado</h2>
+                    <h2>Peso estimado (kg)</h2>
                     <div class="field">
                         <p class="control has-icons-left">
                             <input name="weight" class="input is-medium" type="number" placeholder="Peso estimado" v-model="weight" required>
-                            <p v-if="weightShowHelp" class="help">{{weightHelp}}</p>
                             <span class="icon is-small is-left">
                                 <fa icon="weight-hanging"></fa>
                             </span>
@@ -199,8 +197,7 @@ const getDestinationCheckpointsList = () => {
 
                     <div class="field is-grouped calculate-action">
                         <div class="control">
-                            <button class="button is-link" type="button" @click="showPrice">Calcular</button>
-                            <!-- <p v-if="buttonShowHelp" class="help">{{buttonHelp}}</p> -->
+                            <button class="button is-link" type="submit">Calcular</button>
                         </div>
                         <div class="estimated-calculation">
                             <p v-if="isActive">$ {{ calculatePrice.toLocaleString('es-CO') }}</p>
