@@ -1,10 +1,90 @@
 <script setup lang="ts">
+import { ref, computed } from "vue";
 import { useProfileDetailsStore } from "@/stores/profileDetails";
-import { ref } from "vue";
-
-import { RouterLink } from "vue-router";
 const store = useProfileDetailsStore();
-const modalActive = ref(false);
+const name = ref<string | undefined>(store.name);
+const phone = ref<string | undefined>(store.phone);
+const email = ref<string | undefined>(store.email);
+const password = ref<string | undefined>(store.password);
+
+const visibility = ref<string>("password");
+
+const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/;
+
+function validateEmail(email: string): boolean {
+  return emailRegex.test(email);
+}
+
+// Minimo 8 caracteres
+//Maximo 15
+//Al menos una letra mayúscula
+//Al menos una letra minuscula
+// Al menos un dígito
+// No espacios en blanco
+// Al menos 1 caracter especial
+function validatePassword(password: string): boolean {
+  return passwordRegex.test(password);
+}
+
+const nameValidation = computed(() => {
+  if (name.value != undefined) {
+    if (name.value.trim().length > 0) {
+      if (name.value.length > 10 && name.value.length < 30) {
+        return true;
+      }
+    }
+  }
+  return false;
+});
+
+const phoneValidation = computed(() => {
+  if (phone.value != undefined) {
+    if (phone.value.trim().length > 0) {
+      if (phone.value.length == 10 && !isNaN(Number(phone.value))) {
+        return true;
+      }
+    }
+  }
+  return false;
+});
+
+const emailValidation = computed(() => {
+  if (email.value != undefined) {
+    if (email.value.trim().length > 0) {
+      if (validateEmail(email.value)) {
+        return true;
+      }
+    }
+  }
+  return false;
+});
+
+const passwordValidation = computed(() => {
+  if (password.value != undefined) {
+    if (password.value.trim().length > 0) {
+      if (validatePassword(password.value)) {
+        return true;
+      }
+    }
+  }
+  return false;
+});
+
+function editProfile() {
+  store.editProfile(name.value, phone.value, email.value, password.value);
+}
+
+function showPassword() {
+  visibility.value = "text";
+  console.log("hola");
+}
+
+function hidePassword() {
+  visibility.value = "password";
+  console.log("chao");
+}
 </script>
 
 <template>
@@ -18,7 +98,7 @@ const modalActive = ref(false);
         </div>
         <div class="rotate"></div>
         <div class="citizen_information">
-          <Span>{{ store.name }}</Span>
+          <span>{{ store.name }}</span>
           <div class="box_information">
             <span class="icon is-small is-left material-symbols-outlined">
               Email
@@ -32,11 +112,7 @@ const modalActive = ref(false);
         <div class="field">
           <label class="label">Nombre</label>
           <div class="control has-icons-left">
-            <input
-              class="input custom-input"
-              type="text"
-              v-model="store.name"
-            />
+            <input class="input custom-input" type="text" v-model="name" />
             <span
               class="icon is-small is-left form_icons material-symbols-outlined"
             >
@@ -47,30 +123,22 @@ const modalActive = ref(false);
         <div class="field">
           <label class="label">Teléfono</label>
           <div class="control has-icons-left">
-            <input
-              class="input custom-input"
-              type="tel"
-              v-model="store.phone"
-            />
+            <input class="input custom-input" type="text" v-model="phone" />
             <span
               class="icon is-small is-left form_icons material-symbols-outlined"
             >
-              call
+              Phone
             </span>
           </div>
         </div>
         <div class="field">
           <label class="label">Correo electrónico</label>
           <div class="control has-icons-left">
-            <input
-              class="input custom-input"
-              type="email"
-              v-model="store.email"
-            />
+            <input class="input custom-input" type="text" v-model="email" />
             <span
               class="icon is-small is-left form_icons material-symbols-outlined"
             >
-              Mail
+              Email
             </span>
           </div>
         </div>
@@ -79,8 +147,8 @@ const modalActive = ref(false);
           <div class="control has-icons-left">
             <input
               class="input custom-input"
-              type="password"
-              v-model="store.password"
+              :type="visibility"
+              v-model="password"
             />
             <span
               class="icon is-small is-left form_icons material-symbols-outlined"
@@ -88,51 +156,43 @@ const modalActive = ref(false);
               Lock
             </span>
           </div>
+          <span
+            class="icon is-small is-right form_icons material-symbols-outlined icon_visibility visibility_color"
+            @click="showPassword()"
+            v-if="visibility === 'password'"
+          >
+            visibility_off
+          </span>
+          <span
+            class="icon is-small is-right form_icons material-symbols-outlined icon_visibility"
+            @click="hidePassword()"
+            v-if="visibility === 'text'"
+          >
+            visibility
+          </span>
         </div>
       </div>
-      <RouterLink to="/profile/edit">
-        <button class="button is-fullwidth edit_profile_buttom">
-          <span
-            class="icon is-small is-left buttom_icons material-symbols-outlined"
-          >
-            Manage_accounts
-          </span>
-          <p>Editar perfil</p>
+      <RouterLink to="/perfil">
+        <button
+          class="button is-fullwidth save_changes_buttom"
+          @click="editProfile()"
+          :disabled="
+            !nameValidation ||
+            !phoneValidation ||
+            !emailValidation ||
+            !passwordValidation
+          "
+        >
+          <span class="material-symbols-outlined buttom_icon">save</span>
+          <p>Guardar cambios</p>
         </button>
       </RouterLink>
-      <button class="button is-fullwidth delete_profile_buttom" @click="modalActive=true">
-        <span
-          class="icon is-small is-left buttom_icons material-symbols-outlined"
-        >
-          Delete
-        </span>
-        <p>Eliminar cuenta</p>
-      </button>
-    </div>
-  </div>
-
-  <div class="modal" :class="[modalActive?'is-active':'']">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-      <div class="custom_container">
-        <div class="summary-content">
-          <figure class="image is-64x64 logo">
-            <img src="/citizen/Logo-variant-delete.svg" alt="" />
-          </figure>
-          <p>¿Está seguro que desea eliminar su perfil?</p>
-          <div class="button-container">
-            <button class="button_left">Si</button>
-            <button class="button_right" @click="modalActive=false">No</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .custom-input {
-  pointer-events: none;
   border: none;
   border-bottom: 0.1rem solid gray;
   box-shadow: none;
@@ -149,6 +209,7 @@ const modalActive = ref(false);
 
 .field {
   margin-bottom: 4.5rem;
+  position: relative;
 }
 
 .card {
@@ -227,13 +288,7 @@ const modalActive = ref(false);
   background-position: center;
   background-image: url("/citizen/logo-card-beifong.svg");
 }
-.edit_profile_buttom {
-  background-color: var(--color-primary-gray);
-  color: white;
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-.delete_profile_buttom {
+.save_changes_buttom {
   margin-top: 0.5rem;
   background-color: var(--color-primary-orange);
   color: white;
@@ -247,12 +302,21 @@ const modalActive = ref(false);
 }
 
 .form_icons {
-  margin-top: 0.7rem;
-  color: black !important;
+  margin-top: 0.6rem;
 }
 
-.buttom_icons {
-  margin-top: 0.7rem;
+.buttom_icon {
+  margin-right: 1rem;
+}
+
+.icon_visibility {
+  position: absolute;
+  right: 0;
+  transform: translateY(-350%);
+}
+
+.visibility_color {
+  color: #dbdbdb;
 }
 
 .box_information {
@@ -266,76 +330,6 @@ const modalActive = ref(false);
     height: 2rem;
     margin-right: 0.2rem;
     color: #dbdbdb;
-  }
-}
-.modal-content{
-  overflow: visible;
-}
-
-
-
-
-.custom_container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: visible;
-}
-.summary-content {
-  position: relative;
-  background-color: var(--color-seconday-orange);
-  box-shadow: 5px 8px 3px rgba(0, 0, 0, 0.09);
-  border: 1px solid #80918d1d;
-  border-radius: 12px;
-  margin: 0 auto;
-  width: 80%;
-  overflow: visible;
-
-  @media (min-width: 1024px) {
-    width: 35%;
-  }
-  .logo {
-    position: absolute;
-    top: -30px;
-    left: 50%; /* Coloca el punto de referencia horizontal en el centro del contenedor */
-    transform: translateX(-50%);
-  }
-  & p {
-    font-size: 2.5rem;
-    text-align: center;
-    font-weight: bold;
-    margin-top: 5rem;
-  }
-  .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 3rem;
-    margin-bottom: 2rem;
-    .button_left {
-      width: 5rem;
-      background-color: var(--color-primary-orange);
-      color: white;
-      border: none;
-      border-radius: 25%;
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin-right: 20%;
-    }
-    .button_right {
-      width: 5rem;
-      background-color: var(--color-primary-gray);
-      color: white;
-      border: none;
-      border-radius: 25%;
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
   }
 }
 </style>
