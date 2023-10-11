@@ -16,20 +16,36 @@ export const usePackagesStore = defineStore("package", () => {
         originCheckpoint: Checkpoint.Unknown,
         destinyNation: NationType.Unknown,
         destinyCheckpoint: Checkpoint.Unknown,
+        guide: 5,
         length: undefined,
         width: undefined,
         height: undefined,
         weight: undefined,
         price: undefined,
-
     })
 
-    const packages: PackageState[] = [];
+
+
+    const packages = ref<PackageState[]>([]);
 
     //actions
     function addPackage() {
+        const random = Math.random();
+        if (random < 0.5) {
+            setArrived(new Date());
+        }
         setCreatedDate();
-        packages.push(state.value);
+        packages.value.push(state.value);
+    }
+
+    function setPackages(packagesData: PackageState[]) {
+        packagesData.forEach((packageData) => {
+            packages.value.push(packageData);
+        });
+    }
+
+    function resetPackagesList() {
+        packages.value.splice(0, 4);
     }
 
     function setArrived(date: Date): void {
@@ -76,6 +92,7 @@ export const usePackagesStore = defineStore("package", () => {
             originCheckpoint: Checkpoint.Unknown,
             destinyNation: NationType.Unknown,
             destinyCheckpoint: Checkpoint.Unknown,
+            guide: state.value.guide + 1,
             length: undefined,
             width: undefined,
             height: undefined,
@@ -85,7 +102,29 @@ export const usePackagesStore = defineStore("package", () => {
     }
 
     function setCreatedDate() {
-        state.value.created = new Date;
+        state.value.created = new Date();
+    }
+
+    function getCreatedDate(data: PackageState) {
+        if (data.created) {
+            return formatDate(data.created);
+        }
+    }
+
+    function formatDate(date: Date | undefined) {
+        if (date === undefined) return;
+        const namesDate = [
+            "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+        ];
+
+        const dia = date.getDate();
+        const mes = date.getMonth();
+        const year = date.getFullYear();
+
+        const nameMonth = namesDate[mes];
+
+        return `${dia} de ${nameMonth}, ${year}`;
     }
 
     return {
@@ -98,6 +137,10 @@ export const usePackagesStore = defineStore("package", () => {
         setPrice,
         addPackage,
         resetState,
+        setPackages,
+        formatDate,
+        getCreatedDate,
+        resetPackagesList,
         packages
     }
 })

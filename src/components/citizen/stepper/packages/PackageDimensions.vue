@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-//@ts-ignore
 import {usePackagesStore} from "@/stores/packages";
 //Store to packages
 const packageStore = usePackagesStore()
@@ -64,7 +63,7 @@ onBeforeMount(() => {
       <div class="form-inputs">
         <div class="field">
           <p class="control has-icons-left">
-            <input name="height" class="input is-medium" type="number" placeholder="Height" v-model="height" min="1" max="500" required>
+            <input name="height" class="input is-medium" type="number" placeholder="Height" v-model="height" min="1" max="1000" required>
             <span class="icon is-small is-left">
             <fa icon="ruler-vertical"></fa>
           </span>
@@ -72,7 +71,7 @@ onBeforeMount(() => {
         </div>
         <div class="field">
           <p class="control has-icons-left">
-            <input name="width" class="input is-medium" type="number" placeholder="Width" v-model="width" min="1" max="500" required>
+            <input name="width" class="input is-medium" type="number" placeholder="Width" v-model="width" min="1" max="1000" required>
             <span class="icon is-small is-left">
             <fa icon="ruler"></fa>
           </span>
@@ -80,7 +79,7 @@ onBeforeMount(() => {
         </div>
         <div class="field">
           <p class="control has-icons-left">
-            <input name="length" class="input is-medium" type="number" placeholder="Length" v-model="length" min="1" max="500" required>
+            <input name="length" class="input is-medium" type="number" placeholder="Length" v-model="length" min="1" max="1000" required>
             <span class="icon is-small is-left">
             <fa icon="ruler-horizontal"></fa>
           </span>

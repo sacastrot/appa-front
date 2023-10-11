@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-//@ts-ignore
 import {usePackagesStore} from "@/stores/packages";
 
 const packageStore = usePackagesStore()

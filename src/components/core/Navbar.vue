@@ -51,10 +51,12 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.navbar-end{
+  background-color: var(--color-primary-blue);
+}
 .navbar{
     height: 5rem;
     background-color: var(--navbar);
-    border-radius: 0.8rem;
 }
 
 .navbar-brand .navbar-burger{
