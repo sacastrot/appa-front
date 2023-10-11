@@ -68,4 +68,9 @@ interface Bisonte {
     email: string | undefined;
     vehicle: string | undefined;
 }
-export type {Steps, StepComponent, PackageState, Carriage, Bisonte}
+
+interface CheckpointCoordinates {
+    x: number;
+    y: number;
+}
+export type {Steps, StepComponent, PackageState, Carriage, Bisonte, CheckpointCoordinates}

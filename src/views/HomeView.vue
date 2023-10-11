@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from "vue";
+import PriceCalculator from "../components/core/PriceCalculator.vue"
 
 const isActive = ref(false);
 
@@ -37,28 +38,32 @@ const isActive = ref(false);
       </div>
     </div>
 
-        <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
-          <span class="add">+</span>
-          <ul>
-            <RouterLink to="/carriages/register">
-              <li>
-                <p>Nuevo Acarreo&nbsp;</p>
-                <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
-              </li>
-            </RouterLink>
-            <RouterLink to="/packages/register">
-              <li>
-                <p>Nuevo Paquete</p>
-                <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
-              </li>
-            </RouterLink>
-          </ul>
-        </div>
-      </main>
+    <h2>Calculadora</h2>
+    <p>Te damos un estimado del valor de tu paquete</p>
+    <PriceCalculator/>
+
+    <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
+      <span class="add">+</span>
+      <ul>
+        <RouterLink to="/carriages/register">
+          <li>
+            <p>Nuevo Acarreo&nbsp;</p>
+            <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
+          </li>
+        </RouterLink>
+        <RouterLink to="/packages/register">
+          <li>
+            <p>Nuevo Paquete</p>
+            <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
+          </li>
+        </RouterLink>
+      </ul>
+    </div>
+  </main>
 </template>
 
 <style scoped>
-.home-page{
+.home-page {
   width: 92%;
   max-width: 80rem;
   margin: 0 auto;
