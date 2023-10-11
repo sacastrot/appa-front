@@ -42,7 +42,7 @@ const appStep: Steps = {
 
 <template>
   <main>
-    <Hero/>
+    <Hero :title="'Registrar Paquete'"/>
     <div class="content">
       <Stepper :steps="appStep"/>
     </div>

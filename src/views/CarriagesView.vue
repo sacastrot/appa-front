@@ -12,7 +12,7 @@ const showInfromation = ref<boolean>(false);
 <template>
   <main class="carriages-container">
     <h1>Acarreos</h1>
-    <RouterLink to="/acarreos/registrar">
+    <RouterLink to="/carriages/register">
       <NewCarriage/>
     </RouterLink>
     <div class="history-header">

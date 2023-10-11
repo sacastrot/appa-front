@@ -110,7 +110,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
     function addCarriage(): void {
         setCreated(new Date())
         const random = Math.random()
-        if (random > 0.5)  setArrived(new Date())
+        // setArrived(new Date())
         setGuide(currentGuideNumber.value)
         currentGuideNumber.value++
         carriages.value.push(currentCarriage.value)

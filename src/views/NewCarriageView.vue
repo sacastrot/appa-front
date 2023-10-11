@@ -50,7 +50,7 @@ const steps: Steps = {
 
 <template>
   <main>
-    <Hero/>
+    <Hero :title="'Registrar Acarreo'"/>
     <div class="content">
       <Stepper :steps="steps"/>
     </div>

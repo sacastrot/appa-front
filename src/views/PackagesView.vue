@@ -13,7 +13,7 @@ const modalActive = ref<boolean>(false);
 <template>
   <main class="packages-container">
     <h1 class="mb-5 pt-5">Paquetes</h1>
-    <RouterLink to="/paquetes/registrar">
+    <RouterLink to="/packages/register">
       <NewPackage/>
     </RouterLink>
     <div class="header">
