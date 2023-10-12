@@ -30,18 +30,19 @@ const getLastItem = computed(() => {
 </script>
 
 <template>
-    <div class="box" v-if="existsOrder">
-        <div id="order-state">
-          <p>{{Object(getLastItem[0]).arrived ? "Entregado" : "Sin entregar"}}</p>
+    <RouterLink :to="getLastItem[1] == 'Paquete' ? '/packages' : '/carriages'">
+        <div class="box" v-if="existsOrder">
+            <div id="order-state">
+              <p>{{Object(getLastItem[0]).arrived ? "Entregado" : "Sin entregar"}}</p>
+            </div>
+            <div id="order-detail">
+              <p style="padding-top: 1.2rem;">{{getLastItem[1]}}</p>
+              <p style="padding-bottom: 1.2rem;">Destino: {{Object(getLastItem[0]).destinyNation}}</p>
+              <p v-if="Object(getLastItem[0]).arrived" style="padding-bottom: 1.2rem;">Entregado el: {{Object(getLastItem[0]).arrived.toLocaleDateString()}}</p>
+            </div>
         </div>
-        <div id="order-detail">
-          <p style="padding-top: 1.2rem;">{{getLastItem[1]}}</p>
-          <p>Fecha de creación: {{Object(getLastItem[0]).created.toLocaleDateString()}}</p>
-          <p>Origen: {{Object(getLastItem[0]).originNation}}</p>
-          <p style="padding-bottom: 1.2rem;">Destino: {{Object(getLastItem[0]).destinyNation}}</p>
-        </div>
-    </div>
-    <div class="box" v-else>
+    </RouterLink>
+    <div class="box" v-if="existsOrder == false">
         <h2>Aún no ha realizado ningún pedido</h2>
     </div>
 </template>
@@ -71,7 +72,7 @@ const getLastItem = computed(() => {
 #order-detail p {
   color: var(--primary-text);
   font-size: 1.25rem;
-  padding: 0.1rem 1.25rem;
+  padding: 0.2rem 1.25rem;
   width: 100%;
 }
 
