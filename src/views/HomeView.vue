@@ -21,8 +21,10 @@ const isActive = ref(false);
       <h2>Rastrear envío</h2>
       <div class="field">
         <p class="control has-icons-left">
-          <span class="icon is-left material-symbols-outlined">search</span>
           <input class="input is-medium" type="text" placeholder="Número de guía">
+          <span class="icon is-small is-left">
+            <fa icon="magnifying-glass"></fa>
+          </span>
         </p>
       </div>
     </div>
@@ -79,11 +81,12 @@ h2 {
   font-size: 2rem;
   color: var(--primary-text);
   font-weight: bold;
-  padding: 3rem 1rem 1.5rem 0;
+  padding: 2rem 1rem 1.5rem 0;
 }
 
 p {
   font-size: 1.7rem;
+  padding: 0 0 1rem 0;
 }
 
 header .image {
