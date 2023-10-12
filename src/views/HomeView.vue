@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import PriceCalculator from "../components/core/PriceCalculator.vue"
+import PriceCalculator from "../components/citizen/PriceCalculator.vue"
+import LastOrderInfo from "../components/citizen/LastOrderInfo.vue"
 
 const isActive = ref(false);
 
@@ -30,14 +31,7 @@ const isActive = ref(false);
     </div>
     <div class="last-order">
       <h2>Último pedido</h2>
-      <div class="box">
-        <div id="order-state">
-          <p>Entregado</p>
-        </div>
-        <div id="order-detail">
-          <p><b>Acarreo<br>Destino:</b> Nación del fuego<br>Entregado el: 15 de Septiembre de 2023</p>
-        </div>
-      </div>
+      <LastOrderInfo/>
     </div>
 
     <h2>Calculadora</h2>
@@ -111,34 +105,6 @@ header .image {
   background-color: var(--input-field);
   font-size: 1.5rem;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
-}
-
-.box {
-  background-color: var(--input-field);
-  display: flex;
-  padding: 0;
-}
-
-.box #order-state {
-  background-color: var(--primary-button);
-  padding: 1.25rem;
-  border-radius: 0.6rem 0 0 0.6rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#order-state p {
-  color: var(--color-primary-white);
-  font-size: 1.5rem;
-  padding: 0;
-}
-
-#order-detail p {
-  color: var(--primary-text);
-  font-size: 1.25rem;
-  padding: 1.25rem;
-  width: 100%;
 }
 
 .action-button {
