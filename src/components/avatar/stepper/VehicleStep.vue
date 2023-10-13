@@ -40,8 +40,8 @@ onBeforeMount(async () =>{
 
 <template>
     <div class="form-header">
-      <h1>Correo electrónico</h1>
-      <p>Ingrese el correo electrónico del bisonte</p>
+      <h1>Placa del vehículo</h1>
+      <p>Ingrese la placa del vehículo del bisonte</p>
     </div>
     <div class="form-content">
       <div class="form-inputs">
