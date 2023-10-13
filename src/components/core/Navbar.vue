@@ -13,41 +13,44 @@ export default defineComponent({
 </script>
 
 <template>
-    <nav class="navbar is-fixed-top has-shadow">
-        <div class="container">
-            <div class="navbar-brand">
-                <RouterLink to="/">
-                    <img src="/img/logo-white.svg" alt="Acarreos Appa logo">
-                </RouterLink>
-                <RouterLink to="/" class="brand-text"> Acarreos Appa </RouterLink>
-                <div  
-                    :aria-expanded="isActive" 
+    <div class="section">
+        <nav class="navbar is-fixed-top has-shadow">
+            <div class="container">
+                <div class="navbar-brand">
+                    <RouterLink to="/">
+                        <img src="/img/logo-white.svg" alt="Acarreos Appa logo">
+                    </RouterLink>
+                    <RouterLink to="/" class="brand-text"> Acarreos Appa </RouterLink>
+                    <div  
+                        :aria-expanded="isActive" 
+                        :class="{ 'is-active': isActive }"
+                        role="button" 
+                        class="navbar-burger" 
+                        aria-label="menu" 
+                        data-target="collapse"
+                        @click="isActive = !isActive" 
+                    >
+                        <span aria-hidden="true" />
+                        <span aria-hidden="true" />
+                        <span aria-hidden="true" />
+                    </div>
+                </div>
+                <div 
+                    id="collapse" 
                     :class="{ 'is-active': isActive }"
-                    role="button" 
-                    class="navbar-burger" 
-                    aria-label="menu" 
-                    data-target="collapse"
-                    @click="isActive = !isActive" 
+                    class="navbar-menu is-paddingless"
                 >
-                    <span aria-hidden="true" />
-                    <span aria-hidden="true" />
-                    <span aria-hidden="true" />
+                    <div class="navbar-end" @click="isActive = !isActive">
+                        <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
+                        <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
+                        <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
+                        <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
+                    </div>
                 </div>
             </div>
-            <div 
-                id="collapse" 
-                :class="{ 'is-active': isActive }"
-                class="navbar-menu is-paddingless"
-            >
-                <div class="navbar-end" @click="isActive = !isActive">
-                    <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
-                    <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
-                    <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
-                    <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
-                </div>
-            </div>
-        </div>
-    </nav>
+        </nav>
+
+    </div>
 </template>
 
 <style scoped>

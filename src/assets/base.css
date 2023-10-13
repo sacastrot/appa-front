@@ -2,6 +2,7 @@
   --color-primary-orange: #E47120;
   --color-primary-brown: #964738;
   --color-primary-blue: #9BBFE1;
+  --color-secondary-blue: #347894;
   --color-secondary-brown: #5A1807;
   --color-secondary-brown-blur: rgba(90, 24, 7, 0.5);
   --color-soft-blue: #F5F8FB;
@@ -29,11 +30,11 @@
   --seconday-text: var(--color-secondary-green);
   --pending-state: var(--color-primary-red);
   --delivered-state: var(--color-secondary-green);
+  --link-login: var(--color-secondary-blue);
 }
 
 html{
   font-size: 62.5%;
-  padding-top: 5rem;
 }
 
 *,
@@ -45,7 +46,7 @@ html{
 }
 
 body {
-  min-height: calc(100vh - 5rem);
+  min-height: 100vh;
   color: var(--primary-text);
   background: var(--background);
   transition:

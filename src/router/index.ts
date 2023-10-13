@@ -7,6 +7,7 @@ import ProfileView from "../views/ProfileView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
 import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
+import LoginViewVue from '@/views/LoginView.vue';
 
 const routes: RouteRecordRaw[] = [
     {
@@ -43,6 +44,15 @@ const routes: RouteRecordRaw[] = [
         path: "/carriages/register",
         name: "register-carriages",
         component: NewCarriageView
+    },
+    {
+        path: "/login",
+        name: "login",
+        component: LoginViewVue,
+        meta: {
+            requiredAuth: false,
+            title: "Welcome to Acarreos Appa"
+        }
     }
 ];
 
