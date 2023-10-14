@@ -9,8 +9,10 @@ import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
 import LoginViewVue from '@/views/LoginView.vue';
 import {useLayoutStore} from "@/stores/layout";
+import {useUserStore} from "@/stores/user";
 import MainLayout from "@/layouts/MainLayout.vue";
 import LoginLayout from "@/layouts/LoginLayout.vue";
+import SignUpView from "@/views/SignUpView.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -92,6 +94,16 @@ const routes: RouteRecordRaw[] = [
             title: "Welcome to Acarreos Appa",
             layout: LoginLayout,
         }
+    },
+    {
+        path:"/sign-up",
+        name: "sign-up",
+        component: SignUpView,
+        meta: {
+            requiredAuth: false,
+            title: "Welcome to Acarreos Appa",
+            layout: LoginLayout,
+        }
     }
 ];
 
@@ -102,9 +114,10 @@ const router = createRouter({
 
 router.beforeEach(async (to, from,next) => {
     const layoutStore = useLayoutStore();
+    const user = useUserStore();
     layoutStore.setLayout(to.meta.layout);
 
-    if(to.meta.requiredAuth){
+    if(to.meta.requiredAuth && !user.isAuth){
         return next({name: "login"});
     }
 

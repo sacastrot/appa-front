@@ -67,5 +67,5 @@ export const useUserStore = defineStore("user", () => {
     }
 
 
-    return {state, isAuth, setName, setEmail, setPassword, setRole, setVehicle, login, logout, addUser, resetUser}
+    return {state, isAuth, setName, setEmail, setPassword, setRole, setVehicle, login, logout, addUser, resetUser, users}
 });

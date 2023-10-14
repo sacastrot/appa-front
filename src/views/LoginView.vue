@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Logo from '@/components/core/Logo.vue';
 import { ref } from 'vue';
+import {useRouter} from "vue-router";
 
 const showPassword = ref<string>("password")
 const iconPassword = ref("visibility")
@@ -13,6 +14,9 @@ const togglePassword = () => {
         iconPassword.value = "visibility"
     }
 }
+
+const router = useRouter()
+
 </script>
 <template>
     <div class="login-container">
@@ -45,7 +49,7 @@ const togglePassword = () => {
         </div>
         <div class="sign-up">
             <p class="pr-5">¿No tienes una cuenta?</p>
-            <p class="link">Regístrate</p>
+            <p @click="router.push('/sign-up')" class="link">Regístrate</p>
         </div>
     </div>
 </template>
