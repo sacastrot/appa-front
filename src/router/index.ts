@@ -8,42 +8,80 @@ import EditProfileView from "../views/EditProfileView.vue";
 import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
 import LoginViewVue from '@/views/LoginView.vue';
+import {useLayoutStore} from "@/stores/layout";
+import MainLayout from "@/layouts/MainLayout.vue";
+import LoginLayout from "@/layouts/LoginLayout.vue";
 
 const routes: RouteRecordRaw[] = [
     {
         path: "/",
         name: "home",
-        component: HomeView
+        component: HomeView,
+        meta: {
+            requiredAuth: true,
+            title: "Welcome to Acarreos Appa",
+            layout: MainLayout
+        }
     },
     {
         path: "/carriages",
         name: "carriages",
-        component: CarriagesView
+        component: CarriagesView,
+        meta: {
+            requiredAuth: true,
+            title: "Acarreos",
+            layout: MainLayout
+        }
     },
     {
         path: "/packages",
         name: "packages",
-        component: PackagesView
+        component: PackagesView,
+        meta: {
+            requiredAuth: true,
+            title: "Paquetes",
+            layout: MainLayout
+        }
     },
     {
         path: "/profile",
         name: "profile",
-        component: ProfileView
+        component: ProfileView,
+        meta: {
+            requiredAuth: true,
+            title: "Tu perfil",
+            layout: MainLayout
+        }
     },
     {
         path: "/packages/register",
         name: "register-packages",
-        component: NewPackageView
+        component: NewPackageView,
+        meta: {
+            requiredAuth: true,
+            title: "Welcome to Acarreos Appa",
+            layout: MainLayout
+        }
     },
     {
         path: "/profile/edit",
         name: "edit-profile",
-        component: EditProfileView
+        component: EditProfileView,
+        meta: {
+            requiredAuth: true,
+            title: "Welcome to Acarreos Appa",
+            layout: MainLayout
+        }
     },
     {
         path: "/carriages/register",
         name: "register-carriages",
-        component: NewCarriageView
+        component: NewCarriageView,
+        meta: {
+            requiredAuth: true,
+            title: "Welcome to Acarreos Appa",
+            layout: MainLayout
+        }
     },
     {
         path: "/login",
@@ -51,7 +89,8 @@ const routes: RouteRecordRaw[] = [
         component: LoginViewVue,
         meta: {
             requiredAuth: false,
-            title: "Welcome to Acarreos Appa"
+            title: "Welcome to Acarreos Appa",
+            layout: LoginLayout,
         }
     }
 ];
@@ -61,4 +100,14 @@ const router = createRouter({
     routes,
 });
 
+router.beforeEach(async (to, from,next) => {
+    const layoutStore = useLayoutStore();
+    layoutStore.setLayout(to.meta.layout);
+
+    if(to.meta.requiredAuth){
+        return next({name: "login"});
+    }
+
+    return next();
+});
 export default router;

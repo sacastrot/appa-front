@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import {RouterView} from "vue-router";
-import Navbar from "./components/core/Navbar.vue";
+import {useLayoutStore} from "@/stores/layout";
+const layout = useLayoutStore();
 </script>
 
 <template>
-  <Navbar/>
-  <RouterView/>
+  <component :is="layout.state"/>
 </template>
 
 <style scoped>

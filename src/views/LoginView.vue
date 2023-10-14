@@ -11,7 +11,6 @@ const togglePassword = () => {
     } else {
         showPassword.value = "password"
         iconPassword.value = "visibility"
-
     }
 }
 </script>

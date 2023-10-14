@@ -24,6 +24,12 @@ export enum Checkpoint {
     ShuJing       ="Shu Jing",
 }
 
+export enum Role {
+    Citizen,
+    Bison,
+    Avatar
+}
+
 interface Steps {
     steps: number;
     listStepsComponents: StepComponent[];
@@ -69,8 +75,17 @@ interface Bisonte {
     vehicle: string | undefined;
 }
 
+interface User {
+    id: number;
+    name: string | undefined;
+    email: string | undefined;
+    password: string | undefined;
+    role: Role;
+    vehicle: string | undefined;
+
+}
 interface CheckpointCoordinates {
     x: number;
     y: number;
 }
-export type {Steps, StepComponent, PackageState, Carriage, Bisonte, CheckpointCoordinates}
+export type {Steps, StepComponent, PackageState, Carriage, Bisonte, CheckpointCoordinates, User}
