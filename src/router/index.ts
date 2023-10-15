@@ -13,6 +13,7 @@ import {useUserStore} from "@/stores/user";
 import MainLayout from "@/layouts/MainLayout.vue";
 import LoginLayout from "@/layouts/LoginLayout.vue";
 import SignUpView from "@/views/SignUpView.vue";
+import AccessDeniedView from "@/views/AccessDeniedView.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -104,6 +105,16 @@ const routes: RouteRecordRaw[] = [
             title: "Welcome to Acarreos Appa",
             layout: LoginLayout,
         }
+    },
+    {
+        path:"/access-denied",
+        name: "sign-up",
+        component: AccessDeniedView,
+        meta: {
+            requiredAuth: false,
+            title: "Access denied",
+            layout: MainLayout,
+        }
     }
 ];
 
@@ -116,6 +127,8 @@ router.beforeEach(async (to, from,next) => {
     const layoutStore = useLayoutStore();
     const user = useUserStore();
     layoutStore.setLayout(to.meta.layout);
+
+    document.title = to.meta.title as string;
 
     if(to.meta.requiredAuth && !user.isAuth){
         return next({name: "login"});

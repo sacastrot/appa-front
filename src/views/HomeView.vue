@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from "vue";
 import PriceCalculator from "../components/core/PriceCalculator.vue"
 import {useUserStore} from "@/stores/user";
+
 const user = useUserStore()
 const isActive = ref(false);
 
@@ -15,10 +16,12 @@ const isActive = ref(false);
           <img src="/img/Logo-background-brown.svg" alt="Appa Logo brown background">
         </div>
         <h1>Hola,<br>Toph Beifong</h1>
+        <RouterLink to="/login">
+          <p>Logout</p>
+        </RouterLink>
       </div>
       <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
     </header>
-    {{ user.users }}
     <div class="track-order">
       <h2>Rastrear envío</h2>
       <div class="field">

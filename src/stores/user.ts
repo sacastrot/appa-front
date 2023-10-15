@@ -16,41 +16,51 @@ export const useUserStore = defineStore("user", () => {
     const users = ref<User[]>([])
 
     //actions
-    function login(email: string, password: string) {
-        const user = users.value.find(user => user.email === email && user.password === password)
-        if(user){
+    function login(email: string, password: string): boolean {
+        const user = users.value.find(data => data.email === email && data.password === password)
+        console.log(user)
+        if (user) {
             isAuth.value = true;
             state.value = user;
+            return true;
         }
-
+        isAuth.value = false;
+        return false;
     }
+
     function logout() {
         isAuth.value = false;
         resetUser();
     }
+
     function addUser() {
         users.value.push(state.value)
     }
+
     function setName(name: string | undefined) {
-        if(name){
+        if (name) {
             state.value.name = name;
         }
     }
+
     function setEmail(email: string | undefined) {
-        if(email){
+        if (email) {
             state.value.email = email;
         }
     }
+
     function setPassword(password: string | undefined) {
-        if(password){
+        if (password) {
             state.value.password = password;
         }
     }
+
     function setRole(role: Role) {
         state.value.role = role;
     }
+
     function setVehicle(vehicle: string | undefined) {
-        if(vehicle){
+        if (vehicle) {
             state.value.vehicle = vehicle;
         }
     }
