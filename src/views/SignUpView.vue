@@ -42,35 +42,23 @@ const nameRegex = /^[a-zA-ZÀ-ÿ\s]{1,40}$/;
 
 
 function validateEmail(email: string): void {
-  if(!emailRegex.test(email))
-    emailState.value = false
-  else
-    emailState.value = true
+  emailState.value = emailRegex.test(email);
 }
 
 function validateName(name: string): void {
-  if(!nameRegex.test(name) || name.trim().length === 0)
-    nameState.value = false
-  else
-    nameState.value = true
+  nameState.value = !(!nameRegex.test(name) || name.trim().length === 0);
 }
 function validatePassword1(password: string): void {
-  if(!passwordRegex.test(password))
-    password1State.value = false
-  else
-    password1State.value = true
+  password1State.value = passwordRegex.test(password);
 }
 
 function validatePassword2(password2: string): void {
-  if(password1.value !== password2)
-    password2State.value = false
-  else
-    password2State.value = true
+  password2State.value = password1.value === password2;
 }
 
 const userRegister = () => {
-  const fileds: string[] = [email.value, name.value, password1.value, password2.value]
-  const whiteFields = fileds.some(filed => filed.trim().length === 0)
+  const fields: string[] = [email.value, name.value, password1.value, password2.value]
+  const whiteFields = fields.some(filed => filed.trim().length === 0)
   const validData = (emailState.value && nameState.value && password1State.value && password2State.value)
 
   if(!whiteFields && validData){
@@ -79,9 +67,9 @@ const userRegister = () => {
     user.setEmail(email.value)
     user.setName(name.value)
     user.setPassword(password1.value)
-    user.addUser(user.state)
+    user.addUser()
     user.login(email.value, password1.value)
-    router.push("/")
+    router.push("/login")
   } else{
     invalidFileds.value = true
   }
@@ -120,6 +108,7 @@ const userRegister = () => {
               <li>Mínimo 8 caracteres</li>
               <li>Al menos 1 letra en mayúscula</li>
               <li>Al menos 1 letra en minúscula</li>
+              <li>Al menos 1 número</li>
               <li>Al menos un caracter especial</li>
               <li>Sin espacios en blanco</li>
             </ul>

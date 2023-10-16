@@ -14,6 +14,9 @@ import MainLayout from "@/layouts/MainLayout.vue";
 import LoginLayout from "@/layouts/LoginLayout.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import AccessDeniedView from "@/views/AccessDeniedView.vue";
+import {Role} from "@/types/intefaces";
+import HomeBisonView from "@/views/HomeBisonView.vue";
+import HomeAvatarView from "@/views/HomeAvatarView.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -22,8 +25,31 @@ const routes: RouteRecordRaw[] = [
         component: HomeView,
         meta: {
             requiredAuth: true,
-            title: "Welcome to Acarreos Appa",
-            layout: MainLayout
+            title: "Acarreos Appa",
+            layout: MainLayout,
+            roles: [Role.Citizen]
+        }
+    },
+    {
+        path: "/bison",
+        name: "home-bison",
+        component: HomeBisonView,
+        meta: {
+            requiredAuth: true,
+            title: "Acarreos Appa",
+            layout: MainLayout,
+            roles: [Role.Bison]
+        }
+    },
+    {
+        path: "/avatar",
+        name: "home-avatar",
+        component: HomeAvatarView,
+        meta: {
+            requiredAuth: true,
+            title: "Acarreos Appa",
+            layout: MainLayout,
+            roles: [Role.Avatar]
         }
     },
     {
@@ -33,7 +59,8 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiredAuth: true,
             title: "Acarreos",
-            layout: MainLayout
+            layout: MainLayout,
+            roles: [Role.Citizen]
         }
     },
     {
@@ -43,7 +70,8 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiredAuth: true,
             title: "Paquetes",
-            layout: MainLayout
+            layout: MainLayout,
+            roles: [Role.Citizen]
         }
     },
     {
@@ -53,7 +81,8 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiredAuth: true,
             title: "Tu perfil",
-            layout: MainLayout
+            layout: MainLayout,
+            roles: [Role.Citizen, Role.Bison, Role.Avatar]
         }
     },
     {
@@ -62,8 +91,9 @@ const routes: RouteRecordRaw[] = [
         component: NewPackageView,
         meta: {
             requiredAuth: true,
-            title: "Welcome to Acarreos Appa",
-            layout: MainLayout
+            title: "Nuevo paquete",
+            layout: MainLayout,
+            roles: [Role.Citizen]
         }
     },
     {
@@ -72,8 +102,9 @@ const routes: RouteRecordRaw[] = [
         component: EditProfileView,
         meta: {
             requiredAuth: true,
-            title: "Welcome to Acarreos Appa",
-            layout: MainLayout
+            title: "Tu perfil",
+            layout: MainLayout,
+            roles: [Role.Citizen, Role.Bison, Role.Avatar]
         }
     },
     {
@@ -82,8 +113,9 @@ const routes: RouteRecordRaw[] = [
         component: NewCarriageView,
         meta: {
             requiredAuth: true,
-            title: "Welcome to Acarreos Appa",
-            layout: MainLayout
+            title: "Nuevo acarreo",
+            layout: MainLayout,
+            roles: [Role.Citizen]
         }
     },
     {
@@ -92,7 +124,7 @@ const routes: RouteRecordRaw[] = [
         component: LoginViewVue,
         meta: {
             requiredAuth: false,
-            title: "Welcome to Acarreos Appa",
+            title: "Bienvenido a Acarreos Appa",
             layout: LoginLayout,
         }
     },
@@ -102,17 +134,17 @@ const routes: RouteRecordRaw[] = [
         component: SignUpView,
         meta: {
             requiredAuth: false,
-            title: "Welcome to Acarreos Appa",
+            title: "Registrarse",
             layout: LoginLayout,
         }
     },
     {
         path:"/access-denied",
-        name: "sign-up",
+        name: "access-denied",
         component: AccessDeniedView,
         meta: {
             requiredAuth: false,
-            title: "Access denied",
+            title: "Acceso denegado",
             layout: MainLayout,
         }
     }
@@ -132,6 +164,16 @@ router.beforeEach(async (to, from,next) => {
 
     if(to.meta.requiredAuth && !user.isAuth){
         return next({name: "login"});
+    }
+
+    if(to.meta.requiredAuth){
+        const role = user.state.role;
+        //@ts-ignore
+        if(!to.meta.roles.includes(role)){
+            return next({name: "access-denied"});
+        }else{
+            return next();
+        }
     }
 
     return next();

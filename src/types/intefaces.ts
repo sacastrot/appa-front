@@ -80,6 +80,7 @@ interface User {
     name: string | undefined;
     email: string | undefined;
     password: string | undefined;
+    phone: number | undefined;
     role: Role;
     vehicle: string | undefined;
 

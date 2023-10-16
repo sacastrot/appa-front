@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import Logo from '@/components/core/Logo.vue';
-import {ref} from 'vue';
+import {onBeforeMount, ref} from 'vue';
 import {useRouter} from "vue-router";
 import {useUserStore} from "@/stores/user";
+import {Role} from "@/types/intefaces";
 
+const router = useRouter()
 const user = useUserStore();
 const showPassword = ref<string>("password")
 const iconPassword = ref("visibility")
@@ -23,8 +25,15 @@ const togglePassword = () => {
 const handleLogin = () => {
   status.value = user.login(email.value, password.value);
   console.log(status.value);
-  if(status.value){
-    router.push('/')
+  if (status.value) {
+    console.log(user.state);
+    if (user.state.role === Role.Citizen) {
+      router.push('/')
+    } else if (user.state.role === Role.Bison) {
+      router.push('/bison')
+    } else if (user.state.role === Role.Avatar) {
+      router.push('/avatar')
+    }
   }
 }
 
@@ -32,7 +41,9 @@ const resetError = () => {
   status.value = true;
 }
 
-const router = useRouter()
+onBeforeMount(() => {
+  user.loadUsers();
+})
 
 </script>
 <template>
@@ -44,13 +55,15 @@ const router = useRouter()
         <div class="field mt-2 mb-6">
           <label class="label">Correo electrónico</label>
           <div class="control">
-            <input @focus="resetError" v-model="email" class="input is-large" :class="[!status ? 'is-danger':'']" type="email" placeholder="correo@appa.com" >
+            <input @focus="resetError" v-model="email" class="input is-large" :class="[!status ? 'is-danger':'']"
+                   type="email" placeholder="correo@appa.com">
           </div>
         </div>
         <div class="field password">
           <label class="label">Contraseña</label>
           <div class="control has-icons-right">
-            <input @focus="resetError" v-model="password" class="input is-large" :class="[!status ? 'is-danger':'']" :type="showPassword" placeholder="Email input"/>
+            <input @focus="resetError" v-model="password" class="input is-large" :class="[!status ? 'is-danger':'']"
+                   :type="showPassword" placeholder="Email input"/>
             <span @click="togglePassword" class="icon is-small is-right">
               <span class="material-symbols-outlined eye"> {{ iconPassword }} </span>
             </span>

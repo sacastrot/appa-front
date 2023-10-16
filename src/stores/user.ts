@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 import type {User} from "@/types/intefaces";
 import {Role} from "@/types/intefaces";
+import {userData} from "@/data/userData";
 
 export const useUserStore = defineStore("user", () => {
     const state = ref<User>({
@@ -9,13 +10,21 @@ export const useUserStore = defineStore("user", () => {
         name: undefined,
         email: undefined,
         password: undefined,
+        phone: undefined,
         role: Role.Citizen,
         vehicle: undefined,
     })
+    const loadData = ref(false);
     const isAuth = ref(false)
     const users = ref<User[]>([])
 
     //actions
+    function loadUsers() {
+        if (!loadData.value) {
+            users.value = userData;
+            loadData.value = true;
+        }
+    }
     function login(email: string, password: string): boolean {
         const user = users.value.find(data => data.email === email && data.password === password)
         console.log(user)
@@ -71,11 +80,10 @@ export const useUserStore = defineStore("user", () => {
             name: undefined,
             email: undefined,
             password: undefined,
+            phone: undefined,
             role: Role.Citizen,
             vehicle: undefined,
         }
     }
-
-
-    return {state, isAuth, setName, setEmail, setPassword, setRole, setVehicle, login, logout, addUser, resetUser, users}
+    return {state, isAuth, setName, setEmail, setPassword, setRole, setVehicle, login, logout, addUser, resetUser, users,loadUsers}
 });
