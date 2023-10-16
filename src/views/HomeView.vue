@@ -16,9 +16,6 @@ const isActive = ref(false);
           <img src="/img/Logo-background-brown.svg" alt="Appa Logo brown background">
         </div>
         <h1>Hola,<br>Toph Beifong</h1>
-        <RouterLink to="/login">
-          <p>Logout</p>
-        </RouterLink>
       </div>
       <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
     </header>

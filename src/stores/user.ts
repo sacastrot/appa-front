@@ -64,6 +64,12 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    function setPhone(phone: number | undefined) {
+        if (phone) {
+            state.value.phone = phone;
+        }
+    }
+
     function setRole(role: Role) {
         state.value.role = role;
     }
@@ -85,5 +91,5 @@ export const useUserStore = defineStore("user", () => {
             vehicle: undefined,
         }
     }
-    return {state, isAuth, setName, setEmail, setPassword, setRole, setVehicle, login, logout, addUser, resetUser, users,loadUsers}
+    return {state, isAuth, setName, setEmail, setPassword, setPhone, setRole, setVehicle, login, logout, addUser, resetUser, users,loadUsers}
 });

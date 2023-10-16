@@ -4,7 +4,6 @@ import HomeView from "../views/HomeView.vue";
 import CarriagesView from "../views/CarriagesView.vue";
 import PackagesView from "../views/PackagesView.vue";
 import ProfileView from "../views/ProfileView.vue";
-import EditProfileView from "../views/EditProfileView.vue";
 import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
 import LoginViewVue from '@/views/LoginView.vue';
@@ -97,17 +96,6 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
-        path: "/profile/edit",
-        name: "edit-profile",
-        component: EditProfileView,
-        meta: {
-            requiredAuth: true,
-            title: "Tu perfil",
-            layout: MainLayout,
-            roles: [Role.Citizen, Role.Bison, Role.Avatar]
-        }
-    },
-    {
         path: "/carriages/register",
         name: "register-carriages",
         component: NewCarriageView,
@@ -122,6 +110,16 @@ const routes: RouteRecordRaw[] = [
         path: "/login",
         name: "login",
         component: LoginViewVue,
+        meta: {
+            requiredAuth: false,
+            title: "Bienvenido a Acarreos Appa",
+            layout: LoginLayout,
+        }
+    },
+    {
+        path: "/logout",
+        name: "logout",
+        redirect: "/login",
         meta: {
             requiredAuth: false,
             title: "Bienvenido a Acarreos Appa",

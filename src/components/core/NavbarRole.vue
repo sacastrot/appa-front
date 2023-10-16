@@ -42,6 +42,7 @@ const isActive = ref<boolean>(false);
             <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
             <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
+            <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
           </div>
           <!--For bison role-->
           <div v-if="user.state.role == Role.Bison" class="navbar-end" @click="isActive = !isActive">
@@ -49,6 +50,7 @@ const isActive = ref<boolean>(false);
             <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span> Actualizar</RouterLink>
             <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">assignment</span> Pedidos</RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
+            <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
           </div>
           <!--For avatar role-->
           <div v-if="user.state.role == Role.Avatar" class="navbar-end" @click="isActive = !isActive">
@@ -66,6 +68,7 @@ const isActive = ref<boolean>(false);
               Bisontes
             </RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
+            <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
           </div>
         </div>
       </div>
@@ -111,7 +114,7 @@ const isActive = ref<boolean>(false);
   padding-left: 0.5rem;
   font-size: 2rem;
   color: var(--color-primary-white);
-  font-family: "Baloo Tamma 2, sans-serif",serif;
+  font-family: "Baloo Tamma 2", "sans-serif";
 }
 
 .navbar-item{
