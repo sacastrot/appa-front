@@ -29,7 +29,7 @@ const store = useBisontesStore();
           </div>
           <div class="rotate"></div>
           <div class="content">
-            <p>{{ bisonte.name }}</p>
+            <p class="has-text-weight-bold"> {{ bisonte.name }}</p>
             <p>{{ bisonte.email }}</p>
           </div>
         </div>

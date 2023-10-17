@@ -8,8 +8,8 @@ import AvatarHomeView from "./views/AvatarHomeView.vue";
 <template>
   <Navbar/>
   <!-- <RouterView/> -->
-  <RegisteredBisontesView/>
-  <!-- <AvatarHomeView/> -->
+<!--  <RegisteredBisontesView/>-->
+   <AvatarHomeView/>
 </template>
 
 <style scoped>
