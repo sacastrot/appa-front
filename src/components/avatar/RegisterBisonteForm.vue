@@ -191,6 +191,10 @@ form {
                 background-color: var(--color-primary-orange);
                 font-size: 1.2rem;
                 margin-bottom: 2rem;
+                font-weight: bold;
+                border: none;
+                border-radius: 10px;
+                width: 120px;
             }
         }
     }
