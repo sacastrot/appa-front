@@ -1,99 +1,72 @@
 <script setup lang="ts">
 import { onBeforeMount, onBeforeUnmount, ref, watch } from "vue";
 import {useBisontesStore} from "@/stores/bisontes";
+import { useRouter } from "vue-router";
+
 const isRegister = ref(false)
+const router = useRouter();
 const bisonteStore = useBisontesStore();
+
 const nameBisonte = ref<string | undefined>(bisonteStore.state.name);
 const idBisonte = ref<number | undefined>(bisonteStore.state.id);
 const emailBisonte = ref<string | undefined>(bisonteStore.state.email);
 const vehicleBisonte = ref<string | undefined>(bisonteStore.state.vehicle);
-let lastBisonte = bisonteStore.state
-const showSuccess = () => {
-    bisonteStore.addBisonte()
-    console.log(bisonteStore.bisontes)
-    console.log(bisonteStore.state)
-    lastBisonte = bisonteStore.bisontes[bisonteStore.bisontes.length -1]
-    bisonteStore.resetBisonte();
-    isRegister.value = !isRegister.value
-    return isRegister.value
-}
+const validName = ref(false)
+const validId = ref(false)
+const validEmail = ref(false)
+const validVehicle = ref(false)
+const validInformation = ref(false)
+
 const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
 function validateEmail(email: string): boolean {
     return emailRegex.test(email);
 }
 
-const emit = defineEmits(["validateStep"]);
-const emitValidateStep = (validateValue: boolean) => {
-    emit("validateStep", validateValue)
+watch([nameBisonte, idBisonte, emailBisonte, vehicleBisonte], () => {
+    validName.value = (nameBisonte.value && nameBisonte.value.length > 3) ? true : false
+    validId.value = (idBisonte.value && !bisonteStore.searchBisonte(idBisonte.value)) ? true : false
+    validEmail.value = (validateEmail(emailBisonte.value) && !bisonteStore.searchBisonteByEmail(emailBisonte.value)) ? true : false
+    validVehicle.value = (vehicleBisonte.value != undefined && !bisonteStore.searchVehicle(vehicleBisonte.value)) ? true : false
+    validInformation.value = (validName.value && validId.value && validEmail.value && validVehicle.value) ? true : false
+    return validInformation.value
+})
+
+const returnHome = () => {
+  router.push("/");
 }
-
-watch(nameBisonte, () => {
+const showSuccess = async () => {
     if(nameBisonte.value && nameBisonte.value.length > 3){
-        emitValidateStep(true);
-    }else{
-        emitValidateStep(false);
-    }
-})
-
-watch(idBisonte, () => {
-    if(idBisonte.value){
-        if(!bisonteStore.searchBisonte(idBisonte.value)){
-        emitValidateStep(true);
-        }else{
-        emitValidateStep(false);
-        }
-    }else{
-        emitValidateStep(false);
-    }
-})
-
-watch(emailBisonte, () => {
-    if(validateEmail(emailBisonte.value)){
-        emitValidateStep(true);
-    }else{
-        emitValidateStep(false);
-    }
-})
-
-watch(vehicleBisonte, () => {
-    if(vehicleBisonte.value){
-        if(!bisonteStore.searchVehicle(vehicleBisonte.value)){
-        emitValidateStep(true);
-        }else{
-        emitValidateStep(false);
-        }
-    }else{
-        emitValidateStep(false);
-    }
-})
-
-onBeforeUnmount(async () =>{
-    if(nameBisonte.value){
         bisonteStore.setName(nameBisonte.value);
     }
     if(idBisonte.value){
-        bisonteStore.setId(idBisonte.value);
+        if(!bisonteStore.searchBisonte(idBisonte.value)){
+            bisonteStore.setId(idBisonte.value);
+        }
     }
-    if(emailBisonte.value){
-        bisonteStore.setEmail(emailBisonte.value);
+    if(validateEmail(emailBisonte.value)){
+        if (!bisonteStore.searchBisonteByEmail(emailBisonte.value)){
+            bisonteStore.setEmail(emailBisonte.value);
+        }
     }
-    if(vehicleBisonte.value !== undefined){
-        bisonteStore.setVehicle(vehicleBisonte.value);
+    if(vehicleBisonte.value != undefined){
+        if(!bisonteStore.searchVehicle(vehicleBisonte.value)){
+            bisonteStore.setVehicle(vehicleBisonte.value);
+        }
     }
-    emitValidateStep(false);
-})
+    bisonteStore.addBisonte()
+    bisonteStore.resetBisonte();
+    isRegister.value = !isRegister.value
+    return isRegister.value
+}
 
 onBeforeMount(async () =>{
     nameBisonte.value = bisonteStore.state.name;
     idBisonte.value = bisonteStore.state.id;
     emailBisonte.value = bisonteStore.state.email;
     vehicleBisonte.value = bisonteStore.state.vehicle;
-//   emitValidateStep(Boolean(nameBisonte.value && nameBisonte.value.length > 3));
-//   emitValidateStep(Boolean(idBisonte.value));
-//   emitValidateStep(validateEmail(emailBisonte.value));
-//   emitValidateStep(Boolean(vehicleBisonte.value));
 })
+
 </script>
 
 <template>
@@ -142,7 +115,7 @@ onBeforeMount(async () =>{
                 </div>
 
                 <div class="control">
-                    <button class="button is-link" type="submit">Registrar</button>
+                    <button class="button is-link" type="submit" :disabled="!validInformation">Registrar</button>
                 </div>
             </div>
         </div>
@@ -167,32 +140,35 @@ onBeforeMount(async () =>{
                 <div class="summary-section">
                     <h1>Nombre</h1>
                     <p>
-                        {{lastBisonte.name}}
+                        {{nameBisonte}}
                     </p>
                     <hr>
                 </div>
                 <div class="summary-section">
                     <h1>Documento de identidad</h1>
                     <p>
-                        {{lastBisonte.id}}
+                        {{idBisonte}}
                     </p>
                     <hr>
                 </div>
                 <div class="summary-section">
                     <h1>Correo electrónico</h1>
                     <p>
-                        {{lastBisonte.email}}
+                        {{emailBisonte}}
                     </p>
                     <hr>
                 </div>
                 <div class="summary-section">
                     <h1>Vehiculo</h1>
                     <p>
-                        {{lastBisonte.vehicle}}
+                        {{vehicleBisonte}}
                     </p>
                     <hr>
                 </div>
             </div>
+        </div>
+        <div class="actions-return-home">
+            <button class="button" @click="returnHome">Volver al inicio</button>
         </div>
     </div>
 </template>
@@ -220,11 +196,24 @@ form {
     }
 }
 
-.success{
+.success {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .actions-return-home {
+        margin: 2rem auto;
+        & button {
+            font-size: 1.4rem;
+            width: 250px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--primary-button);
+            color: var(--color-primary-white);
+        }
+    }
     .success-image{
         margin-top: 30px;
     }

@@ -35,10 +35,6 @@ const appStep: Steps = {
   listStepsComponents: [firstStep, secondtStep, thirdStep, fourthStep, finalStep]
 }
 
-const showStepper = ref(false)
-
-
-
 </script>
 
 <template>

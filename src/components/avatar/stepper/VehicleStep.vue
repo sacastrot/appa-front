@@ -12,7 +12,6 @@ const emitValidateStep = (validateValue: boolean) => {
 }
 
 watch(vehicleBisonte, () => {
-  console.log(vehicleBisonte.value)
   if(vehicleBisonte.value){
     if(!bisonteStore.searchVehicle(vehicleBisonte.value)){
       emitValidateStep(true);
