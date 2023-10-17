@@ -1,31 +1,32 @@
 <script setup lang="ts">
-import {ref} from "vue";
-import type {Bisonte} from "@/types/intefaces";
+import { ref } from "vue";
+import type { Bisonte } from "@/types/intefaces";
+import { useBisontesStore } from "@/stores/bisontes";
 
 const expand = ref<boolean>(false);
+const store = useBisontesStore();
+const search = ref<string>("");
+const modalActive = ref(false);
+let filteredBisontes = ref<Bisonte[] | undefined>(store.bisontes);
+
 const toggleExpand = () => {
   expand.value = !expand.value;
 };
-import {useBisontesStore} from "@/stores/bisontes";
-
-const store = useBisontesStore();
-const search = ref<string>("");
-let filteredBisontes = ref<Bisonte[] | undefined>(store.bisontes);
 
 function searchBisonte() {
   if (!search.value) {
-    console.log("entre aqui");
     filteredBisontes.value = store.bisontes;
     return filteredBisontes.value;
   }
   filteredBisontes.value = store.searchBisonteEmail(
-      search.value.toLowerCase().trim()
+    search.value.toLowerCase().trim()
   );
-  console.log(filteredBisontes.value);
   return filteredBisontes.value;
 }
-const log = (message: string) => {
-  console.log(message);
+
+let bisonteRemoved = ref<Bisonte | undefined>(undefined);
+function getBisonte(bisonte : Bisonte): void {
+    bisonteRemoved.value = bisonte;
 }
 </script>
 
@@ -37,20 +38,20 @@ const log = (message: string) => {
         <p class="control has-icons-left">
           <span class="icon is-left material-symbols-outlined">search</span>
           <input
-              class="input is-medium"
-              type="text"
-              placeholder="Correo del bisonte"
-              @input="searchBisonte"
-              v-model="search"
+            class="input is-medium"
+            type="text"
+            placeholder="Correo del bisonte"
+            @input="searchBisonte"
+            v-model="search"
           />
         </p>
       </div>
     </div>
     <div class="bisontes-list">
       <div
-          class="bison-card"
-          v-for="bisonte in filteredBisontes"
-          :key="bisonte.id"
+        class="bison-card"
+        v-for="bisonte in filteredBisontes"
+        :key="bisonte.id"
       >
         <Transition name="fade-bisonte-summary">
           <div class="first_content" v-if="!expand">
@@ -71,12 +72,15 @@ const log = (message: string) => {
           </div>
         </Transition>
         <div
-            class="square"
-            @click="toggleExpand"
-            :class="[expand ? 'package-active' : 'package-inactive']"
+          class="square"
+          @click="toggleExpand"
+          :class="[expand ? 'package-active' : 'package-inactive']"
         >
           <!--          <Transition name="fade-details">-->
-          <div class="full_bison_description" :class="expand?'description-active':'description-inactive'">
+          <div
+            class="full_bison_description"
+            :class="expand ? 'description-active' : 'description-inactive'"
+          >
             <div class="bison_details">
               <!--                <img src="/citizen/logo-card-beifong.svg" alt="" />-->
               <div class="item bison_name">
@@ -103,11 +107,40 @@ const log = (message: string) => {
           </div>
           <!--          </Transition>-->
         </div>
-        <button @click="log('button')" class="actions" :class="expand?'description-active':'description-inactive'">Eliminar</button>
-        <div @click="toggleExpand" class="logo" :class="[expand ? 'logo-active' : 'logo-inactive']"/>
+        <button
+          @click="[modalActive=true, getBisonte(bisonte)]"
+          class="actions"
+          :class="expand ? 'description-active' : 'description-inactive'"
+        >
+          Eliminar
+        </button>
+        <div
+          @click="toggleExpand"
+          class="logo"
+          :class="[expand ? 'logo-active' : 'logo-inactive']"
+        />
       </div>
     </div>
   </main>
+  <div class="modal" :class="[modalActive ? 'is-active' : '']">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <div class="custom_container">
+        <div class="summary-content">
+          <figure class="image is-64x64 logo_modal">
+            <img src="/citizen/Logo-variant-delete.svg" alt="" />
+          </figure>
+          <p>¿Está seguro que desea eliminar el bisonte?</p>
+          <div class="button-container">
+            <button class="button_left" @click="[store.deleteBisonte(bisonteRemoved.id), modalActive = false]">Si</button>
+            <button class="button_right" @click="modalActive = false">
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -129,7 +162,7 @@ const log = (message: string) => {
   background-color: var(--input-field);
   font-size: 1.5rem;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
-  0 0 0 1px rgba(10, 10, 10, 0.02);
+    0 0 0 1px rgba(10, 10, 10, 0.02);
 }
 
 .track-bisonte {
@@ -140,7 +173,6 @@ const log = (message: string) => {
     margin-bottom: 1rem;
   }
 }
-
 
 .bisontes-list {
   padding-bottom: 2rem;
@@ -161,11 +193,13 @@ const log = (message: string) => {
   opacity: 100;
   transition: opacity 0.4s ease-in-out;
   transition-delay: 0.2s;
+  pointer-events: all;
 }
 
 .description-inactive {
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
 }
 
 .first_content {
@@ -217,7 +251,7 @@ const log = (message: string) => {
   gap: 10px 0;
 
   .item {
-    color: #FDF8F8;
+    color: #fdf8f8;
   }
 
   & h1 {
@@ -287,7 +321,7 @@ const log = (message: string) => {
   .triangle {
     width: 20px;
     height: 20px;
-    background-color: #E47120;
+    background-color: #e47120;
     position: absolute;
     left: -10px;
     transform: rotate(45deg);
@@ -304,35 +338,6 @@ const log = (message: string) => {
   right: calc(0% + 0.5rem);
   transition: all 0.3s ease-in-out;
 }
-
-.fade-bisonte-summary-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-bisonte-summary-enter-active {
-  transition: opacity 0.2s ease;
-  transition-delay: 0.2s;
-}
-
-.fade-bisonte-summary-enter-from,
-.fade-bisonte-summary-leave-to {
-  opacity: 0;
-}
-
-.fade-details-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-details-enter-active {
-  transition: opacity 0.2s ease;
-  transition-delay: 0.2s;
-}
-
-.fade-details-enter-from,
-.fade-details-leave-to {
-  opacity: 0;
-}
-
 .package-active {
   width: calc(100% - 9rem);
   transition: width 0.3s ease-in-out;
@@ -341,5 +346,69 @@ const log = (message: string) => {
 .package-inactive {
   width: 80px;
   transition: width 0.3s ease-in-out;
+}
+
+.modal-content {
+  overflow: visible;
+}
+
+.custom_container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+}
+.summary-content {
+  position: relative;
+  background-color: var(--color-seconday-orange);
+  box-shadow: 5px 8px 3px rgba(0, 0, 0, 0.09);
+  border: 1px solid #80918d1d;
+  border-radius: 12px;
+  margin: 0 auto;
+  width: 80%;
+  overflow: visible;
+  .logo_modal {
+    position: absolute;
+    top: -30px;
+    left: 50%; /* Coloca el punto de referencia horizontal en el centro del contenedor */
+    transform: translateX(-50%);
+  }
+  & p {
+    font-size: 2.5rem;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 5rem;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    .button_left {
+      width: 5rem;
+      background-color: var(--color-primary-orange);
+      color: white;
+      border: none;
+      border-radius: 25%;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 20%;
+    }
+    .button_right {
+      width: 5rem;
+      background-color: var(--color-primary-gray);
+      color: white;
+      border: none;
+      border-radius: 25%;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
 }
 </style>
