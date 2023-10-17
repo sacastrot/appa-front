@@ -24,9 +24,7 @@ const togglePassword = () => {
 
 const handleLogin = () => {
   status.value = user.login(email.value, password.value);
-  console.log(status.value);
   if (status.value) {
-    console.log(user.state);
     if (user.state.role === Role.Citizen) {
       router.push('/')
     } else if (user.state.role === Role.Bison) {

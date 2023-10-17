@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import {computed, ref} from "vue";
-import {useRouter} from "vue-router";
 import {useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
 
 const user = useUserStore();
-const router = useRouter();
 const modalActive = ref<boolean>(false);
 const readOnly = ref<boolean>(true);
 
@@ -20,6 +18,9 @@ const vehicle = user.state.vehicle;
 
 //To edit profile
 const visibility = ref<string>("password");
+const showPassword = ref<string>("password")
+const iconPassword = ref("visibility")
+
 
 const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 const passwordRegex =
@@ -73,18 +74,8 @@ const emailValidation = computed(() => {
   return false;
 });
 
-// const vehicleValidation = computed(() => {
-//   if (vehicle.value != undefined) {
-//     if (vehicle.value.trim().length > 0) {
-//       return true;
-//     }
-//   }
-//   return false;
-// });
-
 const passwordValidation = computed(() => {
   if (password.value != undefined) {
-    console.log("password", password.value.trim().length > 0)
     if (password.value.trim().length > 0) {
       if (validatePassword(password.value)) {
         return true;
@@ -101,12 +92,20 @@ function editProfile() {
   user.setPhone(phone.value);
 }
 
-function showPassword() {
-  visibility.value = "text";
-}
 
 function hidePassword() {
   visibility.value = "password";
+}
+
+const togglePassword = () => {
+  console.log("togglePassword")
+  if (showPassword.value === "password") {
+    showPassword.value = "text";
+    iconPassword.value = "visibility_off"
+  } else {
+    showPassword.value = "password"
+    iconPassword.value = "visibility"
+  }
 }
 
 </script>
@@ -218,34 +217,21 @@ function hidePassword() {
           </div>
           <div class="field">
             <label class="label">Contraseña</label>
-            <div class="control has-icons-left">
+            <div class="control has-icons-left has-icons-right">
               <input
                   class="input custom-input"
-                  :type="visibility"
+                  :type="showPassword"
                   :readonly="readOnly"
                   v-model="password"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
               >
-              Lock
-            </span>
-            </div>
-            <div v-if="!readOnly">
-            <span
-                class="icon is-small is-right form_icons material-symbols-outlined icon_visibility visibility_color"
-                @click="showPassword()"
-                v-if="visibility === 'password'"
-            >
-            visibility_off
-          </span>
-              <span
-                  class="icon is-small is-right form_icons material-symbols-outlined icon_visibility"
-                  @click="hidePassword()"
-                  v-if="visibility === 'text'"
-              >
-            visibility
-          </span>
+                Lock
+              </span>
+              <span @click="togglePassword" v-if="!readOnly" class="icon is-small is-right password-icon">
+                <span class="material-symbols-outlined eye"> {{ iconPassword }} </span>
+              </span>
             </div>
           </div>
         </div>
@@ -327,6 +313,19 @@ function hidePassword() {
 .field {
   margin-bottom: 4.5rem;
   position: relative;
+
+  .password-icon.is-right {
+    pointer-events: all;
+    cursor: pointer;
+  }
+
+  .material-symbols-outlined.eye {
+    font-variation-settings: 'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  }
+
 }
 
 .card {

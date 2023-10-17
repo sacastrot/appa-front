@@ -27,7 +27,6 @@ export const useUserStore = defineStore("user", () => {
     }
     function login(email: string, password: string): boolean {
         const user = users.value.find(data => data.email === email && data.password === password)
-        console.log(user)
         if (user) {
             isAuth.value = true;
             state.value = user;

@@ -6,6 +6,11 @@ import {ref} from "vue";
 const user = useUserStore();
 
 const isActive = ref<boolean>(false);
+
+function logoutUser(){
+  user.logout()
+  console.log(user.isAuth)
+}
 </script>
 
 <template>
@@ -42,7 +47,7 @@ const isActive = ref<boolean>(false);
             <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
             <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
-            <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
+            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
           </div>
           <!--For bison role-->
           <div v-if="user.state.role == Role.Bison" class="navbar-end" @click="isActive = !isActive">
