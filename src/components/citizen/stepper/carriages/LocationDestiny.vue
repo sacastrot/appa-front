@@ -59,16 +59,26 @@ onBeforeMount(() => {
     </div>
     <div class="form-content">
       <div class="form-inputs">
-        <div class="select is-medium">
-          <select v-model="destinyNation" @change="getCheckpointsList">
-            <option v-for="value in NationType" :value="stringToNation[value]"> {{ value }}</option>
-          </select>
-        </div>
-        <div class="select is-medium">
-          <select v-model="destinyCheckpoint">
-            <option v-for="value in checkpointList" :value="stringToCheckpoint[value]">{{value}}</option>
-          </select>
-        </div>
+        <p class="control has-icons-left">
+          <div class="select is-medium">
+            <select v-model="destinyNation" @change="getCheckpointsList">
+              <option v-for="value in NationType" :value="stringToNation[value]"> {{ value }}</option>
+            </select>
+          </div>
+          <span class="icon is-small is-left">
+            <fa icon="map"></fa>
+          </span>
+        </p>
+        <p class="control has-icons-left">
+          <div class="select is-medium">
+            <select v-model="destinyCheckpoint">
+              <option v-for="value in checkpointList" :value="stringToCheckpoint[value]">{{value}}</option>
+            </select>
+          </div>
+          <span class="icon is-small is-left">
+              <fa icon="location-dot"></fa>
+          </span>
+        </p>
       </div>
     </div>
   </form>
