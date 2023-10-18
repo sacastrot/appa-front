@@ -1,38 +1,21 @@
 <script setup lang="ts">
-import {useBisontesStore} from "@/stores/bisontes";
-import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+import {onBeforeMount, watch} from "vue";
+import {useUserStore} from "@/stores/user";
 
-const bisonteStore = useBisontesStore();
+const user = useUserStore();
 
-const vehicleBisonte = ref<string | undefined>(bisonteStore.state.vehicle);
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
 
-watch(vehicleBisonte, () => {
-  if(vehicleBisonte.value){
-    if(!bisonteStore.searchVehicle(vehicleBisonte.value)){
-      emitValidateStep(true);
-    }else{
-      emitValidateStep(false);
-    }
-  }else{
-    emitValidateStep(false);
-  }
-})
-
-onBeforeUnmount(async () =>{
-  if(vehicleBisonte.value !== undefined){
-    bisonteStore.setVehicle(vehicleBisonte.value);
-  }
-  emitValidateStep(false);
+watch(user.state, () => {
+  emitValidateStep(user.validateVehicle)
 })
 
 onBeforeMount(async () =>{
-  vehicleBisonte.value = bisonteStore.state.vehicle;
-  emitValidateStep(Boolean(vehicleBisonte.value));
+  emitValidateStep(user.validateVehicle)
 })
 
 </script>
@@ -46,7 +29,7 @@ onBeforeMount(async () =>{
       <div class="form-inputs">
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="vehicleBisonte" class="input is-medium" type="text" placeholder="Placa del vehiculo">
+            <input v-model.trim="user.state.vehicle" class="input is-medium" type="text" placeholder="Placa del vehiculo">
             <span class="icon is-medium is-left">
               <fa icon="truck"></fa>
             </span>

@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import NewPackage from "@/components/citizen/history/NewPackage.vue";
 import HistoryPackage from "@/components/citizen/history/HistoryPackage.vue";
-import {onBeforeMount, onBeforeUnmount, ref} from "vue";
+import {onBeforeMount, ref} from "vue";
 import {usePackagesStore} from "@/stores/packages";
-import {packagesData} from "@/data/packagesData";
 
 const packagesStore = usePackagesStore();
-
 const modalActive = ref<boolean>(false);
+
+onBeforeMount(() => {
+  packagesStore.loadPackages();
+})
 </script>
 
 <template>
@@ -117,7 +119,7 @@ const modalActive = ref<boolean>(false);
 
 p {
   font-size: 1.7rem;
-  padding: 0px 0 15px 0px;
+  padding: 0 0 15px 0;
 }
 
 .packages-container {

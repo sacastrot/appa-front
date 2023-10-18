@@ -1,40 +1,20 @@
 <script setup lang="ts">
-import {useBisontesStore} from "@/stores/bisontes";
-import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+import {onBeforeMount, watch} from "vue";
+import {useUserStore} from "@/stores/user";
 
-const bisonteStore = useBisontesStore();
-
-const idBisonte = ref<number | undefined>(bisonteStore.state.id);
+const user = useUserStore();
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
 
-watch(idBisonte, () => {
-  if(idBisonte.value){
-    if(!bisonteStore.searchBisonte(idBisonte.value)){
-      emitValidateStep(true);
-    }else{
-      emitValidateStep(false);
-    }
-  }else{
-    emitValidateStep(false);
-  }
+watch(user.state, () => {
+  emitValidateStep(user.validateId)
 })
-
-onBeforeUnmount(async () =>{
-  if(idBisonte.value){
-    bisonteStore.setId(idBisonte.value);
-  }
-  emitValidateStep(false);
-})
-
 onBeforeMount(async () =>{
-  idBisonte.value = bisonteStore.state.id;
-  emitValidateStep(Boolean(idBisonte.value));
+  emitValidateStep(user.validateId)
 })
-
 </script>
 
 <template>
@@ -46,7 +26,7 @@ onBeforeMount(async () =>{
       <div class="form-inputs">
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="idBisonte" class="input is-medium" type="number" placeholder="Documento de identidad">
+            <input v-model="user.state.id" class="input is-medium" type="number" placeholder="Documento de identidad">
             <span class="icon is-medium is-left">
               <fa icon="id-card"></fa>
             </span>

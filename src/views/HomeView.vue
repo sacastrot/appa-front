@@ -1,9 +1,30 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import PriceCalculator from "../components/citizen/PriceCalculator.vue"
-import LastOrderInfo from "../components/citizen/LastOrderInfo.vue"
+import {useUserStore} from "@/stores/user";
+import {ref} from "vue";
+import LastOrderInfo from "@/components/citizen/LastOrderInfo.vue";
+import PriceCalculator from "@/components/citizen/PriceCalculator.vue";
+import type {User} from "@/types/intefaces";
+import {Role} from "@/types/intefaces";
 
+const user = useUserStore()
 const isActive = ref(false);
+
+let userData: User = {
+  id: undefined,
+  name: "",
+  isAuth: false,
+  vehicle: "",
+  role: Role.Citizen,
+  password: undefined,
+  phone: undefined,
+  email: undefined,
+};
+if(user.currentUser){
+  const temp = user.searchUserById(user.currentUser);
+  if (temp){
+    userData = temp;
+  }
+}
 
 </script>
 
@@ -14,7 +35,7 @@ const isActive = ref(false);
         <div class="image">
           <img src="/img/Logo-background-brown.svg" alt="Appa Logo brown background">
         </div>
-        <h1>Hola,<br>Toph Beifong</h1>
+        <h1>Hola,<br>{{userData.name}}</h1>
       </div>
       <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
     </header>
@@ -106,7 +127,6 @@ header .image {
   font-size: 1.5rem;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
 }
-
 .action-button {
   position: fixed;
   bottom: 30px;
