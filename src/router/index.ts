@@ -4,45 +4,159 @@ import HomeView from "../views/HomeView.vue";
 import CarriagesView from "../views/CarriagesView.vue";
 import PackagesView from "../views/PackagesView.vue";
 import ProfileView from "../views/ProfileView.vue";
-import EditProfileView from "../views/EditProfileView.vue";
 import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
+import LoginViewVue from '@/views/LoginView.vue';
+import {useLayoutStore} from "@/stores/layout";
+import {useUserStore} from "@/stores/user";
+import SignUpView from "@/views/SignUpView.vue";
+import AccessDeniedView from "@/views/AccessDeniedView.vue";
+import {Role} from "@/types/intefaces";
+import HomeBisonView from "@/views/HomeBisonView.vue";
+import HomeAvatarView from "@/views/HomeAvatarView.vue";
+import NewBisonteView from "@/views/NewBisonteView.vue";
+import LoginLayout from "@/layouts/LoginLayout.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
 
 const routes: RouteRecordRaw[] = [
     {
         path: "/",
         name: "home",
-        component: HomeView
+        component: HomeView,
+        meta: {
+            requiredAuth: true,
+            title: "Acarreos Appa",
+            layout: MainLayout,
+            roles: [Role.Citizen]
+        }
+    },
+    {
+        path: "/bison",
+        name: "home-bison",
+        component: HomeBisonView,
+        meta: {
+            requiredAuth: true,
+            title: "Acarreos Appa",
+            layout: MainLayout,
+            roles: [Role.Bison]
+        }
+    },
+    {
+        path: "/avatar",
+        name: "home-avatar",
+        component: HomeAvatarView,
+        meta: {
+            requiredAuth: true,
+            title: "Acarreos Appa",
+            layout: MainLayout,
+            roles: [Role.Avatar]
+        }
     },
     {
         path: "/carriages",
         name: "carriages",
-        component: CarriagesView
+        component: CarriagesView,
+        meta: {
+            requiredAuth: true,
+            title: "Acarreos",
+            layout: MainLayout,
+            roles: [Role.Citizen]
+        }
     },
     {
         path: "/packages",
         name: "packages",
-        component: PackagesView
+        component: PackagesView,
+        meta: {
+            requiredAuth: true,
+            title: "Paquetes",
+            layout: MainLayout,
+            roles: [Role.Citizen]
+        }
     },
     {
         path: "/profile",
         name: "profile",
-        component: ProfileView
+        component: ProfileView,
+        meta: {
+            requiredAuth: true,
+            title: "Tu perfil",
+            layout: MainLayout,
+            roles: [Role.Citizen, Role.Bison, Role.Avatar]
+        }
     },
     {
         path: "/packages/register",
         name: "register-packages",
-        component: NewPackageView
-    },
-    {
-        path: "/profile/edit",
-        name: "edit-profile",
-        component: EditProfileView
+        component: NewPackageView,
+        meta: {
+            requiredAuth: true,
+            title: "Nuevo paquete",
+            layout: MainLayout,
+            roles: [Role.Citizen]
+        }
     },
     {
         path: "/carriages/register",
         name: "register-carriages",
-        component: NewCarriageView
+        component: NewCarriageView,
+        meta: {
+            requiredAuth: true,
+            title: "Nuevo acarreo",
+            layout: MainLayout,
+            roles: [Role.Citizen]
+        }
+    },
+    {
+        path: "/login",
+        name: "login",
+        component: LoginViewVue,
+        meta: {
+            requiredAuth: false,
+            title: "Bienvenido a Acarreos Appa",
+            layout: LoginLayout,
+        }
+    },
+    {
+        path: "/logout",
+        name: "logout",
+        redirect: "/login",
+        meta: {
+            requiredAuth: false,
+            title: "Bienvenido a Acarreos Appa",
+            layout: LoginLayout,
+        }
+    },
+    {
+        path:"/sign-up",
+        name: "sign-up",
+        component: SignUpView,
+        meta: {
+            requiredAuth: false,
+            title: "Registrarse",
+            layout: LoginLayout,
+        }
+    },
+    {
+        path:"/access-denied",
+        name: "access-denied",
+        component: AccessDeniedView,
+        meta: {
+            requiredAuth: false,
+            title: "Acceso denegado",
+            layout: LoginLayout,
+        }
+    },
+    {
+        path: "/bison/register",
+        name: "avatar-register-bisontes",
+        component: NewBisonteView,
+        meta: {
+            requiredAuth: true,
+            title: "Nuevo bisonte",
+            layout: MainLayout,
+            roles: [Role.Avatar]
+        }
     }
 ];
 
@@ -51,4 +165,37 @@ const router = createRouter({
     routes,
 });
 
+router.beforeEach(async (to, from,next) => {
+    const layoutStore = useLayoutStore();
+    const user = useUserStore();
+    let userData;
+    if (user.currentUser !== undefined) {
+        userData = user.searchUserById(user.currentUser);
+    }
+    layoutStore.setLayout(to.meta.layout);
+
+    document.title = to.meta.title as string;
+
+    if(userData) {
+        if(to.meta.requiredAuth){
+            if (!userData.isAuth) {
+                return next({name: "login"});
+            } else {
+                //@ts-ignore
+                if (!to.meta.roles.includes(userData.role)) {
+                    return next({name: "access-denied"});
+                } else {
+                    return next();
+                }
+            }
+        }
+    }else{
+        if(to.meta.requiredAuth){
+            return next({name: "login"});
+        }
+    }
+
+
+    return next();
+});
 export default router;

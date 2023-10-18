@@ -2,6 +2,9 @@
 import {ref} from "vue";
 import {useRouter} from "vue-router";
 import type {StepComponent} from "@/types/intefaces";
+import {useUserStore} from "@/stores/user";
+import {Role} from "@/types/intefaces";
+const user = useUserStore();
 //steps
 const {steps} = defineProps<{
   steps: {
@@ -22,7 +25,11 @@ const onValidate = (validate: boolean) => {
 //Functions to change step
 //TODO: Change to use router
 const returnHome = () => {
-  router.push("/");
+  if (user.currentRole == Role.Citizen){
+    router.push("/");
+  } else if (user.currentRole == Role.Avatar){
+    router.push("/avatar");
+  }
 }
 //Functions to change step to next
 const nextStep = () => {
@@ -151,7 +158,7 @@ const backStep = () => {
   }
 
   .actions-return-home {
-    margin: 0 auto;
+    margin: 2rem auto;
 
     & button {
       width: 250px;

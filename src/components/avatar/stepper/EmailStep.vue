@@ -1,40 +1,19 @@
 <script setup lang="ts">
-import {useBisontesStore} from "@/stores/bisontes";
-import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+import {onBeforeMount, watch} from "vue";
+import {useUserStore} from "@/stores/user";
 
-const bisonteStore = useBisontesStore();
-
-const emailBisonte = ref<string | undefined>(bisonteStore.state.email);
-
+const user = useUserStore();
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
 
-const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
-
-function validateEmail(email: string): boolean {
-  return emailRegex.test(email);
-}
-
-watch(emailBisonte, () => {
-  if(validateEmail(emailBisonte.value)){
-      emitValidateStep(true);
-  }else{
-    emitValidateStep(false);
-  }
-})
-
-onBeforeUnmount(async () =>{
-  if(emailBisonte.value){
-    bisonteStore.setEmail(emailBisonte.value);
-  }
-  emitValidateStep(false);
+watch(user.state, () => {
+  emitValidateStep(user.validateEmail)
 })
 
 onBeforeMount(async () =>{
-  emailBisonte.value = bisonteStore.state.email;
-  emitValidateStep(validateEmail(emailBisonte.value));
+  emitValidateStep(user.validateEmail)
 })
 
 </script>
@@ -48,7 +27,7 @@ onBeforeMount(async () =>{
       <div class="form-inputs">
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="emailBisonte" class="input is-medium" type="email" placeholder="Correo electrónico">
+            <input v-model.trim="user.state.email" class="input is-medium" type="email" placeholder="Correo electrónico">
             <span class="icon is-medium is-left">
               <fa icon="envelope"></fa>
             </span>

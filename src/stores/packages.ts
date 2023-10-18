@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import {ref} from "vue";
 import type {PackageState} from "@/types/intefaces";
 import {Checkpoint, NationType} from "@/types/intefaces";
+import {packagesData} from "@/data/packagesData";
 
 /**
  * @name usePackagesStore
@@ -24,8 +25,7 @@ export const usePackagesStore = defineStore("package", () => {
         price: undefined,
     })
 
-
-
+    const loadData = ref(false);
     const packages = ref<PackageState[]>([]);
 
     //actions
@@ -38,10 +38,11 @@ export const usePackagesStore = defineStore("package", () => {
         packages.value.push(state.value);
     }
 
-    function setPackages(packagesData: PackageState[]) {
-        packagesData.forEach((packageData) => {
-            packages.value.push(packageData);
-        });
+    function loadPackages() {
+        if(!loadData.value){
+            packages.value = packagesData;
+            loadData.value = true;
+        }
     }
 
     function resetPackagesList() {
@@ -137,7 +138,7 @@ export const usePackagesStore = defineStore("package", () => {
         setPrice,
         addPackage,
         resetState,
-        setPackages,
+        loadPackages,
         formatDate,
         getCreatedDate,
         resetPackagesList,
