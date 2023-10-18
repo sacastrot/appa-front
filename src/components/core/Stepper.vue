@@ -151,7 +151,7 @@ const backStep = () => {
   }
 
   .actions-return-home {
-    margin: 0 auto;
+    margin: 2rem auto;
 
     & button {
       width: 250px;

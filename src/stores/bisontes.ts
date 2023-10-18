@@ -16,6 +16,10 @@ export const useBisontesStore = defineStore("bisontes", () => {
         return bisontes.value.find(bisonte => bisonte.id === id)
     }
 
+    function searchBisonteByEmail(email: string): Bisonte | undefined {
+        return bisontes.value.find(bisonte => bisonte.email === email)
+    }
+
     function searchVehicle(vehicle: string): Bisonte | undefined {
         return bisontes.value.find(bisonte => bisonte.vehicle === vehicle)
     }
@@ -60,6 +64,7 @@ export const useBisontesStore = defineStore("bisontes", () => {
         setEmail,
         setVehicle,
         searchBisonte,
+        searchBisonteByEmail,
         searchVehicle,
         resetBisonte
     }
