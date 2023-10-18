@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {ref} from "vue";
 import PriceCalculator from "../components/core/PriceCalculator.vue"
+import LastOrderInfo from "../components/citizen/LastOrderInfo.vue"
 import {useUserStore} from "@/stores/user";
+import {ref} from "vue";
 
 const user = useUserStore()
 const isActive = ref(false);
@@ -23,21 +24,16 @@ const isActive = ref(false);
       <h2>Rastrear envío</h2>
       <div class="field">
         <p class="control has-icons-left">
-          <span class="icon is-left material-symbols-outlined">search</span>
           <input class="input is-medium" type="text" placeholder="Número de guía">
+          <span class="icon is-small is-left">
+            <fa icon="magnifying-glass"></fa>
+          </span>
         </p>
       </div>
     </div>
     <div class="last-order">
       <h2>Último pedido</h2>
-      <div class="box">
-        <div id="order-state">
-          <p>Entregado</p>
-        </div>
-        <div id="order-detail">
-          <p><b>Acarreo<br>Destino:</b> Nación del fuego<br>Entregado el: 15 de Septiembre de 2023</p>
-        </div>
-      </div>
+      <LastOrderInfo/>
     </div>
 
     <h2>Calculadora</h2>
@@ -81,11 +77,12 @@ h2 {
   font-size: 2rem;
   color: var(--primary-text);
   font-weight: bold;
-  padding: 3rem 1rem 1.5rem 0;
+  padding: 2rem 1rem 1.5rem 0;
 }
 
 p {
   font-size: 1.7rem;
+  padding: 0 0 1rem 0;
 }
 
 header .image {
@@ -111,35 +108,6 @@ header .image {
   font-size: 1.5rem;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
 }
-
-.box {
-  background-color: var(--input-field);
-  display: flex;
-  padding: 0;
-}
-
-.box #order-state {
-  background-color: var(--primary-button);
-  padding: 1.25rem;
-  border-radius: 0.6rem 0 0 0.6rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#order-state p {
-  color: var(--color-primary-white);
-  font-size: 1.5rem;
-  padding: 0;
-}
-
-#order-detail p {
-  color: var(--primary-text);
-  font-size: 1.25rem;
-  padding: 1.25rem;
-  width: 100%;
-}
-
 .action-button {
   position: fixed;
   bottom: 30px;

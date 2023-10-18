@@ -19,7 +19,11 @@ function validateEmail(email: string): boolean {
 
 watch(emailBisonte, () => {
   if(validateEmail(emailBisonte.value)){
+    if (!bisonteStore.searchBisonteByEmail(emailBisonte.value)){
       emitValidateStep(true);
+    } else {
+      emitValidateStep(false);
+    }
   }else{
     emitValidateStep(false);
   }

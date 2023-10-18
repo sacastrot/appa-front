@@ -16,6 +16,7 @@ import AccessDeniedView from "@/views/AccessDeniedView.vue";
 import {Role} from "@/types/intefaces";
 import HomeBisonView from "@/views/HomeBisonView.vue";
 import HomeAvatarView from "@/views/HomeAvatarView.vue";
+import NewBisonteView from "@/views/NewBisonteView.vue"
 
 const routes: RouteRecordRaw[] = [
     {
@@ -144,6 +145,17 @@ const routes: RouteRecordRaw[] = [
             requiredAuth: false,
             title: "Acceso denegado",
             layout: MainLayout,
+        }
+    },
+    {
+        path: "/bison/register",
+        name: "avatar-register-bisontes",
+        component: NewBisonteView,
+        meta: {
+            requiredAuth: true,
+            title: "Nuevo bisonte",
+            layout: MainLayout,
+            roles: [Role.Avatar]
         }
     }
 ];
