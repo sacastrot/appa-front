@@ -114,6 +114,10 @@ export const useUserStore = defineStore("user", () => {
         users.value.splice(index, 1);
     }
 
+    function setUser(user: User) : void {
+        state.value = user;
+    }
+
     function setName(name: string | undefined) {
         if (name) {
             state.value.name = name;
@@ -201,6 +205,7 @@ export const useUserStore = defineStore("user", () => {
         setRandomPassword,
         setDefaultId,
         deleteUser,
-        filterBisonByEmail
+        filterBisonByEmail,
+        setUser
     }
 });
