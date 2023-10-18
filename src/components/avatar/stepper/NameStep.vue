@@ -1,34 +1,16 @@
 <script setup lang="ts">
-import {useBisontesStore} from "@/stores/bisontes";
-import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+import {watch} from "vue";
+import {useUserStore} from "@/stores/user";
 
-const bisonteStore = useBisontesStore();
-
-const nameBisonte = ref<string | undefined>(bisonteStore.state.name);
+const user = useUserStore();
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
 
-watch(nameBisonte, () => {
-  if(nameBisonte.value && nameBisonte.value.length > 3){
-    emitValidateStep(true);
-  }else{
-    emitValidateStep(false);
-  }
-})
-
-onBeforeUnmount(async () =>{
-  if(nameBisonte.value){
-    bisonteStore.setName(nameBisonte.value);
-  }
-  emitValidateStep(false);
-})
-
-onBeforeMount(async () =>{
-  nameBisonte.value = bisonteStore.state.name;
-  emitValidateStep(Boolean(nameBisonte.value && nameBisonte.value.length > 3));
+watch(user.state, () => {
+  emitValidateStep(user.validateName)
 })
 
 </script>
@@ -44,7 +26,7 @@ onBeforeMount(async () =>{
       <div class="form-inputs">
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="nameBisonte" class="input is-medium" type="text" placeholder="Nombre">
+            <input v-model.trim="user.state.name" class="input is-medium" type="text" placeholder="Nombre">
             <span class="icon is-medium is-left">
               <fa icon="user"></fa>
             </span>

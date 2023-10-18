@@ -24,14 +24,17 @@ const togglePassword = () => {
 
 const handleLogin = () => {
   status.value = user.login(email.value, password.value);
+
   if (status.value) {
-    if (user.state.role === Role.Citizen) {
+    if (user.currentRole === Role.Citizen) {
       router.push('/')
-    } else if (user.state.role === Role.Bison) {
+    } else if (user.currentRole === Role.Bison) {
       router.push('/bison')
-    } else if (user.state.role === Role.Avatar) {
+    } else if (user.currentRole === Role.Avatar) {
       router.push('/avatar')
     }
+  }else{
+    router.push('/login')
   }
 }
 
@@ -61,7 +64,7 @@ onBeforeMount(() => {
           <label class="label">Contraseña</label>
           <div class="control has-icons-right">
             <input @focus="resetError" v-model="password" class="input is-large" :class="[!status ? 'is-danger':'']"
-                   :type="showPassword" placeholder="Email input"/>
+                   :type="showPassword" placeholder="Contraseña"/>
             <span @click="togglePassword" class="icon is-small is-right">
               <span class="material-symbols-outlined eye"> {{ iconPassword }} </span>
             </span>

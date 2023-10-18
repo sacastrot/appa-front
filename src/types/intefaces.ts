@@ -76,13 +76,14 @@ interface Bisonte {
 }
 
 interface User {
-    id: number;
+    id: number | undefined;
     name: string | undefined;
     email: string | undefined;
     password: string | undefined;
     phone: number | undefined;
     role: Role;
     vehicle: string | undefined;
+    isAuth: boolean;
 
 }
 interface CheckpointCoordinates {

@@ -8,13 +8,12 @@ import EmailStep from "@/components/avatar/stepper/EmailStep.vue";
 import VehicleStep from "@/components/avatar/stepper/VehicleStep.vue";
 import Success from "@/components/avatar/stepper/Success.vue";
 import Hero from "@/components/core/Hero.vue";
-import { ref } from "vue";
 
 const firstStep: StepComponent = {
   finalStep: false,
   value: NameStep,
 }
-const secondtStep: StepComponent = {
+const secondStep: StepComponent = {
   finalStep: false,
   value: IdStep
 }
@@ -32,7 +31,7 @@ const finalStep: StepComponent = {
 }
 const appStep: Steps = {
   steps: 5,
-  listStepsComponents: [firstStep, secondtStep, thirdStep, fourthStep, finalStep]
+  listStepsComponents: [firstStep, secondStep, thirdStep, fourthStep, finalStep]
 }
 
 </script>

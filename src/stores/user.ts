@@ -1,24 +1,77 @@
 import {defineStore} from "pinia";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import type {User} from "@/types/intefaces";
 import {Role} from "@/types/intefaces";
 import {userData} from "@/data/userData";
 
 export const useUserStore = defineStore("user", () => {
     const state = ref<User>({
-        id: 0,
+        id: undefined,
         name: undefined,
         email: undefined,
         password: undefined,
         phone: undefined,
         role: Role.Citizen,
         vehicle: undefined,
+        isAuth: false,
     })
     const loadData = ref(false);
-    const isAuth = ref(false)
     const users = ref<User[]>([])
+    const currentUser = ref<number | undefined>(undefined);
+    const currentRole = ref<Role>();
+
+    //validation
+    const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    const validateName = computed(() => {
+        if(state.value.name){
+            return state.value.name.length > 3
+        }
+        return false
+    });
+
+    const validateId = computed(() => {
+
+        if(state.value.id !== undefined && state.value.id !== 0 && state.value.id !== null && (state.value.id).toString().length !== 0){
+            const response = searchUserById(state.value.id);
+            return response === undefined
+        }
+        return false
+    });
+
+    const validateEmail = computed(() => {
+        if(state.value.email){
+            if(emailRegex.test(state.value.email)){
+                const response = searchUserByEmail(state.value.email);
+                return response === undefined
+            }
+        }
+        return false
+    });
+
+    const validateVehicle = computed(() => {
+        if (state.value.vehicle){
+            const response = searchUserByVehicle(state.value.vehicle);
+            return response === undefined
+        }
+        return false
+    });
+
+    const validateInfoUser = computed(() => {
+        return !(validateName.value && validateId.value && validateEmail.value && validateVehicle.value)
+    });
+
+
 
     //actions
+    function searchUserByVehicle(vehicle: string): User | undefined {
+        return users.value.find(user => user.vehicle === vehicle)
+    }
+    function searchUserByEmail(email: string): User | undefined {
+        return users.value.find(user => user.email === email)
+    }
+    function searchUserById(id: number): User | undefined {
+        return users.value.find(user => user.id === id)
+    }
     function loadUsers() {
         if (!loadData.value) {
             users.value = userData;
@@ -28,16 +81,19 @@ export const useUserStore = defineStore("user", () => {
     function login(email: string, password: string): boolean {
         const user = users.value.find(data => data.email === email && data.password === password)
         if (user) {
-            isAuth.value = true;
-            state.value = user;
+            currentUser.value = user.id;
+            currentRole.value = user.role;
+            user.isAuth = true;
             return true;
         }
-        isAuth.value = false;
         return false;
     }
 
     function logout() {
-        isAuth.value = false;
+        const user = users.value.find(data => data.id === currentUser.value)
+        if (user) {
+            user.isAuth = false;
+        }
         resetUser();
     }
 
@@ -79,16 +135,30 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    function setRandomPassword(){
+        if (state.value.vehicle && state.value.id !== undefined){
+            state.value.password = (state.value.vehicle + state.value.id).toString();
+        }
+    }
+
+    function setDefaultId(){
+        let tempId = Math.random() * 1000000000000000;
+        while (searchUserById(tempId)){
+           tempId = Math.random() * 1000000000000000;
+        }
+    }
+
     function resetUser() {
         state.value = {
-            id: state.value.id + 1,
+            id: undefined,
             name: undefined,
             email: undefined,
             password: undefined,
             phone: undefined,
             role: Role.Citizen,
             vehicle: undefined,
+            isAuth: false,
         }
     }
-    return {state, isAuth, setName, setEmail, setPassword, setPhone, setRole, setVehicle, login, logout, addUser, resetUser, users,loadUsers}
+    return {state, setName, setEmail, setPassword, setPhone, setRole, setVehicle, login, logout, addUser, resetUser, users,loadUsers, validateName, validateId, validateEmail, validateVehicle, validateInfoUser, searchUserByVehicle, searchUserByEmail, searchUserById, currentUser, currentRole, setRandomPassword, setDefaultId}
 });

@@ -9,14 +9,14 @@ import NewCarriageView from "@/views/NewCarriageView.vue";
 import LoginViewVue from '@/views/LoginView.vue';
 import {useLayoutStore} from "@/stores/layout";
 import {useUserStore} from "@/stores/user";
-import MainLayout from "@/layouts/MainLayout.vue";
-import LoginLayout from "@/layouts/LoginLayout.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import AccessDeniedView from "@/views/AccessDeniedView.vue";
 import {Role} from "@/types/intefaces";
 import HomeBisonView from "@/views/HomeBisonView.vue";
 import HomeAvatarView from "@/views/HomeAvatarView.vue";
-import NewBisonteView from "@/views/NewBisonteView.vue"
+import NewBisonteView from "@/views/NewBisonteView.vue";
+import LoginLayout from "@/layouts/LoginLayout.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -144,7 +144,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiredAuth: false,
             title: "Acceso denegado",
-            layout: MainLayout,
+            layout: LoginLayout,
         }
     },
     {
@@ -168,23 +168,33 @@ const router = createRouter({
 router.beforeEach(async (to, from,next) => {
     const layoutStore = useLayoutStore();
     const user = useUserStore();
+    let userData;
+    if (user.currentUser !== undefined) {
+        userData = user.searchUserById(user.currentUser);
+    }
     layoutStore.setLayout(to.meta.layout);
 
     document.title = to.meta.title as string;
 
-    if(to.meta.requiredAuth && !user.isAuth){
-        return next({name: "login"});
-    }
-
-    if(to.meta.requiredAuth){
-        const role = user.state.role;
-        //@ts-ignore
-        if(!to.meta.roles.includes(role)){
-            return next({name: "access-denied"});
-        }else{
-            return next();
+    if(userData) {
+        if(to.meta.requiredAuth){
+            if (!userData.isAuth) {
+                return next({name: "login"});
+            } else {
+                //@ts-ignore
+                if (!to.meta.roles.includes(userData.role)) {
+                    return next({name: "access-denied"});
+                } else {
+                    return next();
+                }
+            }
+        }
+    }else{
+        if(to.meta.requiredAuth){
+            return next({name: "login"});
         }
     }
+
 
     return next();
 });

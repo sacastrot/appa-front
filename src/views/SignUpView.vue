@@ -64,6 +64,7 @@ const userRegister = () => {
   if(!whiteFields && validData){
     name.value = name.value.trimEnd()
     name.value = name.value.trimStart()
+    user.setDefaultId()
     user.setEmail(email.value)
     user.setName(name.value)
     user.setPassword(password1.value)
@@ -216,6 +217,7 @@ const userRegister = () => {
     display: flex;
     font-size: 1.1rem;
     .link{
+      cursor: pointer;
       font-weight: bold;
       color: var(--link-login);
       text-decoration: underline;

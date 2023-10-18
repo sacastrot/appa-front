@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import {useBisontesStore} from "@/stores/bisontes";
 import {onBeforeUnmount} from "vue";
+import {useUserStore} from "@/stores/user";
+import {Role} from "@/types/intefaces";
 
-const bisonteStore = useBisontesStore();
+const user = useUserStore();
 onBeforeUnmount(() =>{
-  bisonteStore.addBisonte()
-  bisonteStore.resetBisonte();
-
+  user.setRole(Role.Bison);
+  user.setRandomPassword();
+  user.addUser();
+  user.resetUser();
 })
 </script>
 
@@ -31,28 +33,28 @@ onBeforeUnmount(() =>{
         <div class="summary-section">
           <h1>Nombre</h1>
           <p>
-            {{bisonteStore.state.name}}
+            {{user.state.name}}
           </p>
           <hr>
         </div>
         <div class="summary-section">
           <h1>Documento de identidad</h1>
           <p>
-            {{bisonteStore.state.id}}
+            {{user.state.id}}
           </p>
           <hr>
         </div>
         <div class="summary-section">
           <h1>Correo electrónico</h1>
           <p>
-            {{bisonteStore.state.email}}
+            {{user.state.email}}
           </p>
           <hr>
         </div>
         <div class="summary-section">
           <h1>Vehiculo</h1>
           <p>
-            {{bisonteStore.state.vehicle}}
+            {{user.state.vehicle}}
           </p>
           <hr>
         </div>

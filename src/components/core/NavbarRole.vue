@@ -7,9 +7,9 @@ const user = useUserStore();
 
 const isActive = ref<boolean>(false);
 
+
 function logoutUser(){
   user.logout()
-  console.log(user.isAuth)
 }
 </script>
 
@@ -42,7 +42,7 @@ function logoutUser(){
             class="navbar-menu is-paddingless"
         >
           <!--For citizen role-->
-          <div v-if="user.state.role == Role.Citizen" class="navbar-end" @click="isActive = !isActive">
+          <div v-if="user.currentRole == Role.Citizen" class="navbar-end" @click="isActive = !isActive">
             <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
             <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
             <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
@@ -50,7 +50,7 @@ function logoutUser(){
             <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
           </div>
           <!--For bison role-->
-          <div v-if="user.state.role == Role.Bison" class="navbar-end" @click="isActive = !isActive">
+          <div v-if="user.currentRole == Role.Bison" class="navbar-end" @click="isActive = !isActive">
             <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
             <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span> Actualizar</RouterLink>
             <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">assignment</span> Pedidos</RouterLink>
@@ -58,9 +58,9 @@ function logoutUser(){
             <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
           </div>
           <!--For avatar role-->
-          <div v-if="user.state.role == Role.Avatar" class="navbar-end" @click="isActive = !isActive">
+          <div v-if="user.currentRole == Role.Avatar" class="navbar-end" @click="isActive = !isActive">
             <RouterLink to="/avatar" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
-            <RouterLink to="/carriages" class="navbar-item">
+            <RouterLink to="/bison/register" class="navbar-item">
               <span class="bison-add">
                 <img src="/icon/bisonAdd.svg" alt="Bisonte con icono de suma">
               </span>
