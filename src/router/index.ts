@@ -13,10 +13,11 @@ import SignUpView from "@/views/SignUpView.vue";
 import AccessDeniedView from "@/views/AccessDeniedView.vue";
 import {Role} from "@/types/intefaces";
 import HomeBisonView from "@/views/HomeBisonView.vue";
-import HomeAvatarView from "@/views/HomeAvatarView.vue";
 import NewBisonteView from "@/views/NewBisonteView.vue";
 import LoginLayout from "@/layouts/LoginLayout.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
+import AvatarHomeView from "@/views/HomeAvatarView.vue";
+import RegisteredBisontesView from "@/views/RegisteredBisontesView.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -44,7 +45,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/avatar",
         name: "home-avatar",
-        component: HomeAvatarView,
+        component: AvatarHomeView,
         meta: {
             requiredAuth: true,
             title: "Acarreos Appa",
@@ -154,6 +155,17 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiredAuth: true,
             title: "Nuevo bisonte",
+            layout: MainLayout,
+            roles: [Role.Avatar]
+        }
+    },
+    {
+        path: "/bison/list",
+        name: "avatar-list-bisons",
+        component: RegisteredBisontesView,
+        meta: {
+            requiredAuth: true,
+            title: "Listar bisontes",
             layout: MainLayout,
             roles: [Role.Avatar]
         }

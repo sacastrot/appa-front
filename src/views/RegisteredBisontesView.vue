@@ -1,32 +1,36 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import type { Bisonte } from "@/types/intefaces";
-import { useBisontesStore } from "@/stores/bisontes";
+import {ref, watch} from "vue";
+import type {User} from "@/types/intefaces";
+import {Role} from "@/types/intefaces";
+import {useUserStore} from "@/stores/user";
 
 const expand = ref<boolean>(false);
-const store = useBisontesStore();
+const store = useUserStore();
 const search = ref<string>("");
 const modalActive = ref(false);
-let filteredBisontes = ref<Bisonte[] | undefined>(store.bisontes);
+
+const initialBisons: User[] = store.users.filter((user) => user.role === Role.Bison)
+
+let filteredBisons = ref<User[] | undefined[]>(initialBisons);
 
 const toggleExpand = () => {
   expand.value = !expand.value;
 };
 
-function searchBisonte() {
-  if (!search.value) {
-    filteredBisontes.value = store.bisontes;
-    return filteredBisontes.value;
-  }
-  filteredBisontes.value = store.searchBisonteEmail(
-    search.value.toLowerCase().trim()
-  );
-  return filteredBisontes.value;
+watch([search] , () => {
+  filteredBisons.value = store.filterBisonByEmail(
+      search.value.toLowerCase().trim()
+  )
+})
+
+let bisonRemove = ref<User | undefined>(undefined);
+function getBison(bison : User): void {
+    bisonRemove.value = bison;
 }
 
-let bisonteRemoved = ref<Bisonte | undefined>(undefined);
-function getBisonte(bisonte : Bisonte): void {
-    bisonteRemoved.value = bisonte;
+function deleteBison(bisonId: number){
+  store.deleteUser(bisonId)
+  filteredBisons.value = store.users.filter((user) => user.role === Role.Bison)
 }
 </script>
 
@@ -41,7 +45,6 @@ function getBisonte(bisonte : Bisonte): void {
             class="input is-medium"
             type="text"
             placeholder="Correo del bisonte"
-            @input="searchBisonte"
             v-model="search"
           />
         </p>
@@ -50,7 +53,7 @@ function getBisonte(bisonte : Bisonte): void {
     <div class="bisontes-list">
       <div
         class="bison-card"
-        v-for="bisonte in filteredBisontes"
+        v-for="bisonte in filteredBisons"
         :key="bisonte.id"
       >
         <Transition name="fade-bisonte-summary">
@@ -108,7 +111,7 @@ function getBisonte(bisonte : Bisonte): void {
           <!--          </Transition>-->
         </div>
         <button
-          @click="[modalActive=true, getBisonte(bisonte)]"
+          @click="[modalActive=true, getBison(bisonte)]"
           class="actions"
           :class="expand ? 'description-active' : 'description-inactive'"
         >
@@ -132,7 +135,7 @@ function getBisonte(bisonte : Bisonte): void {
           </figure>
           <p>¿Está seguro que desea eliminar el bisonte?</p>
           <div class="button-container">
-            <button class="button_left" @click="[store.deleteBisonte(bisonteRemoved.id), modalActive = false]">Si</button>
+            <button class="button_left" @click="[deleteBison(bisonRemove.id), modalActive = false]">Si</button>
             <button class="button_right" @click="modalActive = false">
               No
             </button>
