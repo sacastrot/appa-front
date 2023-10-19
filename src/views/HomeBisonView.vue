@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import BisonOrder from '@/components/citizen/bison/BisonOrder.vue';
 
 </script>
 
 <template>
-<h1>Home for Bison</h1>
+  <BisonOrder/>
 </template>
 
 <style scoped>
-
 </style>
