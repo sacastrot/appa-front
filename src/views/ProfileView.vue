@@ -2,11 +2,12 @@
 import {computed, ref} from "vue";
 import {useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
-import type {User} from "@/types/intefaces";
 import {getCurrentUser} from "@/services/user";
+import {useRouter} from "vue-router";
 
 
 const userStore = useUserStore();
+const router = useRouter();
 const modalActive = ref<boolean>(false);
 const readOnly = ref<boolean>(true);
 
@@ -95,6 +96,11 @@ function editProfile() {
   user.email = email.value;
   user.password = password.value;
   user.phone = phone.value;
+}
+
+function deleteUser() {
+  userStore.deleteUser(user.id)
+  router.push("/login")
 }
 
 const togglePassword = () => {
@@ -277,7 +283,7 @@ const togglePassword = () => {
             </figure>
             <p>¿Está seguro que desea eliminar su perfil?</p>
             <div class="button-container">
-              <button class="button_left">Si</button>
+              <button @click="deleteUser" class="button_left">Si</button>
               <button class="button_right" @click="modalActive=false">No</button>
             </div>
           </div>
