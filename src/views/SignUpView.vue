@@ -7,9 +7,6 @@ import {useRouter} from "vue-router";
 //Store to save the user data
 const user = useUserStore();
 //User fields (Citizen)
-const email = ref<string>("")
-const name = ref<string>("")
-const password1 = ref<string>("")
 const password2 = ref<string>("")
 
 //States to validate the fields
@@ -113,7 +110,7 @@ const userRegister = () => {
           <p v-if="!password2State" class="help is-danger">Las contraseñas no coinciden</p>
         </div>
         <div class="form-actions mt-6">
-          <button class="button is-large signup" :disabled="!user.validateInfoCitizen || !password2State" type="submit">
+          <button class="button is-large signup" :disabled="!user.validateInfoCitizen || !password2State || !password2" type="submit">
             Registrarse
           </button>
         </div>

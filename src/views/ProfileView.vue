@@ -61,12 +61,12 @@ const nameValidation = computed(() => {
 const phoneValidation = computed(() => {
   if (phone.value != undefined) {
     if (phone.value.toString().trim().length > 0) {
-      if (phone.value.toString().length >= 7 && !isNaN(phone.value)) {
-        return true;
-      }
+      return phone.value.toString().length >= 7 && !isNaN(phone.value);
     }
+    //Only a citizen can have no phone
+    return role === Role.Citizen
   }
-  return false;
+  return true;
 });
 
 const emailValidation = computed(() => {
