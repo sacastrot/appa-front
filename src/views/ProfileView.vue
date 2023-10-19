@@ -3,29 +3,23 @@ import {computed, ref} from "vue";
 import {useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
 import type {User} from "@/types/intefaces";
+import {getCurrentUser} from "@/services/user";
 
 
 const userStore = useUserStore();
 const modalActive = ref<boolean>(false);
 const readOnly = ref<boolean>(true);
 
+const user = getCurrentUser()
 
-let user:User | undefined;
+const name = ref<string | undefined>(user.name);
+const email = ref<string | undefined>(user.email);
+const password = ref<string | undefined>(user.password);
+const phone = ref<number | undefined>(user.phone);
 
-if(userStore.currentUser){
-  user = userStore.searchUserById(userStore.currentUser)
-  if(user)
-    userStore.setUser(user)
-}
-
-const name = ref<string | undefined>(userStore.state.name);
-const email = ref<string | undefined>(userStore.state.email);
-const password = ref<string | undefined>(userStore.state.password);
-const phone = ref<number | undefined>(userStore.state.phone);
-
-const role = userStore.state.role;
-const document = userStore.state.id;
-const vehicle = userStore.state.vehicle;
+const role = user.role;
+const document = user.id;
+const vehicle = user.vehicle;
 
 
 //To edit profile
@@ -37,12 +31,11 @@ const iconPassword = ref("visibility")
 const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const nameRegex = /^[a-zA-ZÀ-ÿ\s]{1,40}$/;
+const nameRegex = /^[a-zA-ZÀ-ÿ\s]{3,40}$/;
 
 function validateEmail(email: string): boolean {
   return emailRegex.test(email);
 }
-
 // Minimo 8 caracteres
 //Al menos una letra mayúscula
 //Al menos una letra minuscula
@@ -54,9 +47,9 @@ function validatePassword(password: string): boolean {
 }
 
 const nameValidation = computed(() => {
-  if (userStore.state.name != undefined) {
-    if (userStore.state.name.trim().length > 0) {
-      if (nameRegex.test(userStore.state.name)) {
+  if (name.value != undefined) {
+    if (name.value.trim().length > 0) {
+      if (nameRegex.test(name.value)) {
         return true;
       }
     }
@@ -65,9 +58,9 @@ const nameValidation = computed(() => {
 });
 
 const phoneValidation = computed(() => {
-  if (userStore.state.phone != undefined) {
-    if (userStore.state.phone.toString().trim().length > 0) {
-      if (userStore.state.phone.toString().length >= 7 && !isNaN(userStore.state.phone)) {
+  if (phone.value != undefined) {
+    if (phone.value.toString().trim().length > 0) {
+      if (phone.value.toString().length >= 7 && !isNaN(phone.value)) {
         return true;
       }
     }
@@ -76,9 +69,9 @@ const phoneValidation = computed(() => {
 });
 
 const emailValidation = computed(() => {
-  if (userStore.state.email != undefined) {
-    if (userStore.state.email.trim().length > 0) {
-      if (validateEmail(userStore.state.email)) {
+  if (email.value != undefined) {
+    if (email.value.trim().length > 0) {
+      if (validateEmail(email.value)) {
         return true;
       }
     }
@@ -87,9 +80,9 @@ const emailValidation = computed(() => {
 });
 
 const passwordValidation = computed(() => {
-  if (userStore.state.password != undefined) {
-    if (userStore.state.password.trim().length > 0) {
-      if (validatePassword(userStore.state.password)) {
+  if (password.value != undefined) {
+    if (password.value.trim().length > 0) {
+      if (validatePassword(password.value)) {
         return true;
       }
     }
@@ -98,19 +91,13 @@ const passwordValidation = computed(() => {
 });
 
 function editProfile() {
-  userStore.setName(name.value);
-  userStore.setEmail(email.value);
-  userStore.setPassword(password.value);
-  userStore.setPhone(phone.value);
-}
-
-
-function hidePassword() {
-  visibility.value = "password";
+  user.name = name.value;
+  user.email = email.value;
+  user.password = password.value;
+  user.phone = phone.value;
 }
 
 const togglePassword = () => {
-  console.log("togglePassword")
   if (showPassword.value === "password") {
     showPassword.value = "text";
     iconPassword.value = "visibility_off"
@@ -134,12 +121,12 @@ const togglePassword = () => {
           </div>
           <div class="rotate"></div>
           <div class="citizen_information">
-            <span>{{ userStore.state.name }}</span>
+            <span>{{ user.name }}</span>
             <div class="box_information">
               <span class="icon is-small is-left material-symbols-outlined">
                 Email
               </span>
-              <p>{{ userStore.state.email }}</p>
+              <p>{{ user.email }}</p>
             </div>
           </div>
         </div>
@@ -152,7 +139,7 @@ const togglePassword = () => {
                   class="input custom-input"
                   type="text"
                   :readonly="readOnly"
-                  v-model="userStore.state.name"
+                  v-model="name"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
@@ -168,7 +155,7 @@ const togglePassword = () => {
                   class="input custom-input"
                   type="tel"
                   :readonly="readOnly"
-                  v-model="userStore.state.phone"
+                  v-model="phone"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
@@ -184,7 +171,7 @@ const togglePassword = () => {
                   class="input custom-input"
                   type="email"
                   :readonly="readOnly"
-                  v-model="userStore.state.email"
+                  v-model="email"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
@@ -193,7 +180,7 @@ const togglePassword = () => {
             </span>
             </div>
           </div>
-          <div v-if="userStore.state.role===Role.Bison">
+          <div v-if="role===Role.Bison">
             <div class="field">
               <label class="label">Documento</label>
               <div class="control has-icons-left">
@@ -201,7 +188,7 @@ const togglePassword = () => {
                     class="input custom-input"
                     type="text"
                     readonly
-                    v-model="userStore.state.id"
+                    :value="document"
                 />
                 <span
                     class="icon is-small is-left form_icons material-symbols-outlined"
@@ -217,7 +204,7 @@ const togglePassword = () => {
                     class="input custom-input"
                     type="text"
                     readonly
-                    v-model="userStore.state.vehicle"
+                    :value="vehicle"
                 />
                 <span
                     class="icon is-small is-left form_icons material-symbols-outlined"
@@ -234,7 +221,7 @@ const togglePassword = () => {
                   class="input custom-input"
                   :type="showPassword"
                   :readonly="readOnly"
-                  v-model="userStore.state.password"
+                  v-model="password"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
@@ -266,7 +253,7 @@ const togglePassword = () => {
         <button
             v-if="!readOnly"
             class="button is-fullwidth save_changes_buttom"
-            @click="readOnly=!readOnly"
+            @click="[editProfile(), readOnly=!readOnly]"
             :disabled="
             !nameValidation ||
             !phoneValidation ||
