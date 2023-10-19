@@ -8,7 +8,6 @@ import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
 import LoginViewVue from '@/views/LoginView.vue';
 import {useLayoutStore} from "@/stores/layout";
-import {useUserStore} from "@/stores/user";
 import SignUpView from "@/views/SignUpView.vue";
 import AccessDeniedView from "@/views/AccessDeniedView.vue";
 import {Role} from "@/types/intefaces";
@@ -18,6 +17,7 @@ import LoginLayout from "@/layouts/LoginLayout.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import AvatarHomeView from "@/views/HomeAvatarView.vue";
 import RegisteredBisontesView from "@/views/RegisteredBisontesView.vue";
+import {getCurrentUser} from "@/services/user";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -179,11 +179,8 @@ const router = createRouter({
 
 router.beforeEach(async (to, from,next) => {
     const layoutStore = useLayoutStore();
-    const user = useUserStore();
-    let userData;
-    if (user.currentUser !== undefined) {
-        userData = user.searchUserById(user.currentUser);
-    }
+
+    const userData = getCurrentUser();
     layoutStore.setLayout(to.meta.layout);
 
     document.title = to.meta.title as string;

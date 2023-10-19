@@ -9,6 +9,7 @@ const isActive = ref<boolean>(false);
 
 
 function logoutUser(){
+  console.log("logout")
   user.logout()
 }
 </script>
@@ -55,7 +56,7 @@ function logoutUser(){
             <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span> Actualizar</RouterLink>
             <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">assignment</span> Pedidos</RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
-            <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
+            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
           </div>
           <!--For avatar role-->
           <div v-if="user.currentRole == Role.Avatar" class="navbar-end" @click="isActive = !isActive">
@@ -66,14 +67,14 @@ function logoutUser(){
               </span>
               Registrar
             </RouterLink>
-            <RouterLink to="/packages" class="navbar-item">
+            <RouterLink to="/bison/list" class="navbar-item">
               <span class="bisons">
                 <img src="/icon/bisons.svg" alt="">
               </span>
               Bisontes
             </RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
-            <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
+            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
           </div>
         </div>
       </div>

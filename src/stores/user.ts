@@ -22,9 +22,12 @@ export const useUserStore = defineStore("user", () => {
 
     //validation
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const nameRegex = /^[a-zA-ZÀ-ÿ\s]{1,40}$/;
+
     const validateName = computed(() => {
         if (state.value.name) {
-            return state.value.name.length > 3
+            return state.value.name.length > 3 && nameRegex.test(state.value.name);
         }
         return false
     });
@@ -56,10 +59,18 @@ export const useUserStore = defineStore("user", () => {
         return false
     });
 
-    const validateInfoUser = computed(() => {
+    const validatePassword = computed(() => {
+        return passwordRegex.test(state.value.password as string);
+    });
+
+
+    const validateInfoBison = computed(() => {
         return !(validateName.value && validateId.value && validateEmail.value && validateVehicle.value)
     });
 
+    const validateInfoCitizen = computed(() => {
+        return validateEmail.value && validateName.value && validatePassword.value
+    });
 
     //actions
     function searchUserByVehicle(vehicle: string): User | undefined {
@@ -87,6 +98,7 @@ export const useUserStore = defineStore("user", () => {
 
     function login(email: string, password: string): boolean {
         const user = users.value.find(data => data.email === email && data.password === password)
+        console.log(user)
         if (user) {
             currentUser.value = user.id;
             currentRole.value = user.role;
@@ -159,10 +171,11 @@ export const useUserStore = defineStore("user", () => {
     }
 
     function setDefaultId() {
-        let tempId = Math.random() * 1000000000000000;
+        let tempId = Math.floor(Math.random() * 1000000000000000);
         while (searchUserById(tempId)) {
-            tempId = Math.random() * 1000000000000000;
+            tempId = Math.floor(Math.random() * 1000000000000000);
         }
+        state.value.id = tempId;
     }
 
     function resetUser() {
@@ -196,7 +209,9 @@ export const useUserStore = defineStore("user", () => {
         validateId,
         validateEmail,
         validateVehicle,
-        validateInfoUser,
+        validatePassword,
+        validateInfoCitizen,
+        validateInfoUser: validateInfoBison,
         searchUserByVehicle,
         searchUserByEmail,
         searchUserById,
