@@ -2,10 +2,22 @@
 import Hero from '@/components/core/Hero.vue';
 
 
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Checkpoint } from "@/types/intefaces";
 import { computed } from "vue";
-import type { CheckpointCoordinates } from "@/types/intefaces";
+import type { Carriage, CheckpointCoordinates, NationType, PackageState, User } from "@/types/intefaces";
+import { OrderType } from "@/types/intefaces";
+import { getCurrentUser } from '@/services/user';
+import { carriagesByBison, getCurrentCarriage } from '@/services/carriage';
+import { getCurrentPackage, packageByBison } from '@/services/package';
+import { getNation } from '@/data/directions';
+import { useCarriagesStore } from '@/stores/carriages';
+import { usePackagesStore } from '@/stores/packages';
+import { useUserStore } from '@/stores/user';
+
+const carriageStore= useCarriagesStore()
+const packageStore= usePackagesStore()
+const userStore = useUserStore()
 
 const currentLocation = ref<Checkpoint>(Checkpoint.Unknown);
 const nationHelp = ref("Seleccione una nación.");
@@ -282,43 +294,77 @@ function findShortestPath(
   return null;
 }
 
-const shortestPath = findShortestPath(
-  graph.value,
-  Checkpoint.FireCapital,
-  Checkpoint.BaSingSe
-);
-
-if (shortestPath) {
-  console.log(
-    `Ruta más corta desde ${Checkpoint.SouthernWater} a ${Checkpoint.FireCapital}:`,
-    shortestPath
-  );
-} else {
-  console.log(
-    `No se encontró un camino desde ${Checkpoint.BaSingSe} a ${Checkpoint.FireCapital}`
-  );
-}
-
-function showCurrentLocation() {
-  console.log(currentLocation);
-}
 
 const showSetCheckpoint = ref(true);
-const isPackage = ref(false);  //toca obtenerlo del storage
 const showSetPrice= ref(false);  
 const showSuccess = ref(false);  
 
 
 // Lo usamos para guardar el valor del input de setPrice
-const money = ref("");
+const money = ref(0);
 
+
+
+const user: User = getCurrentUser()
+const myCarriages: Carriage[] = carriagesByBison(user?.id!)
+const myPackages: PackageState[] = packageByBison(user?.id!)
+const currentPackage: PackageState | undefined = getCurrentPackage(user?.id!)
+const currentCarriage: Carriage | undefined = getCurrentCarriage(user?.id!)
+
+const order: Carriage | PackageState | undefined = currentPackage? currentPackage : currentCarriage
+
+const isPackage = ref(order?.type === OrderType.Package);
+
+const arrived = ref(false);
+
+const shortestPath = findShortestPath(
+  graph.value,
+  order?.originCheckpoint!,
+  order?.destinyCheckpoint!
+);
+
+let nation: NationType;
+
+watch([currentLocation], () => {
+  nation = getNation(currentLocation.value);
+  arrived.value = order?.destinyCheckpoint === currentLocation.value
+  console.log(arrived)
+
+});
+
+function showPriceInput(){
+  showSetPrice.value = arrived.value;
+}
+
+function updateLocationCarriage() {
+  carriageStore.updateLocation(nation, currentLocation.value, order?.id!) 
+}
+
+function setPrice(){
+  carriageStore.setPrice(money.value, order?.id!)
+  carriageStore.setArrived(new Date(),order?.id!)
+  updateLocationCarriage()
+  userStore.setAvailable(true, user.id!)
+}
+
+function setArrivedPackage(){
+  packageStore.setArrived(new Date(),order?.id!)
+}
+
+function updateLocationPackage(){
+  packageStore.updateLocation(nation, currentLocation.value, order?.id!)
+  if(arrived.value){
+    userStore.setAvailable(true, user.id!)
+    setArrivedPackage()
+  } 
+}
 
 </script>
 
 <template>
   <Hero :title="'Pedido asociado'"/>
   <main class="">
-
+{{ order }}
     <div class="summary-content" v-if="showSetCheckpoint">
       <div class="logo"></div>
       <h1>Actualizar ubicaci&oacuten</h1>
@@ -340,15 +386,23 @@ const money = ref("");
         <button
           class="button button_right"
           :disabled="originNationShowHelp"
-          @click="showSetPrice = true; showSetCheckpoint = false"
-          v-if="isPackage===false"
+          @click="showSetCheckpoint = false; showPriceInput(); showSuccess=true; updateLocationCarriage();"
+          v-if="!isPackage && !arrived"
         >
-          Siguiente
+          Actualizar
         </button>
         <button
         class="button button_right"
         :disabled="originNationShowHelp"
-        @click="showSuccess=true; showSetCheckpoint = false"
+        @click="showSetCheckpoint = false; showPriceInput();"
+        v-if="!isPackage && arrived"
+      >
+        Siguiente
+      </button>
+        <button
+        class="button button_right"
+        :disabled="originNationShowHelp"
+        @click="showSuccess=true; showSetCheckpoint = false; updateLocationPackage();"
         v-if="isPackage"
       >
         Actualizar
@@ -372,7 +426,7 @@ const money = ref("");
         </div>
       <div class="button-container">
         <button class="button button_left" @click="showSetPrice=false; showSetCheckpoint=true">Atr&aacutes</button>
-        <button class="button button_right" :disabled="!money" @click="showSuccess=true; showSetPrice=false">Actualizar</button>
+        <button class="button button_right" :disabled="!money" @click="showSuccess=true; showSetPrice=false; setPrice()">Actualizar</button>
       </div>
     </div>
 
@@ -380,29 +434,30 @@ const money = ref("");
       <div class="success-title">
           <img src="/stepper/package/success.png" />
           <h1>Actualizaci&oacuten completada</h1>
-          <p>El acarreo o paquete se completo con &eacutexito</p>
+          <p>El {{order?.type === OrderType.Package ? "paquete" : "acarreo"}} se completo con &eacutexito</p>
       </div>
       <div class="package-card">
           <div class="location">
             <img src="/img/BisonLocation.svg" />
             <div class="location-text">
               <div class="location-origin">
-                <h1>Nacion de tales</h1>
-                <p>algo2</p>
+                <h1>{{order?.originNation}}</h1>
+                <p>{{order?.originCheckpoint}}</p>
               </div>
               <div class="location-destination">
-                <h1>Hasta</h1>
-                <p>coso2</p>
+                <h1>{{order?.destinyNation}}</h1>
+                <p>{{order?.destinyCheckpoint}}</p>
               </div>
             </div>
           </div>
           <hr class="vertical-line" />
           <div class="card-description">
-            <p class="order-id">Paquete tales #123</p>
+            <p class="order-id">{{order?.type === OrderType.Package ? "Paquete" : "Acarreo"}} # {{order.type === OrderType.Package ? order.guide : order.guideNumber}}</p>
             <h1>Ubicaci&oacuten</h1>
-            <p>Ba sing se, Reino tierra</p>
+            <p>{{order?.currentNation}}</p>
+            <p>{{order?.currentCheckpoint}}</p>
             <h1>Estado</h1>
-            <p>Sin entregar</p>
+            <p>{{order?.arrived === undefined ? "Pendiente" : "Entregado"}}</p>
           </div>
         </div>
   </div>
@@ -657,13 +712,12 @@ const money = ref("");
       font-size: 1.2rem;
       font-weight: bold;
       line-height: 1.2rem;
-      margin-bottom: 0.5rem;
     }
 
     & p {
       font-size: 1.2rem;
       line-height: 1.2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     .order-id {
       color: var(--title-section);

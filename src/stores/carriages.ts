@@ -24,6 +24,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
         pickUpDate: undefined,
         pickUpHour: undefined,
         description: undefined,
+        price: 0,
         citizen: undefined,
         bison: undefined,
         type: OrderType.Carriage
@@ -150,6 +151,12 @@ export const useCarriagesStore = defineStore("carriages", () => {
         }
     }
 
+    function setPrice(price: number, carriageId: number): void {
+        const carriage = carriages.value.find(carriage => carriage.id === carriageId)
+        if (carriage)
+            carriage.price = price
+    }
+
     /** Add the current carriage to the carriages list
      * @returns {void} A void return.
      */
@@ -179,6 +186,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
             pickUpHour: undefined,
             description: undefined,
             citizen: undefined,
+            price: 0,
             bison: undefined,
             type: OrderType.Carriage
         }
@@ -197,6 +205,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
         updateLocation,
         setBison,
         carriages,
+        setPrice,
         reset
     }
 })

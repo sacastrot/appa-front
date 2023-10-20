@@ -1,62 +1,78 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
-import type { User } from "@/types/intefaces";
+import type { Checkpoint, NationType} from "@/types/intefaces";
+import { OrderType} from "@/types/intefaces";
 import { Role } from "@/types/intefaces";
 const user = useUserStore();
 
-let userData: User = {
-  id: undefined,
-  name: "",
-  isAuth: false,
-  vehicle: "",
-  role: Role.Citizen,
-  password: undefined,
-  phone: undefined,
-  email: undefined,
-};
-if (user.currentUser) {
-  const temp = user.searchUserById(user.currentUser);
-  if (temp) {
-    userData = temp;
+
+const {order} = defineProps<{
+  order: {
+    id: number;
+    created: Date | undefined;
+    arrived: Date | undefined;
+    guideNumber: number | undefined;
+    originNation: NationType,
+    originCheckpoint: Checkpoint,
+    destinyNation: NationType,
+    destinyCheckpoint: Checkpoint,
+    currentNation: NationType,
+    currentCheckpoint: Checkpoint,
+    pickUpDate: Date | undefined;
+    pickUpHour: string | undefined;
+    description: string | undefined;
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
   }
-}
+  | {
+    id: number;
+    created: Date | undefined;
+    arrived: Date | undefined;
+    originNation: NationType,
+    originCheckpoint: Checkpoint,
+    destinyNation: NationType,
+    destinyCheckpoint: Checkpoint,
+    currentNation: NationType,
+    currentCheckpoint: Checkpoint,
+    guide: number;
+    length: number | undefined,
+    width: number | undefined,
+    height: number | undefined,
+    weight: number | undefined;
+    price: number | undefined;
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
+  }
+}>()
+
 </script>
 
 <template>
   <main class="home-page">
-    <header>
-      <div class="avatar">
-        <div class="image">
-          <img
-            src="/img/Logo-background-brown.svg"
-            alt="Appa Logo brown background"
-          />
-        </div>
-        <h1>Hola,<br />{{ userData.name }}</h1>
-      </div>
-      <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
-    </header>
     <div class="package-card">
       <div class="location">
         <img src="/img/BisonLocation.svg" />
         <div class="location-text">
           <div class="location-origin">
-            <h1>Nacion de tales</h1>
-            <p>algo2</p>
+            <h1>{{order.originNation}}</h1>
+            <p>{{order.originCheckpoint}}</p>
           </div>
           <div class="location-destination">
-            <h1>Hasta</h1>
-            <p>coso2</p>
+            <h1>{{order.destinyNation}}</h1>
+            <p>{{order.destinyCheckpoint}}</p>
           </div>
         </div>
       </div>
       <hr class="vertical-line" />
       <div class="card-description">
-        <p class="order-id">Paquete tales #123</p>
+        <p class="order-id">{{order.type === OrderType.Package ? "Paquete" : "Acarreo"}} # {{order.type === OrderType.Package ? order.guide : order.guideNumber}}</p>
         <h1>Ubicaci&oacuten</h1>
-        <p>Ba sing se, Reino tierra</p>
+        <p>{{order.currentNation}}</p>
+        <p>{{order.currentCheckpoint}}</p>
         <h1>Estado</h1>
-        <p>Sin entregar</p>
+        <p>{{order.arrived === undefined ? "Pendiente" : "Entregado"}}</p>
       </div>
     </div>
     <div class="button-container">
@@ -114,8 +130,9 @@ if (user.currentUser) {
     height: 70%;
     max-width: 40%;
     flex-direction: column;
-    padding: 0 0 0 1rem;
+    padding: 0 0 0 1.5rem;
     margin-right: 3rem;
+    margin-bottom: 1rem;
     overflow-wrap: break-word;
     word-wrap: break-word;
 
@@ -123,13 +140,12 @@ if (user.currentUser) {
       font-size: 1.2rem;
       font-weight: bold;
       line-height: 1.2rem;
-      margin-bottom: 0.5rem;
     }
 
     & p {
       font-size: 1.2rem;
       line-height: 1.2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     .order-id {
       color: var(--title-section);
@@ -152,6 +168,7 @@ if (user.currentUser) {
     display: flex;
     justify-content: center;
     margin-top: 2rem;
+    margin-bottom: 2rem;
     & button {
       background-color: var(--color-primary-orange);
       border: none;
@@ -161,32 +178,6 @@ if (user.currentUser) {
       color: white;
       padding: 1rem 2rem;
     }
-  }
-}
-
-header {
-  .image {
-    padding: 2rem 1.5rem 0 0;
-    height: 12rem;
-    width: 10rem;
-  }
-
-  & h1 {
-    font-size: 2.5rem;
-    color: var(--title-section);
-    font-weight: bold;
-  }
-
-  & h2 {
-    font-size: 2rem;
-    color: var(--primary-text);
-    font-weight: bold;
-    padding: 2rem 1rem 1.5rem 0;
-  }
-
-  & p {
-    font-size: 1.7rem;
-    padding: 0 0 1rem 0;
   }
 }
 .avatar {
