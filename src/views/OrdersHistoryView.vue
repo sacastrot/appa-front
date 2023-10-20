@@ -10,7 +10,7 @@ import CardOrderHistory from "@/components/bison/CardOrderHistory.vue"
             <h1>Historial</h1>
             <p>Pedidos completados</p>
         </div>
-        <CardOrderHistory/>
+        <CardOrderHistory class="my-4"/>
     </main>
 
 </template>

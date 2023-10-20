@@ -5,6 +5,8 @@ const expand = ref<boolean>(false);
 const toggleExpand = () => {
     expand.value = !expand.value
 };
+
+const type = ref("packages");
 </script>
 
 <template>
@@ -26,27 +28,32 @@ const toggleExpand = () => {
                 </div>
             </div>
         </Transition>
-        <div @click="toggleExpand" class="square" :class="[expand ? 'order-active' : 'order-inactive']"></div>
-        <div class="order-details" :class="[expand ? 'description-active' : 'description-inactive']">
-            <h1>Descripción</h1>
-            <div class="package-description">
-                <h1>Alto</h1>
-                <p>1.2 cm</p>
-                <h1>Largo</h1>
-                <p>3 cm</p>
-                <h1>Ancho</h1>
-                <p>5 cm</p>
-                <h1>Peso</h1>
-                <p>2 kg</p>
-            </div>
-            <div class="carriage-description">
-                <p>Necesito ir a la nación del aire lo más pronto posible</p>
-            </div>
-            <div class="price">
-                <h1>Precio</h1>
-                <h1>$350.000</h1>
-            </div>
+        <div @click="toggleExpand" class="square" :class="[expand ? 'order-active' : 'order-inactive']">
+            <span v-if="type === 'packages'" class="material-symbols-outlined">package_2</span>
+            <span v-else class="material-symbols-outlined">local_shipping</span>
         </div>
+        <Transition name="fade-description">
+            <div class="order-details" :class="[expand ? 'description-active' : 'description-inactive']">
+                <h1>Descripción</h1>
+                <div v-if="type === 'packages'" class="package-description">
+                    <h1>Alto</h1>
+                    <p>1.2 cm</p>
+                    <h1>Largo</h1>
+                    <p>3 cm</p>
+                    <h1>Ancho</h1>
+                    <p>5 cm</p>
+                    <h1>Peso</h1>
+                    <p>2 kg</p>
+                </div>
+                <div v-else class="carriage-description">
+                    <p>Necesito ir a la nación del aire lo más pronto posible</p>
+                </div>
+                <div class="price">
+                    <h1>Precio</h1>
+                    <h1>$350.000</h1>
+                </div>
+            </div>
+        </Transition>
 
     </div>
 
@@ -110,5 +117,104 @@ const toggleExpand = () => {
   display: flex;
   align-items: center;
   justify-content: start;
+}
+
+.order-details {
+  width: 97%;
+  display: grid;
+  grid-template: repeat(4, 1fr) / 2fr 1fr 1fr;
+  grid-gap: 0 2rem;
+  & h1 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    align-self: end;
+    margin: 0;
+    padding-left: 0.5rem;
+    color: var(--color-primary-white);
+  }
+  & p {
+    margin: 0;
+    padding: 0;
+    align-self: end;
+    font-size: 1.2rem;
+    color: var(--color-primary-white);
+  }
+  .material-symbols-outlined {
+    justify-self: center;
+    grid-area: 1/ 1 / 2 span/ 2;
+    font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    font-size: 5rem;
+    .package-pending {
+      color: var(--pending-state);
+    }
+    .package-delivered {
+      color: var(--delivered-state);
+    }
+  }
+  .price {
+    grid-area: 3/ 1/ 2 span/ 2;
+    text-align: center;
+    align-self: end;
+  }
+}
+
+.order-details.description-inactive:hover {
+  background-color: rgba(155, 191, 225, 0.27);
+
+}
+
+.description-active {
+  width: 90%;
+  /* transition: width 0.3s ease-in-out; */
+  opacity: 100;
+  transition: opacity 0.4s ease-in-out;
+  transition-delay: 0.2s;
+  pointer-events: all;
+}
+
+.description-inactive {
+  width: 80px;
+  /* transition: width 0.3s ease-in-out; */
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.order-active {
+  right: calc(100% - 9rem);
+  transition: right 0.5s ease-in-out;
+}
+
+.order-inactive {
+  width: 80px;
+  transition: right 0.5s ease-in-out;
+}
+
+.fade-location-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-location-enter-active {
+  transition: opacity 0.2s ease;
+  transition-delay: 0.2s;
+}
+
+.fade-location-enter-from,
+.fade-location-leave-to {
+  opacity: 0;
+}
+
+.fade-description-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-description-enter-active {
+  transition: opacity 0.2s ease;
+  transition-delay: 0.2s;
+}
+
+.fade-description-enter-from,
+.fade-description-leave-to {
+  opacity: 0;
 }
 </style>
