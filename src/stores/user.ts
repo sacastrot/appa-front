@@ -14,6 +14,7 @@ export const useUserStore = defineStore("user", () => {
         role: Role.Citizen,
         vehicle: undefined,
         isAuth: false,
+        available: true,
     })
     const loadData = ref(false);
     const users = ref<User[]>([])
@@ -126,9 +127,6 @@ export const useUserStore = defineStore("user", () => {
         users.value.splice(index, 1);
     }
 
-    function setUser(user: User) : void {
-        state.value = user;
-    }
 
     function setName(name: string | undefined) {
         if (name) {
@@ -178,6 +176,12 @@ export const useUserStore = defineStore("user", () => {
         state.value.id = tempId;
     }
 
+    function setAvailable(available: boolean, userId: number): void {
+        const user: User | undefined = users.value.find(user => user.id === userId)
+        if (user)
+            user.available = available
+    }
+
     function resetUser() {
         state.value = {
             id: undefined,
@@ -188,6 +192,7 @@ export const useUserStore = defineStore("user", () => {
             role: Role.Citizen,
             vehicle: undefined,
             isAuth: false,
+            available: true,
         }
     }
 
@@ -221,6 +226,6 @@ export const useUserStore = defineStore("user", () => {
         setDefaultId,
         deleteUser,
         filterBisonByEmail,
-        setUser
+        setAvailable
     }
 });

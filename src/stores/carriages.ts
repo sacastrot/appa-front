@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import type {Carriage} from "@/types/intefaces";
-import {Checkpoint, NationType} from "@/types/intefaces";
+import {Checkpoint, NationType, OrderType} from "@/types/intefaces";
 
 /**
  * @name useCarriagesStore
@@ -11,6 +11,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
 
     //states
     const currentCarriage = ref<Carriage>({
+        id: 0,
         created: undefined,
         arrived: undefined,
         guideNumber: undefined,
@@ -18,9 +19,14 @@ export const useCarriagesStore = defineStore("carriages", () => {
         originCheckpoint: Checkpoint.Unknown,
         destinyNation: NationType.Unknown,
         destinyCheckpoint: Checkpoint.Unknown,
+        currentNation: NationType.Unknown,
+        currentCheckpoint: Checkpoint.Unknown,
         pickUpDate: undefined,
         pickUpHour: undefined,
         description: undefined,
+        citizen: undefined,
+        bison: undefined,
+        type: OrderType.Carriage
     })
 
     const carriages = ref<Carriage[]>([])
@@ -40,13 +46,6 @@ export const useCarriagesStore = defineStore("carriages", () => {
         currentCarriage.value.created = date
     }
 
-    /** Set the arrived date of the current carriage
-     * @param {Date}  date - A date param.
-     * @returns {void} A void return.
-     */
-    function setArrived(date: Date): void {
-        currentCarriage.value.arrived = date
-    }
 
     /** Set the guide number of the current carriage
      * @param {number}  guideNumber - A number param.
@@ -65,6 +64,8 @@ export const useCarriagesStore = defineStore("carriages", () => {
         if (originNation !== NationType.Unknown && originCheckpoint !== Checkpoint.Unknown) {
             currentCarriage.value.originNation = originNation;
             currentCarriage.value.originCheckpoint = originCheckpoint;
+            currentCarriage.value.currentNation = originNation;
+            currentCarriage.value.currentCheckpoint = originCheckpoint;
         }
     }
 
@@ -104,13 +105,56 @@ export const useCarriagesStore = defineStore("carriages", () => {
         currentCarriage.value.description = description
     }
 
+
+    /** Set the citizen of the current carriage
+     * @param {number}  citizenId - A number param.
+     * @returns {void} A void return.
+    * */
+    function setCitizen(citizenId: number): void {
+        currentCarriage.value.citizen = citizenId
+    }
+
+    /** Set the arrived date of a carriage
+     * @param {Date}  date - A date param.
+     * @param {number}  carriageId - A number param.
+     * @returns {void} A void return.
+     */
+    function setArrived(date: Date, carriageId: number): void {
+        const carriage: Carriage | undefined = carriages.value.find(carriage => carriage.id === carriageId)
+        if (carriage)
+            carriage.arrived = date
+    }
+
+    /** Set the bison in charge of a carriage
+     * @param {number}  bisonId - A number param.
+     * @param {number}  carriageId - A number param.
+     * @returns {void} A void return.
+     * */
+    function setBison(bisonId: number, carriageId: number): void {
+        const carriage: Carriage | undefined = carriages.value.find(carriage => carriage.id === carriageId)
+        if (carriage)
+            carriage.bison = bisonId
+    }
+
+    /** Update the current location of a carriage
+     * @param {NationType}  nation - A NationType param.
+     * @param {Checkpoint}  checkpoint - A Checkpoint param.
+     * @param {number}  carriageId - A number param.
+     * @returns {void} A void return.
+     * */
+    function updateLocation(nation: NationType, checkpoint: Checkpoint, carriageId: number): void {
+        const carriage = carriages.value.find(carriage => carriage.id === carriageId)
+        if (carriage) {
+            carriage.currentNation = nation
+            carriage.currentCheckpoint = checkpoint
+        }
+    }
+
     /** Add the current carriage to the carriages list
      * @returns {void} A void return.
      */
     function addCarriage(): void {
         setCreated(new Date())
-        const random = Math.random()
-        // setArrived(new Date())
         setGuide(currentGuideNumber.value)
         currentGuideNumber.value++
         carriages.value.push(currentCarriage.value)
@@ -121,6 +165,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
      */
     function reset(): void {
         currentCarriage.value = {
+            id: currentCarriage.value.id + 1,
             created: undefined,
             arrived: undefined,
             guideNumber: undefined,
@@ -128,9 +173,14 @@ export const useCarriagesStore = defineStore("carriages", () => {
             originCheckpoint: Checkpoint.Unknown,
             destinyNation: NationType.Unknown,
             destinyCheckpoint: Checkpoint.Unknown,
+            currentNation: NationType.Unknown,
+            currentCheckpoint: Checkpoint.Unknown,
             pickUpDate: undefined,
             pickUpHour: undefined,
             description: undefined,
+            citizen: undefined,
+            bison: undefined,
+            type: OrderType.Carriage
         }
     }
 
@@ -143,6 +193,9 @@ export const useCarriagesStore = defineStore("carriages", () => {
         setPickUpHour,
         setDescription,
         addCarriage,
+        setCitizen,
+        updateLocation,
+        setBison,
         carriages,
         reset
     }

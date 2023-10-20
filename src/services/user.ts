@@ -13,6 +13,7 @@ export const getCurrentUser = (): User => {
         password: undefined,
         phone: undefined,
         email: undefined,
+        available: true,
     };
 
     if(userStore.currentUser){

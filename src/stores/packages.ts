@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import {ref} from "vue";
 import type {PackageState} from "@/types/intefaces";
-import {Checkpoint, NationType} from "@/types/intefaces";
+import {Checkpoint, NationType, OrderType} from "@/types/intefaces";
 import {packagesData} from "@/data/packagesData";
 
 /**
@@ -11,18 +11,24 @@ import {packagesData} from "@/data/packagesData";
 export const usePackagesStore = defineStore("package", () => {
     // state
     const state = ref<PackageState>({
+        id: 0,
         created: undefined,
         arrived: undefined,
         originNation: NationType.Unknown,
         originCheckpoint: Checkpoint.Unknown,
         destinyNation: NationType.Unknown,
         destinyCheckpoint: Checkpoint.Unknown,
+        currentNation: NationType.Unknown,
+        currentCheckpoint: Checkpoint.Unknown,
         guide: 5,
         length: undefined,
         width: undefined,
         height: undefined,
         weight: undefined,
         price: undefined,
+        citizen: undefined,
+        bison: undefined,
+        type: OrderType.Package
     })
 
     const loadData = ref(false);
@@ -30,10 +36,6 @@ export const usePackagesStore = defineStore("package", () => {
 
     //actions
     function addPackage() {
-        const random = Math.random();
-        if (random < 0.5) {
-            setArrived(new Date());
-        }
         setCreatedDate();
         packages.value.push(state.value);
     }
@@ -49,14 +51,13 @@ export const usePackagesStore = defineStore("package", () => {
         packages.value.splice(0, 4);
     }
 
-    function setArrived(date: Date): void {
-        state.value.arrived = date
-    }
 
     function setOrigin(originNation: NationType, originCheckpoint: Checkpoint) {
         if (originNation !== NationType.Unknown && originCheckpoint !== Checkpoint.Unknown) {
             state.value.originNation = originNation;
             state.value.originCheckpoint = originCheckpoint;
+            state.value.currentNation = originNation;
+            state.value.currentCheckpoint = originCheckpoint;
         }
     }
 
@@ -87,18 +88,24 @@ export const usePackagesStore = defineStore("package", () => {
 
     function resetState() {
         state.value = {
+            id: state.value.id + 1,
             created: undefined,
             arrived: undefined,
             originNation: NationType.Unknown,
             originCheckpoint: Checkpoint.Unknown,
             destinyNation: NationType.Unknown,
             destinyCheckpoint: Checkpoint.Unknown,
+            currentNation: NationType.Unknown,
+            currentCheckpoint: Checkpoint.Unknown,
             guide: state.value.guide + 1,
             length: undefined,
             width: undefined,
             height: undefined,
             weight: undefined,
             price: undefined,
+            citizen: undefined,
+            bison: undefined,
+            type: OrderType.Package
         }
     }
 
@@ -128,6 +135,50 @@ export const usePackagesStore = defineStore("package", () => {
         return `${dia} de ${nameMonth}, ${year}`;
     }
 
+    /** Set the arrived date of a package
+     * @param {Date}  date - A date param.
+     * @param {number}  packageId - A number param.
+     * @returns {void} A void return.
+     */
+    function setArrived(date: Date, packageId: number): void {
+        const pkg: PackageState | undefined = packages.value.find(pkg => pkg.id === packageId);
+        if (pkg)
+            pkg.arrived = date;
+    }
+
+    /** Set the citizen of the current package
+     * @param {number}  citizenId - A number param.
+     * @returns {void} A void return.
+     * */
+    function setCitizen(citizenId: number): void {
+        state.value.citizen = citizenId
+    }
+
+    /** Set the bison in charge of a package
+     * @param {number}  bisonId - A number param.
+     * @param {number}  packageId - A number param.
+     * @returns {void} A void return.
+     * */
+    function setBison(bisonId: number, packageId: number): void {
+        const pkg: PackageState | undefined = packages.value.find(pkg => pkg.id === packageId)
+        if (pkg)
+            pkg.bison = bisonId
+    }
+
+    /** Update the current location of a package
+     * @param {NationType}  nation - A NationType param.
+     * @param {Checkpoint}  checkpoint - A Checkpoint param.
+     * @param {number}  packageId - A number param.
+     * @returns {void} A void return.
+     * */
+    function updateLocation(nation: NationType, checkpoint: Checkpoint, packageId: number): void {
+        const pkg = packages.value.find(pkg => pkg.id === packageId)
+        if (pkg) {
+            pkg.currentNation = nation
+            pkg.currentCheckpoint = checkpoint
+        }
+    }
+
     return {
         state,
         setArrived,
@@ -142,6 +193,9 @@ export const usePackagesStore = defineStore("package", () => {
         formatDate,
         getCreatedDate,
         resetPackagesList,
+        setCitizen,
+        setBison,
+        updateLocation,
         packages
     }
 })
