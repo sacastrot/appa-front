@@ -17,6 +17,7 @@ import HomeAvatarView from "@/views/HomeAvatarView.vue";
 import NewBisonteView from "@/views/NewBisonteView.vue";
 import LoginLayout from "@/layouts/LoginLayout.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
+import OrdersHistoryView from "@/views/OrdersHistoryView.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -156,6 +157,17 @@ const routes: RouteRecordRaw[] = [
             title: "Nuevo bisonte",
             layout: MainLayout,
             roles: [Role.Avatar]
+        }
+    },
+    {
+        path: "/bison/orders",
+        name: "bison-orders-list",
+        component: OrdersHistoryView,
+        meta: {
+            requiredAuth: true,
+            title: "Historial de pedidos",
+            layout: MainLayout,
+            roles: [Role.Bison]
         }
     }
 ];
