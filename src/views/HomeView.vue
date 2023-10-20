@@ -1,44 +1,42 @@
 <script setup lang="ts">
-import {useUserStore} from "@/stores/user";
-import {ref} from "vue";
+import {ref, onBeforeMount} from "vue";
 import LastOrderInfo from "@/components/citizen/LastOrderInfo.vue";
 import PriceCalculator from "@/components/citizen/PriceCalculator.vue";
 import type {User} from "@/types/intefaces";
-import {Role} from "@/types/intefaces";
+import {useCarriagesStore} from "@/stores/carriages";
+import {usePackagesStore} from "@/stores/packages";
+import {getCurrentUser} from "@/services/user";
+import HeaderName from "@/components/core/HeaderName.vue";
 
-const user = useUserStore()
+const carriageStore = useCarriagesStore()
+const packageStore = usePackagesStore()
+
 const isActive = ref(false);
 
-let userData: User = {
-  id: undefined,
-  name: "",
-  isAuth: false,
-  vehicle: "",
-  role: Role.Citizen,
-  password: undefined,
-  phone: undefined,
-  email: undefined,
-};
-if(user.currentUser){
-  const temp = user.searchUserById(user.currentUser);
-  if (temp){
-    userData = temp;
-  }
-}
+const user: User = getCurrentUser()
 
+onBeforeMount(() => {
+  packageStore.loadPackages();
+})
 </script>
 
 <template>
   <main class="home-page">
-    <header>
-      <div class="avatar">
-        <div class="image">
-          <img src="/img/Logo-background-brown.svg" alt="Appa Logo brown background">
-        </div>
-        <h1>Hola,<br>{{userData.name}}</h1>
-      </div>
-      <p>Bienvenido a la mejor aplicación de pedidos y acarreos.</p>
-    </header>
+    <HeaderName :data="{
+    name: user.name,
+    message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
+    }"/>
+    {{"Packages: " }}
+    <br>
+    <div v-for="pkg in packageStore.packages">
+      {{pkg}}
+    </div>
+    <br>
+    {{"Carriages: " + carriageStore.carriages}}
+    <br>
+    <div v-for="carraige in carriageStore.carriages">
+      {{carraige}}
+    </div>
     <div class="track-order">
       <h2>Rastrear envío</h2>
       <div class="field">

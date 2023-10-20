@@ -9,7 +9,8 @@ export const userData: User[] = [
         role: Role.Avatar,
         vehicle: undefined,
         password: "Aang*1234",
-        isAuth: false
+        isAuth: false,
+        available: true,
     },
     {
         id: 2,
@@ -19,7 +20,8 @@ export const userData: User[] = [
         role: Role.Citizen,
         vehicle: undefined,
         password: "Katara*234",
-        isAuth: false
+        isAuth: false,
+        available: true,
     },
     {
         id: 3,
@@ -29,6 +31,7 @@ export const userData: User[] = [
         role: Role.Bison,
         vehicle: "WER123",
         password: "Appa*1234",
-        isAuth: false
+        isAuth: false,
+        available: true
     },
 ]

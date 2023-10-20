@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import NewPackage from "@/components/citizen/history/NewPackage.vue";
 import HistoryPackage from "@/components/citizen/history/HistoryPackage.vue";
-import {onBeforeMount, ref} from "vue";
-import {usePackagesStore} from "@/stores/packages";
+import {ref} from "vue";
+import {getCurrentUser} from "@/services/user";
+import {packagesByCitizen} from "@/services/package";
+import type {PackageState, User} from "@/types/intefaces";
 
-const packagesStore = usePackagesStore();
+const user: User = getCurrentUser()
+const packages: PackageState[] = packagesByCitizen(user?.id!)
+
 const modalActive = ref<boolean>(false);
 
-onBeforeMount(() => {
-  packagesStore.loadPackages();
-})
 </script>
 
 <template>
@@ -42,7 +43,7 @@ onBeforeMount(() => {
         </div>
       </div>
     </transition>
-    <HistoryPackage class="my-4" v-for="(value, index) in packagesStore.packages" :packageValue="value" :key="index"/>
+    <HistoryPackage class="my-4" v-for="(value, index) in packages" :packageValue="value" :key="index"/>
   </main>
 </template>
 

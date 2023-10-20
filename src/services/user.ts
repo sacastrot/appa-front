@@ -13,6 +13,7 @@ export const getCurrentUser = (): User => {
         password: undefined,
         phone: undefined,
         email: undefined,
+        available: true,
     };
 
     if(userStore.currentUser){
@@ -32,4 +33,10 @@ export const getUsersByRole = (targetRole: Role, limit:number = -1): User[] => {
         return filteredUsers.slice(0,limit);
     }
     return filteredUsers;
+}
+
+export const searchAvailableBison = (): User | undefined => {
+    const userStore = useUserStore();
+
+    return userStore.users.find(user => user.role === Role.Bison && user.available)
 }

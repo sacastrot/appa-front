@@ -2,11 +2,26 @@
 
 import {onBeforeUnmount} from "vue";
 import {useCarriagesStore} from "@/stores/carriages";
+import {getCurrentUser, searchAvailableBison} from "@/services/user";
+import type {User} from "@/types/intefaces";
+import {useUserStore} from "@/stores/user";
 
+const userStore = useUserStore()
 const carriagesStore = useCarriagesStore()
+const user: User = getCurrentUser()
+const bison: User = searchAvailableBison()
+
 //Save data in the store before leaving the component and reset the current carriages
 onBeforeUnmount(async () =>{
+  if(user.id){
+    carriagesStore.setCitizen(user.id)
+  }
   carriagesStore.addCarriage();
+
+  if(bison){
+    carriagesStore.setBison(bison.id, carriagesStore.currentCarriage.id)
+    userStore.setAvailable(false, bison?.id!)
+  }
   carriagesStore.reset();
 })
 </script>
