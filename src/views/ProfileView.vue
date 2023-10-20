@@ -2,19 +2,26 @@
 import {computed, ref} from "vue";
 import {useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
+import {getCurrentUser} from "@/services/user";
+import {useRouter} from "vue-router";
 
-const user = useUserStore();
+
+const userStore = useUserStore();
+const router = useRouter();
 const modalActive = ref<boolean>(false);
 const readOnly = ref<boolean>(true);
 
-const name = ref<string | undefined>(user.state.name);
-const email = ref<string | undefined>(user.state.email);
-const password = ref<string | undefined>(user.state.password);
-const phone = ref<number | undefined>(user.state.phone);
+const user = getCurrentUser()
 
-const role = user.state.role;
-const document = user.state.id;
-const vehicle = user.state.vehicle;
+const name = ref<string | undefined>(user.name);
+const email = ref<string | undefined>(user.email);
+const password = ref<string | undefined>(user.password);
+const phone = ref<number | undefined>(user.phone);
+
+const role = user.role;
+const document = user.id;
+const vehicle = user.vehicle;
+
 
 //To edit profile
 const visibility = ref<string>("password");
@@ -25,12 +32,11 @@ const iconPassword = ref("visibility")
 const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const nameRegex = /^[a-zA-ZÀ-ÿ\s]{1,40}$/;
+const nameRegex = /^[a-zA-ZÀ-ÿ\s]{3,40}$/;
 
 function validateEmail(email: string): boolean {
   return emailRegex.test(email);
 }
-
 // Minimo 8 caracteres
 //Al menos una letra mayúscula
 //Al menos una letra minuscula
@@ -55,12 +61,12 @@ const nameValidation = computed(() => {
 const phoneValidation = computed(() => {
   if (phone.value != undefined) {
     if (phone.value.toString().trim().length > 0) {
-      if (phone.value.toString().length >= 7 && !isNaN(phone.value)) {
-        return true;
-      }
+      return phone.value.toString().length >= 7 && !isNaN(phone.value);
     }
+    //Only a citizen can have no phone
+    return role === Role.Citizen
   }
-  return false;
+  return true;
 });
 
 const emailValidation = computed(() => {
@@ -86,19 +92,18 @@ const passwordValidation = computed(() => {
 });
 
 function editProfile() {
-  user.setName(name.value);
-  user.setEmail(email.value);
-  user.setPassword(password.value);
-  user.setPhone(phone.value);
+  user.name = name.value;
+  user.email = email.value;
+  user.password = password.value;
+  user.phone = phone.value;
 }
 
-
-function hidePassword() {
-  visibility.value = "password";
+function deleteUser() {
+  userStore.deleteUser(user.id)
+  router.push("/login")
 }
 
 const togglePassword = () => {
-  console.log("togglePassword")
   if (showPassword.value === "password") {
     showPassword.value = "text";
     iconPassword.value = "visibility_off"
@@ -122,12 +127,12 @@ const togglePassword = () => {
           </div>
           <div class="rotate"></div>
           <div class="citizen_information">
-            <span>{{ user.state.name }}</span>
+            <span>{{ user.name }}</span>
             <div class="box_information">
               <span class="icon is-small is-left material-symbols-outlined">
                 Email
               </span>
-              <p>{{ user.state.email }}</p>
+              <p>{{ user.email }}</p>
             </div>
           </div>
         </div>
@@ -189,7 +194,7 @@ const togglePassword = () => {
                     class="input custom-input"
                     type="text"
                     readonly
-                    v-model="document"
+                    :value="document"
                 />
                 <span
                     class="icon is-small is-left form_icons material-symbols-outlined"
@@ -205,7 +210,7 @@ const togglePassword = () => {
                     class="input custom-input"
                     type="text"
                     readonly
-                    v-model="vehicle"
+                    :value="vehicle"
                 />
                 <span
                     class="icon is-small is-left form_icons material-symbols-outlined"
@@ -278,7 +283,7 @@ const togglePassword = () => {
             </figure>
             <p>¿Está seguro que desea eliminar su perfil?</p>
             <div class="button-container">
-              <button class="button_left">Si</button>
+              <button @click="deleteUser" class="button_left">Si</button>
               <button class="button_right" @click="modalActive=false">No</button>
             </div>
           </div>

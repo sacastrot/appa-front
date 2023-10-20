@@ -1,15 +1,63 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import {RouterLink, useRouter} from 'vue-router';
 import {useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
-import {ref} from "vue";
+import {ref, watch} from "vue";
+import IconAdd from "@/components/core/IconAdd.vue";
+import IconBison from "@/components/core/IconBison.vue";
+
 const user = useUserStore();
+
+const route = useRouter();
 
 const isActive = ref<boolean>(false);
 
 
-function logoutUser(){
+function logoutUser() {
+  console.log("logout")
   user.logout()
+}
+
+const colorAdd = ref("white");
+const colorBison = ref("white");
+
+watch([route.currentRoute], () => {
+  console.log(route.currentRoute.value.path)
+  if (route.currentRoute.value.path === "/bison/register") {
+    colorAdd.value = "#E47120";
+  } else {
+    colorAdd.value = "white";
+  }
+
+  if (route.currentRoute.value.path === "/bison/list") {
+    colorBison.value = "#E47120";
+  } else {
+    colorBison.value = "white";
+  }
+  console.log(colorAdd.value)
+})
+
+const toHome = () => {
+  if (user.currentRole === Role.Citizen) {
+    route.push("/")
+  } else if (user.currentRole === Role.Bison) {
+    route.push("/bison")
+  } else if (user.currentRole === Role.Avatar) {
+    route.push("/avatar")
+  }
+}
+
+const setInactiveColor = () => {
+  if (route.currentRoute.value.path === "/bison/list") {
+    colorAdd.value = "white";
+    return;
+  } else if(route.currentRoute.value.path === "/bison/register") {
+    colorBison.value = "white";
+    return;
+  }
+  colorBison.value = "white";
+  colorAdd.value = "white";
+
 }
 </script>
 
@@ -17,11 +65,9 @@ function logoutUser(){
   <div class="section">
     <nav class="navbar is-fixed-top has-shadow">
       <div class="container">
-        <div class="navbar-brand">
-          <RouterLink to="/">
-            <img src="/img/logo-white.svg" alt="Acarreos Appa logo">
-          </RouterLink>
-          <RouterLink to="/" class="brand-text"> Acarreos Appa </RouterLink>
+        <div class="navbar-brand" @click="toHome">
+          <img src="/img/logo-white.svg" alt="Acarreos Appa logo">
+          <div class="brand-text"> Acarreos Appa</div>
           <div
               :aria-expanded="isActive"
               :class="{ 'is-active': isActive }"
@@ -31,9 +77,9 @@ function logoutUser(){
               data-target="collapse"
               @click="isActive = !isActive"
           >
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
+            <span aria-hidden="true"/>
+            <span aria-hidden="true"/>
+            <span aria-hidden="true"/>
           </div>
         </div>
         <div
@@ -43,37 +89,57 @@ function logoutUser(){
         >
           <!--For citizen role-->
           <div v-if="user.currentRole == Role.Citizen" class="navbar-end" @click="isActive = !isActive">
-            <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
-            <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">local_shipping</span> Acarreos</RouterLink>
-            <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span> Paquetes</RouterLink>
-            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil</RouterLink>
-            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
+            <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio
+            </RouterLink>
+            <RouterLink to="/carriages" class="navbar-item"><span
+                class="material-symbols-outlined">local_shipping</span> Acarreos
+            </RouterLink>
+            <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span>
+              Paquetes
+            </RouterLink>
+            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil
+            </RouterLink>
+            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
+              Salir
+            </RouterLink>
           </div>
           <!--For bison role-->
           <div v-if="user.currentRole == Role.Bison" class="navbar-end" @click="isActive = !isActive">
-            <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
-            <RouterLink to="/carriages" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span> Actualizar</RouterLink>
-            <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">assignment</span> Pedidos</RouterLink>
-            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
-            <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
+            <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio
+            </RouterLink>
+            <RouterLink to="/carriages" class="navbar-item"><span
+                class="material-symbols-outlined">article_shortcut</span> Actualizar
+            </RouterLink>
+            <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">assignment</span>
+              Pedidos
+            </RouterLink>
+            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil
+            </RouterLink>
+            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
+              Salir
+            </RouterLink>
           </div>
           <!--For avatar role-->
           <div v-if="user.currentRole == Role.Avatar" class="navbar-end" @click="isActive = !isActive">
-            <RouterLink to="/avatar" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
-            <RouterLink to="/bison/register" class="navbar-item">
+            <RouterLink to="/avatar" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio
+            </RouterLink>
+            <RouterLink to="/bison/register" class="navbar-item" @mouseenter="colorAdd= '#E47120'" @mouseleave="setInactiveColor">
               <span class="bison-add">
-                <img src="/icon/bisonAdd.svg" alt="Bisonte con icono de suma">
+                <IconAdd :color="colorAdd" />
               </span>
               Registrar
             </RouterLink>
-            <RouterLink to="/packages" class="navbar-item">
+            <RouterLink to="/bison/list" class="navbar-item" @mouseenter="colorBison= '#E47120'" @mouseleave="setInactiveColor">
               <span class="bisons">
-                <img src="/icon/bisons.svg" alt="">
+                <IconBison :color="colorBison"/>
               </span>
               Bisontes
             </RouterLink>
-            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
-            <RouterLink to="/logout" class="navbar-item"><span class="material-symbols-outlined">logout</span> Salir</RouterLink>
+            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil
+            </RouterLink>
+            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
+              Salir
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -84,10 +150,11 @@ function logoutUser(){
 
 <style scoped>
 
-.bison-add{
+.bison-add {
   padding-right: 0.5rem;
 }
-.bisons{
+
+.bisons {
   padding-right: 0.5rem;
 }
 
@@ -95,21 +162,25 @@ function logoutUser(){
   padding: 2.5rem 3rem;
 }
 
-.navbar-end{
+.navbar-end {
   background-color: var(--color-primary-blue);
 }
-.navbar{
+
+.navbar {
   height: 5rem;
   background-color: var(--navbar);
 }
+.navbar-brand {
+  cursor: pointer;
+}
 
-.navbar-brand .navbar-burger{
+.navbar-brand .navbar-burger {
   height: 5rem;
   width: 5rem;
   color: var(--color-primary-white);
 }
 
-.navbar-brand img{
+.navbar-brand img {
   height: 4rem;
   padding: 0.6rem 0.5rem 0 1rem;
 }
@@ -122,7 +193,7 @@ function logoutUser(){
   font-family: "Baloo Tamma 2", "sans-serif";
 }
 
-.navbar-item{
+.navbar-item {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-size: 1.5rem;
@@ -136,7 +207,7 @@ function logoutUser(){
   color: var(--active-menu);
 }
 
-a.navbar-item:hover{
+a.navbar-item:hover {
   color: var(--active-menu);
 }
 
@@ -152,7 +223,7 @@ a.navbar-item:hover{
   background-color: var(--navbar);
 }
 
-.material-symbols-outlined{
+.material-symbols-outlined {
   padding-top: 0.2rem;
   padding-bottom: 0.5rem;
   padding-right: 0.3rem;

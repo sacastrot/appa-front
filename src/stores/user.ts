@@ -22,16 +22,19 @@ export const useUserStore = defineStore("user", () => {
 
     //validation
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const nameRegex = /^[a-zA-ZÀ-ÿ\s]{1,40}$/;
+
     const validateName = computed(() => {
-        if(state.value.name){
-            return state.value.name.length > 3
+        if (state.value.name) {
+            return state.value.name.length > 3 && nameRegex.test(state.value.name);
         }
         return false
     });
 
     const validateId = computed(() => {
 
-        if(state.value.id !== undefined && state.value.id !== 0 && state.value.id !== null && (state.value.id).toString().length !== 0){
+        if (state.value.id !== undefined && state.value.id !== 0 && state.value.id !== null && (state.value.id).toString().length !== 0) {
             const response = searchUserById(state.value.id);
             return response === undefined
         }
@@ -39,8 +42,8 @@ export const useUserStore = defineStore("user", () => {
     });
 
     const validateEmail = computed(() => {
-        if(state.value.email){
-            if(emailRegex.test(state.value.email)){
+        if (state.value.email) {
+            if (emailRegex.test(state.value.email)) {
                 const response = searchUserByEmail(state.value.email);
                 return response === undefined
             }
@@ -49,37 +52,53 @@ export const useUserStore = defineStore("user", () => {
     });
 
     const validateVehicle = computed(() => {
-        if (state.value.vehicle){
+        if (state.value.vehicle) {
             const response = searchUserByVehicle(state.value.vehicle);
             return response === undefined
         }
         return false
     });
 
-    const validateInfoUser = computed(() => {
-        return !(validateName.value && validateId.value && validateEmail.value && validateVehicle.value)
+    const validatePassword = computed(() => {
+        return passwordRegex.test(state.value.password as string);
     });
 
 
+    const validateInfoBison = computed(() => {
+        return !(validateName.value && validateId.value && validateEmail.value && validateVehicle.value)
+    });
+
+    const validateInfoCitizen = computed(() => {
+        return validateEmail.value && validateName.value && validatePassword.value
+    });
 
     //actions
     function searchUserByVehicle(vehicle: string): User | undefined {
         return users.value.find(user => user.vehicle === vehicle)
     }
+
     function searchUserByEmail(email: string): User | undefined {
         return users.value.find(user => user.email === email)
     }
+
     function searchUserById(id: number): User | undefined {
         return users.value.find(user => user.id === id)
     }
+
+    function filterBisonByEmail(email:string) : User[] {
+        return users.value.filter(user => user.email?.includes(email) && user.role === Role.Bison)
+    }
+
     function loadUsers() {
         if (!loadData.value) {
             users.value = userData;
             loadData.value = true;
         }
     }
+
     function login(email: string, password: string): boolean {
         const user = users.value.find(data => data.email === email && data.password === password)
+        console.log(user)
         if (user) {
             currentUser.value = user.id;
             currentRole.value = user.role;
@@ -99,6 +118,16 @@ export const useUserStore = defineStore("user", () => {
 
     function addUser() {
         users.value.push(state.value)
+    }
+
+    function deleteUser(id: number | undefined) {
+        if (!id) return;
+        const index = users.value.findIndex(user => user.id === id);
+        users.value.splice(index, 1);
+    }
+
+    function setUser(user: User) : void {
+        state.value = user;
     }
 
     function setName(name: string | undefined) {
@@ -135,17 +164,18 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    function setRandomPassword(){
-        if (state.value.vehicle && state.value.id !== undefined){
+    function setRandomPassword() {
+        if (state.value.vehicle && state.value.id !== undefined) {
             state.value.password = (state.value.vehicle + state.value.id).toString();
         }
     }
 
-    function setDefaultId(){
-        let tempId = Math.random() * 1000000000000000;
-        while (searchUserById(tempId)){
-           tempId = Math.random() * 1000000000000000;
+    function setDefaultId() {
+        let tempId = Math.floor(Math.random() * 1000000000000000);
+        while (searchUserById(tempId)) {
+            tempId = Math.floor(Math.random() * 1000000000000000);
         }
+        state.value.id = tempId;
     }
 
     function resetUser() {
@@ -160,5 +190,37 @@ export const useUserStore = defineStore("user", () => {
             isAuth: false,
         }
     }
-    return {state, setName, setEmail, setPassword, setPhone, setRole, setVehicle, login, logout, addUser, resetUser, users,loadUsers, validateName, validateId, validateEmail, validateVehicle, validateInfoUser, searchUserByVehicle, searchUserByEmail, searchUserById, currentUser, currentRole, setRandomPassword, setDefaultId}
+
+    return {
+        state,
+        setName,
+        setEmail,
+        setPassword,
+        setPhone,
+        setRole,
+        setVehicle,
+        login,
+        logout,
+        addUser,
+        resetUser,
+        users,
+        loadUsers,
+        validateName,
+        validateId,
+        validateEmail,
+        validateVehicle,
+        validatePassword,
+        validateInfoCitizen,
+        validateInfoUser: validateInfoBison,
+        searchUserByVehicle,
+        searchUserByEmail,
+        searchUserById,
+        currentUser,
+        currentRole,
+        setRandomPassword,
+        setDefaultId,
+        deleteUser,
+        filterBisonByEmail,
+        setUser
+    }
 });

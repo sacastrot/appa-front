@@ -8,15 +8,16 @@ import NewPackageView from "@/views/NewPackageView.vue";
 import NewCarriageView from "@/views/NewCarriageView.vue";
 import LoginViewVue from '@/views/LoginView.vue';
 import {useLayoutStore} from "@/stores/layout";
-import {useUserStore} from "@/stores/user";
 import SignUpView from "@/views/SignUpView.vue";
 import AccessDeniedView from "@/views/AccessDeniedView.vue";
 import {Role} from "@/types/intefaces";
 import HomeBisonView from "@/views/HomeBisonView.vue";
-import HomeAvatarView from "@/views/HomeAvatarView.vue";
 import NewBisonteView from "@/views/NewBisonteView.vue";
 import LoginLayout from "@/layouts/LoginLayout.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
+import AvatarHomeView from "@/views/HomeAvatarView.vue";
+import RegisteredBisontesView from "@/views/RegisteredBisontesView.vue";
+import {getCurrentUser} from "@/services/user";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -44,7 +45,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/avatar",
         name: "home-avatar",
-        component: HomeAvatarView,
+        component: AvatarHomeView,
         meta: {
             requiredAuth: true,
             title: "Acarreos Appa",
@@ -157,6 +158,17 @@ const routes: RouteRecordRaw[] = [
             layout: MainLayout,
             roles: [Role.Avatar]
         }
+    },
+    {
+        path: "/bison/list",
+        name: "avatar-list-bisons",
+        component: RegisteredBisontesView,
+        meta: {
+            requiredAuth: true,
+            title: "Listar bisontes",
+            layout: MainLayout,
+            roles: [Role.Avatar]
+        }
     }
 ];
 
@@ -167,11 +179,8 @@ const router = createRouter({
 
 router.beforeEach(async (to, from,next) => {
     const layoutStore = useLayoutStore();
-    const user = useUserStore();
-    let userData;
-    if (user.currentUser !== undefined) {
-        userData = user.searchUserById(user.currentUser);
-    }
+
+    const userData = getCurrentUser();
     layoutStore.setLayout(to.meta.layout);
 
     document.title = to.meta.title as string;
