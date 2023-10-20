@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { NationType, Checkpoint } from "@/types/intefaces";
-import { stringToNation } from "@/data/directions";
+import { Checkpoint } from "@/types/intefaces";
 import { computed } from "vue";
-
-const originNation = ref<NationType>(NationType.Unknown);
-const nationHelp = ref("Seleccione una nación.");
-const originNationShowHelp = computed(() =>
-  originNation.value != NationType.Unknown ? false : true
-);
-
 import type { CheckpointCoordinates } from "@/types/intefaces";
-import Hero from "@/components/core/Hero.vue";
+
+const currentLocation = ref<Checkpoint>(Checkpoint.Unknown);
+const nationHelp = ref("Seleccione una nación.");
+const originNationShowHelp = computed(() => {
+  if (currentLocation.value === Checkpoint.Unknown) {
+    return true;
+  } else {
+    return false;
+  }
+});
 
 type Graph = {
   [key: string]: {
@@ -33,16 +34,6 @@ coordinates.value.set(Checkpoint.GaipanVillage, { x: 568, y: 280 });
 coordinates.value.set(Checkpoint.SiWong, { x: 700, y: 400 });
 coordinates.value.set(Checkpoint.FireCapital, { x: 174, y: 375 });
 coordinates.value.set(Checkpoint.ShuJing, { x: 435, y: 321 });
-
-// Función para calcular distancias
-function calculateDistance(
-  coord1: CheckpointCoordinates,
-  coord2: CheckpointCoordinates
-): number {
-  const dx = coord1.x - coord2.x;
-  const dy = coord1.y - coord2.y;
-  return Math.sqrt(dx * dx + dy * dy);
-}
 
 // Crear el grafo
 const graph = ref<Graph>({
@@ -232,6 +223,16 @@ const graph = ref<Graph>({
   },
 });
 
+// Función para calcular distancias
+function calculateDistance(
+  coord1: CheckpointCoordinates,
+  coord2: CheckpointCoordinates
+): number {
+  const dx = coord1.x - coord2.x;
+  const dy = coord1.y - coord2.y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
 function findShortestPath(
   graph: Graph,
   start: Checkpoint,
@@ -294,51 +295,51 @@ if (shortestPath) {
     `No se encontró un camino desde ${Checkpoint.BaSingSe} a ${Checkpoint.FireCapital}`
   );
 }
+
+function showCurrentLocation() {
+  console.log(currentLocation);
+}
+
+const showSetCheckpoint = ref(true);
+const isPackage = ref(false);
+const showPrice = ref(true);
 </script>
 
 <template>
   <main class="">
-    <Hero :title="'Pedido Asociado'" />
-    <div class="custom_container">
-      <div class="summary-content">
-        <div class="logo"></div>
-        <h1>Actualizar ubicaci&oacuten</h1>
-        <p class="update-location-text">
-          Ingresa el punto de control en el que estas
-        </p>
-        <span class="select is-large">
-          <select v-model="originNation">
-            <option
-              v-for="value in shortestPath"
-              :value="stringToNation[value]"
-              required
-            >
-              {{ value }}
-            </option>
-          </select>
-          <p v-if="originNationShowHelp" class="help">{{ nationHelp }}</p>
-        </span>
-        <div class="button-container">
+    <div class="summary-content" v-if="showSetCheckpoint">
+      <div class="logo"></div>
+      <h1>Actualizar ubicaci&oacuten</h1>
+      <p class="update-location-text">
+        Ingresa el punto de control en el que estas
+      </p>
+      <span class="select is-large">
+        <select v-model="currentLocation">
+          <option v-for="value in shortestPath" required>
+            {{ value }}
+          </option>
+        </select>
+        <p v-if="originNationShowHelp" class="help">{{ nationHelp }}</p>
+      </span>
+      <div class="button-container">
+        <RouterLink to="/bison">
           <button class="button_left">Atr&aacutes</button>
-          <button class="button_right">Siguiente</button>
-        </div>
+        </RouterLink>
+        <button
+          class="button button_right"
+          :disabled="originNationShowHelp"
+          @click=""
+        >
+          Siguiente
+        </button>
       </div>
     </div>
   </main>
 </template>
 
 <style scoped>
-
-custom_container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
 .summary-content {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -367,14 +368,14 @@ custom_container {
       width: 40%;
     }
     @media (min-width: 768px) and (max-width: 1023px) {
-        width: 60%;
+      width: 60%;
     }
     @media (max-width: 767px) {
-        width: 80%;
-      }
+      width: 80%;
+    }
   }
   & select {
-    background-color: #FDF8F8;
+    background-color: #fdf8f8;
     width: 100%;
     margin-bottom: 1rem;
   }
@@ -384,16 +385,15 @@ custom_container {
     font-size: 1.3rem;
   }
   & .button-container {
+    width: 25rem;
     margin-top: 5rem;
-
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-
     .button_left {
-        width: 10rem;
-        height: 3.5rem;
+      width: 10rem;
+      height: 3.5rem;
       background-color: var(--color-primary-white);
       color: var(--color-primary-orange);
       border: none;
@@ -401,14 +401,13 @@ custom_container {
       font-size: 1.4rem;
       font-weight: bold;
       cursor: pointer;
-      padding: .5rem 3rem;
-      margin-right: 25%;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2)
+      padding: 0.5rem 3rem;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .button_right {
-        width: 10rem;
-        height: 3.5rem;
+      width: 10rem;
+      height: 3.5rem;
       background-color: var(--color-primary-orange);
       color: white;
       border: none;
@@ -416,8 +415,8 @@ custom_container {
       font-size: 1.4rem;
       font-weight: bold;
       cursor: pointer;
-      padding: .5rem 2rem;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2)
+      padding: 0.5rem 2rem;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     }
   }
 }

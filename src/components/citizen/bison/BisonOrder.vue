@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Hero from "@/components/core/Hero.vue";
 import { useUserStore } from "@/stores/user";
 import type { User } from "@/types/intefaces";
 import { Role } from "@/types/intefaces";
@@ -24,7 +23,6 @@ if (user.currentUser) {
 </script>
 
 <template>
-  <Hero :title="'Pedido asociado'" />
   <main class="home-page">
     <header>
       <div class="avatar">
@@ -62,7 +60,9 @@ if (user.currentUser) {
       </div>
     </div>
     <div class="button-container">
-      <button class="update-button">Actualizar</button>
+      <RouterLink to="/bison/updateLocation">
+        <button class="update-button">Actualizar</button>
+      </RouterLink>
     </div>
   </main>
 </template>
@@ -102,10 +102,6 @@ if (user.currentUser) {
         font-size: 1.2rem;
         line-height: 1.2rem;
       }
-
-      .location-destination {
-        color: var(--color-secondary-green);
-      }
     }
 
     & img {
@@ -141,6 +137,7 @@ if (user.currentUser) {
     }
   }
   .vertical-line {
+    margin-left: 4rem;
     border: none;
     border-left: 1px solid #e5e5e5; /* Establece el color y el grosor de la línea */
     height: 70%; /* Establece la altura de la línea vertical */
@@ -150,7 +147,7 @@ if (user.currentUser) {
   width: 92%;
   max-width: 80rem;
   margin: 0 auto;
-
+  margin-bottom: 1rem;
   .button-container {
     display: flex;
     justify-content: center;
@@ -195,5 +192,9 @@ header {
 .avatar {
   display: flex;
   align-items: center;
+}
+
+.update-button{
+  cursor: pointer;
 }
 </style>

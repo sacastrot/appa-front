@@ -17,7 +17,7 @@ import HomeAvatarView from "@/views/HomeAvatarView.vue";
 import NewBisonteView from "@/views/NewBisonteView.vue";
 import LoginLayout from "@/layouts/LoginLayout.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-
+import BisonUpdateLocationView from "@/views/BisonUpdateLocationView.vue";
 const routes: RouteRecordRaw[] = [
     {
         path: "/",
@@ -157,7 +157,19 @@ const routes: RouteRecordRaw[] = [
             layout: MainLayout,
             roles: [Role.Avatar]
         }
+    },
+    {
+        path: "/bison/updateLocation",
+        name: "bison-update-location",
+        component: BisonUpdateLocationView,
+        meta: {
+            requiredAuth: true,
+            title: "Actualizar ubicación",
+            layout: MainLayout,
+            roles: [Role.Bison]
+        }
     }
+
 ];
 
 const router = createRouter({
