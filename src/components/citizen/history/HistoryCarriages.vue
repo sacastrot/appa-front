@@ -2,6 +2,9 @@
 
 import {ref} from "vue";
 import {Checkpoint, NationType} from "@/types/intefaces";
+import {useCarriagesStore} from "@/stores/carriages";
+
+const carriageStore = useCarriagesStore();
 
 const showGuide = ref<boolean>(false);
 const {carriage} = defineProps<{
@@ -33,11 +36,11 @@ const toggleGuide = () => {
       <div  class="location-text">
         <div class="location-origin">
           <h1>{{ carriage.originNation }}</h1>
-          <p>{{ carriage.created.toLocaleDateString("en-US", {day: 'numeric', month: 'short', year: 'numeric'}) }}</p>
+          <p>{{ carriageStore.formatDate(carriage.created) }}</p>
         </div>
         <div class="location-destination">
           <h1>{{ carriage.destinyNation}}</h1>
-          <p>{{ carriage.arrived?  carriage.arrived.toLocaleDateString("en-US", {day: 'numeric', month: 'short', year: 'numeric'}): ""}}</p>
+          <p>{{ carriageStore.formatDate(carriage.arrived) }}</p>
         </div>
       </div>
     </div>

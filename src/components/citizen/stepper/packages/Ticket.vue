@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {usePackagesStore} from "@/stores/packages";
 import {onBeforeMount} from "vue";
+
 const packageStore = usePackagesStore()
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
@@ -19,15 +20,11 @@ onBeforeMount(async () => {
   <div class="ticket">
     <div class="origin">
       <h1>Origen</h1>
-      <p class="nation"><span class="nation-title">Nación: </span>{{ packageStore.state.originNation}}</p>
-      <p class="checkpoint"><span class="checkpoint-title">Punto de control: </span>
-        {{ packageStore.state.originCheckpoint }}</p>
+      <p class="nation">{{ packageStore.state.originNation }} - {{ packageStore.state.originCheckpoint }}</p>
     </div>
     <div class="destiny">
       <h1>Destino</h1>
-      <p class="nation"><span class="nation-title">Nación: </span>{{ packageStore.state.destinyNation }}</p>
-      <p class="checkpoint"><span class="checkpoint-title">Punto de control: </span>
-        {{ packageStore.state.destinyCheckpoint }}</p>
+      <p class="nation">{{ packageStore.state.destinyNation }} - {{ packageStore.state.destinyCheckpoint }}</p>
     </div>
     <div class="weight">
       <h1>Peso</h1>
@@ -40,87 +37,78 @@ onBeforeMount(async () => {
     </div>
     <div class="price">
       <p class="price-title">Precio</p>
-      <p class="price-title">$ {{ packageStore.state.price }}</p>
+      <p class="price-title">{{ packageStore.formatPrice(packageStore.state.price) }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-.header{
+.header {
   margin-bottom: 20px;
-  & h1{
+
+  & h1 {
     text-align: center;
     font-size: 1.6rem;
   }
 }
+
 .ticket {
   margin: 0 auto;
   height: 300px;
   width: 80%;
   background-color: var(--color-primary-white);
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 8px 3px rgba(0, 0, 0, 0.09);
+  border: 1px solid #80918D1D;
+  border-radius: 12px 12px 0 0;
   padding: 15px;
 
   .origin {
-    border-bottom: 1px solid var(--color-primary-gray);
+    border-bottom: 1px solid var(--color-secondary-gray);
 
     & h1 {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
+      margin-top: 5px;
     }
 
     .nation {
+      font-size: 1.2rem;
       margin: 5px 0 2px 0;
-
-      .nation-title {
-        font-weight: bold;
-      }
+      color: var(--color-terciary-gray);
     }
 
-    .checkpoint {
-      margin: 0 0 3px 0;
-
-      .checkpoint-title {
-        font-weight: bold;
-      }
-    }
   }
 
   .destiny {
     margin-top: 8px;
-    border-bottom: 1px solid var(--color-primary-gray);
+    border-bottom: 1px solid var(--color-secondary-gray);
 
     & h1 {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
+      margin-top: 15px;
     }
 
     .nation {
+      font-size: 1.2rem;
+      color: var(--color-terciary-gray);
       margin: 5px 0 2px 0;
 
-      .nation-title {
-        font-weight: bold;
-      }
     }
 
-    .checkpoint {
-      margin: 0 0 3px 0;
-
-      .checkpoint-title {
-        font-weight: bold;
-      }
-    }
   }
 
   .weight {
     margin-top: 8px;
-    border-bottom: 1px solid var(--color-primary-gray);
+    border-bottom: 1px solid var(--color-secondary-gray);
 
     & h1 {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
+      margin-top: 15px;
     }
 
     .weight-data {
+      font-size: 1.2rem;
       margin-bottom: 3px;
+      color: var(--color-terciary-gray);
     }
   }
 
@@ -128,21 +116,25 @@ onBeforeMount(async () => {
     margin-top: 8px;
 
     & h1 {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
+      margin-top: 15px;
     }
 
     .dimensions-data {
+      font-size: 1.2rem;
       margin-bottom: 3px;
+      color: var(--color-terciary-gray);
+
     }
   }
 
   .price {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: space-between;
 
     .price-title {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       color: var(--color-primary-orange);
       font-weight: bolder;
     }

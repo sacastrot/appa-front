@@ -5,10 +5,10 @@ import {carriagesByBison, getCurrentCarriage} from "@/services/carriage";
 import {getCurrentPackage, packageByBison} from "@/services/package";
 import HeaderName from "@/components/core/HeaderName.vue";
 import Hero from "@/components/core/Hero.vue";
-import BisonOrder from "@/components/citizen/bison/BisonOrder.vue";
+import BisonOrder from "@/components/bison/BisonOrder.vue";
 
 const user: User = getCurrentUser()
-const myCarraiages: Carriage[] = carriagesByBison(user?.id!)
+const myCarriages: Carriage[] = carriagesByBison(user?.id!)
 const myPackages: PackageState[] = packageByBison(user?.id!)
 const currentPackage: PackageState | undefined = getCurrentPackage(user?.id!)
 const currentCarriage: Carriage | undefined = getCurrentCarriage(user?.id!)
@@ -19,12 +19,12 @@ const order: Carriage | PackageState | undefined = currentPackage? currentPackag
 <template>
   <Hero :title="'Pedido asociado'"/>
   <div class="home-page">
-    <HeaderName :data="{
+    <HeaderName v-if="user.name" :data="{
     name: user.name,
     message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
     }"/>
     <h1>Acarreos</h1>
-    <h1 v-for="carriage in myCarraiages">
+    <h1 v-for="carriage in myCarriages">
       <br>
       <a href="">{{ carriage }}</a>
     </h1>

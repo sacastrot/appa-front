@@ -23,7 +23,6 @@ const onValidate = (validate: boolean) => {
 }
 
 //Functions to change step
-//TODO: Change to use router
 const returnHome = () => {
   if (user.currentRole == Role.Citizen){
     router.push("/");
@@ -65,7 +64,7 @@ const backStep = () => {
     <div class="content-header">
       <component :is="steps.listStepsComponents[currentStep-1].value" @validateStep="onValidate"></component>
     </div>
-    <div v-show="currentStep < steps.steps" class="actions">
+    <div v-show="currentStep < steps.steps" class="actions py-5">
       <button v-if="!(currentStep === 1)" class="button prev-step" @click="backStep">Atrás</button>
       <button class="button next-step" v-if="currentStep < steps.steps-1" @click="nextStep" :disabled="!validateStep">
         Siguiente
@@ -88,9 +87,9 @@ const backStep = () => {
   flex-direction: column;
   justify-content: space-between;
   max-width: 900px;
-  max-height: 450px;
+  max-height: 550px;
   min-height: 200px;
-  height: 700px;
+  height: 500px;
   overflow-y: scroll;
   scroll-behavior: smooth;
 

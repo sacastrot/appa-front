@@ -10,6 +10,8 @@
   --color-primary-white: #FFFFFF;
   /* Text */
   --color-primary-gray: #505050;
+  --color-secondary-gray: #96A29E;
+  --color-terciary-gray: #80918D;
   --color-secondary-green: #349F91;
   --color-primary-red: #D22200;
 }
@@ -46,6 +48,7 @@ html{
 }
 
 body {
+  padding-bottom: 50px;
   min-height: 100vh;
   color: var(--primary-text);
   background: var(--background);

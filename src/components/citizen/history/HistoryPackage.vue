@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import {Checkpoint, NationType} from "@/types/intefaces";
 import {usePackagesStore} from "@/stores/packages";
 const packagesStore = usePackagesStore();
@@ -35,7 +35,7 @@ if (packageValue.arrived) {
   colorStatus = '#349F91FF';
 } else {
   colorStatus = '#D22200';
-};
+}
 </script>
 
 <template>
@@ -46,7 +46,7 @@ if (packageValue.arrived) {
         <div v-if="!expand" class="location-text">
           <div class="location-origin">
             <h1>{{ packageValue.originNation }}</h1>
-            <p>{{ packagesStore.getCreatedDate(packageValue) }}</p>
+            <p>{{ packagesStore.formatDate(packageValue.created) }}</p>
           </div>
           <div class="location-destination">
             <h1>{{ packageValue.destinyNation }}</h1>
@@ -63,7 +63,7 @@ if (packageValue.arrived) {
             <span class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
             <div class="price">
               <h1>Precio</h1>
-              <h1>{{ packageValue.price }}</h1>
+              <h1>{{ packagesStore.formatPrice(packageValue.price) }}</h1>
             </div>
             <h1>Alto</h1>
             <p>{{ packageValue.height }} cm</p>

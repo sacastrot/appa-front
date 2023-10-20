@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import  {useCarriagesStore} from "@/stores/carriages";
+import {useCarriagesStore} from "@/stores/carriages";
 import {onBeforeMount} from "vue";
 
 const carriagesStore = useCarriagesStore();
@@ -18,99 +18,121 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="bill">
-    <div class="bill-header">
-      <h1>Tu factura</h1>
-    </div>
-    <div class="content-header">
-      <div class="bill-section">
+  <div class="header">
+    <h1>Tu Factura</h1>
+  </div>
+  <div class="ticket">
+    <div class="ticket-description">
+      <div class="origin">
         <h1>Origen</h1>
-        <p>
-          {{carriagesStore.currentCarriage.originNation}} - {{carriagesStore.currentCarriage.originCheckpoint}}
-        </p>
-        <hr>
+        <p class="nation">{{ carriagesStore.currentCarriage.originNation }} -
+          {{ carriagesStore.currentCarriage.originCheckpoint }}</p>
       </div>
-      <div class="bill-section">
+      <div class="destiny">
         <h1>Destino</h1>
-        <p>
-          {{carriagesStore.currentCarriage.destinyNation}} - {{carriagesStore.currentCarriage.destinyCheckpoint}}
-        </p>
-        <hr>
+        <p class="nation">{{ carriagesStore.currentCarriage.destinyNation }} -
+          {{ carriagesStore.currentCarriage.destinyCheckpoint }}</p>
       </div>
-      <div class="bill-section">
+      <div class="weight">
         <h1>Descripción</h1>
-        <p>
-          {{carriagesStore.currentCarriage.description}}
-        </p>
+        <p class="weight-data">{{ carriagesStore.currentCarriage.description }} kg</p>
       </div>
-      <div class="price-section">
-        <p>Precio máximo $2’230.000</p>
-      </div>
+    </div>
+    <div class="price">
+      <p class="price-title">Precio máximo</p>
+      <p class="price-title">{{ carriagesStore.formatPrice(carriagesStore.currentCarriage.price) }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-.bill {
+.header {
+  margin-bottom: 20px;
+
+  & h1 {
+    text-align: center;
+    font-size: 1.6rem;
+  }
+}
+
+.ticket {
+  margin: 0 auto;
+  min-height: 250px;
+  max-height: 300px;
+  width: 80%;
+  background-color: var(--color-primary-white);
+  box-shadow: 5px 8px 3px rgba(0, 0, 0, 0.09);
+  border: 1px solid #80918D1D;
+  border-radius: 12px 12px 0 0;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  align-content: space-between;
+  justify-content: space-between;
 
-  .bill-header{
-    margin: 0 auto 60px auto;
-    text-align: center;
+  .origin {
+    border-bottom: 1px solid var(--color-secondary-gray);
 
-    & h1{
-      font-size: 1.6rem;
+    & h1 {
+      font-size: 1.2rem;
+      margin-top: 5px;
+    }
+
+    .nation {
+      font-size: 1.2rem;
+      margin: 5px 0 2px 0;
+      color: var(--color-terciary-gray);
+    }
+
+  }
+
+  .destiny {
+    margin-top: 8px;
+    border-bottom: 1px solid var(--color-secondary-gray);
+
+    & h1 {
+      font-size: 1.2rem;
+      margin-top: 15px;
+    }
+
+    .nation {
+      font-size: 1.2rem;
+      color: var(--color-terciary-gray);
+      margin: 5px 0 2px 0;
+
+    }
+
+  }
+
+  .weight {
+    margin-top: 8px;
+
+    & h1 {
+      font-size: 1.2rem;
+      margin-top: 15px;
+    }
+
+    .weight-data {
+      font-size: 1.2rem;
+      margin-bottom: 3px;
+      color: var(--color-terciary-gray);
     }
   }
 
-  .content-header{
-    max-height: 80%;
-    min-width: 20%;
-    max-width: 80%;
+  .price {
+    margin-top: 10px;
     display: flex;
-    flex-direction: column;
-    padding: 30px 20px 20px 20px;
-    background-color: #FFFFFF;
-    box-shadow: 5px 8px 3px rgba(0,0,0,0.09);
-    border: 1px solid #80918D1D;
-    border-radius: 12px 12px 0 0;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 1.6rem;
 
-    .bill-section{
-      flex: 1;
-
-      & h1{
-        font-size: 1.2rem;
-        max-width: 80%;
-      }
-
-      & p{
-        font-size: 1.2rem;
-        text-align: left;
-        max-width: 80%;
-        color: #80918D;
-        margin-bottom: 3px;
-      }
-
-      & hr{
-        border-top: 1px solid #96A29E;
-        border-radius: 3px;
-        margin-top: 0;
-        margin-bottom: 15px;
-      }
-    }
-
-    .price-section{
+    .price-title {
+      margin-bottom: 0;
+      align-self: center;
       font-size: 1.6rem;
-      margin-top: 25px;
       color: var(--color-primary-orange);
-
-      & p{
-        font-weight: bold;
-      }
+      font-weight: bolder;
     }
   }
 }
+
 </style>

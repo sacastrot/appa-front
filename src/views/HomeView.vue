@@ -22,7 +22,7 @@ onBeforeMount(() => {
 
 <template>
   <main class="home-page">
-    <HeaderName :data="{
+    <HeaderName v-if="user.name" :data="{
     name: user.name,
     message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
     }"/>

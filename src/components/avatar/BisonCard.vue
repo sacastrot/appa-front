@@ -22,8 +22,6 @@ const setBisonRemoveId = () => {
   bisonRemoveId.value = currentBison?.id;
   deleteBison();
 }
-
-
 const {currentBison} = defineProps<{
   currentBison: {
     id: number | undefined;
@@ -34,40 +32,43 @@ const {currentBison} = defineProps<{
     role: Role;
     vehicle: string | undefined;
     isAuth: boolean;
+    available: boolean;
   } | undefined;
 }>();
+let status: string;
+if (currentBison) {
+  status = currentBison?.available ? "Disponible" : "No disponible";
+}
 </script>
 
 <template>
   <div class="bison-card">
-      <div class="first_content" :class="[!expand?'first_content-active':'first_content-inactive']">
-        <div class="name_content">
-          <span class="material-symbols-outlined figure"> person </span>
-          <div class="summary_information">
-            <span>Nombre</span>
-            <p v-if="currentBison">{{ currentBison.name }}</p>
-          </div>
-        </div>
-        <div class="email_content">
-          <span class="material-symbols-outlined figure"> email </span>
-          <div class="summary_information">
-            <span>Correo</span>
-            <p v-if="currentBison">{{ currentBison.email }}</p>
-          </div>
+    <div class="first_content" :class="[!expand?'first_content-active':'first_content-inactive']">
+      <div class="name_content">
+        <span class="material-symbols-outlined figure"> person </span>
+        <div class="summary_information">
+          <span>Nombre</span>
+          <p v-if="currentBison">{{ currentBison.name }}</p>
         </div>
       </div>
+      <div class="email_content">
+        <span class="material-symbols-outlined figure"> email </span>
+        <div class="summary_information">
+          <span>Correo</span>
+          <p v-if="currentBison">{{ currentBison.email }}</p>
+        </div>
+      </div>
+    </div>
     <div
         class="square"
         @click="toggleExpand"
         :class="[expand ? 'package-active' : 'package-inactive']"
     >
-      <!--          <Transition name="fade-details">-->
       <div
           class="full_bison_description"
           :class="expand ? 'description-active' : 'description-inactive'"
       >
         <div class="bison_details">
-          <!--                <img src="/citizen/logo-card-beifong.svg" alt="" />-->
           <div class="item bison_name">
             <h1>Nombre</h1>
             <p v-if="currentBison">{{ currentBison.name }}</p>
@@ -87,10 +88,9 @@ const {currentBison} = defineProps<{
         </div>
         <div class="status">
           <div class="triangle"></div>
-          <p>Disponible</p>
+          <p>{{status}}</p>
         </div>
       </div>
-      <!--          </Transition>-->
     </div>
     <button
         class="actions"
@@ -281,10 +281,12 @@ const {currentBison} = defineProps<{
   transition: opacity 0.2s ease-in-out;
   pointer-events: none;
 }
+
 .first_content-active {
   opacity: 100;
   transition: opacity 0.4s ease-in-out;
 }
+
 .first_content-inactive {
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
