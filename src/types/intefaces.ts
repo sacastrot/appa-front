@@ -79,6 +79,7 @@ interface Carriage {
     pickUpDate: Date | undefined;
     pickUpHour: string | undefined;
     description: string | undefined;
+    price: number,
     citizen: number | undefined;
     bison: number | undefined;
     type: OrderType;

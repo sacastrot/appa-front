@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import type {Carriage, PackageState, User} from "@/types/intefaces";
 import {getCurrentUser} from "@/services/user";
-import {carriagesByBison} from "@/services/carriage";
-import {packageByBison} from "@/services/package";
+import {carriagesByBison, getCurrentCarriage} from "@/services/carriage";
+import {getCurrentPackage, packageByBison} from "@/services/package";
 import HeaderName from "@/components/core/HeaderName.vue";
+import Hero from "@/components/core/Hero.vue";
+import BisonOrder from "@/components/citizen/bison/BisonOrder.vue";
 
 const user: User = getCurrentUser()
 const myCarraiages: Carriage[] = carriagesByBison(user?.id!)
 const myPackages: PackageState[] = packageByBison(user?.id!)
+const currentPackage: PackageState | undefined = getCurrentPackage(user?.id!)
+const currentCarriage: Carriage | undefined = getCurrentCarriage(user?.id!)
+
+const order: Carriage | PackageState | undefined = currentPackage? currentPackage : currentCarriage
 </script>
 
 <template>
+  <Hero :title="'Pedido asociado'"/>
   <div class="home-page">
     <HeaderName :data="{
     name: user.name,
@@ -27,6 +34,8 @@ const myPackages: PackageState[] = packageByBison(user?.id!)
       <br>
       <a href="">{{ pkg }}</a>
     </h1>
+    <BisonOrder v-if="order" :order="order"/>
+    <h1 v-else>No tienes pedidos asociados</h1>
   </div>
 </template>
 <style scoped>
