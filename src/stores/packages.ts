@@ -11,7 +11,7 @@ import {packagesData} from "@/data/packagesData";
 export const usePackagesStore = defineStore("package", () => {
     // state
     const state = ref<PackageState>({
-        id: 0,
+        id: 4,
         created: undefined,
         arrived: undefined,
         originNation: NationType.Unknown,
@@ -159,8 +159,11 @@ export const usePackagesStore = defineStore("package", () => {
      * @param {number}  packageId - A number param.
      * @returns {void} A void return.
      * */
-    function setBison(bisonId: number, packageId: number): void {
+    function setBison(bisonId: number | undefined, packageId: number): void {
+        console.log("Bison: ", bisonId)
+        console.log("pkg: ", packageId)
         const pkg: PackageState | undefined = packages.value.find(pkg => pkg.id === packageId)
+        console.log("pkgObject: ", pkg)
         if (pkg)
             pkg.bison = bisonId
     }

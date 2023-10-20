@@ -1,5 +1,5 @@
 import {usePackagesStore} from "@/stores/packages";
-import {PackageState } from "@/types/intefaces";
+import type {PackageState} from "@/types/intefaces";
 
 export const packagesByCitizen = (citizenId: number): PackageState[] => {
     const packageStore = usePackagesStore();

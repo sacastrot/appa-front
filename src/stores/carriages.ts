@@ -130,7 +130,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
      * @param {number}  carriageId - A number param.
      * @returns {void} A void return.
      * */
-    function setBison(bisonId: number, carriageId: number): void {
+    function setBison(bisonId: number | undefined, carriageId: number): void {
         const carriage: Carriage | undefined = carriages.value.find(carriage => carriage.id === carriageId)
         if (carriage)
             carriage.bison = bisonId

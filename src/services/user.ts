@@ -34,3 +34,9 @@ export const getUsersByRole = (targetRole: Role, limit:number = -1): User[] => {
     }
     return filteredUsers;
 }
+
+export const searchAvailableBison = (): User | undefined => {
+    const userStore = useUserStore();
+
+    return userStore.users.find(user => user.role === Role.Bison && user.available)
+}

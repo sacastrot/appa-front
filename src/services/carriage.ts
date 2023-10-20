@@ -1,5 +1,5 @@
 import {useCarriagesStore} from "@/stores/carriages";
-import {type Carriage} from "@/types/intefaces";
+import type {Carriage} from "@/types/intefaces";
 
 export const carriagesByCitizen = (citizenId: number): Carriage[] => {
     const carriageStore = useCarriagesStore();
@@ -18,3 +18,4 @@ export const getCurrentCarriage = (bisonId: number): Carriage | undefined => {
 
     return carriageStore.carriages.find(carriage => carriage.bison === bisonId && carriage.arrived === undefined)
 }
+
