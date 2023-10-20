@@ -8,7 +8,9 @@ export const userData: User[] = [
         phone: 1234567890,
         role: Role.Avatar,
         vehicle: undefined,
-        password: "Aang*1234"
+        password: "Aang*1234",
+        isAuth: false,
+        available: true,
     },
     {
         id: 2,
@@ -17,7 +19,9 @@ export const userData: User[] = [
         phone: 65113548,
         role: Role.Citizen,
         vehicle: undefined,
-        password: "Katara*234"
+        password: "Katara*234",
+        isAuth: false,
+        available: true,
     },
     {
         id: 3,
@@ -26,6 +30,8 @@ export const userData: User[] = [
         phone: 3246843,
         role: Role.Bison,
         vehicle: "WER123",
-        password: "Appa*1234"
+        password: "Appa*1234",
+        isAuth: false,
+        available: true
     },
 ]

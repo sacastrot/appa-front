@@ -7,9 +7,6 @@ import {useRouter} from "vue-router";
 //Store to save the user data
 const user = useUserStore();
 //User fields (Citizen)
-const email = ref<string>("")
-const name = ref<string>("")
-const password1 = ref<string>("")
 const password2 = ref<string>("")
 
 //States to validate the fields
@@ -35,45 +32,27 @@ const togglePassword = () => {
   }
 }
 
-//Validations
-const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const nameRegex = /^[a-zA-ZÀ-ÿ\s]{1,40}$/;
-
-
-function validateEmail(email: string): void {
-  emailState.value = emailRegex.test(email);
+function validateEmail(): void {
+  emailState.value = user.validateEmail;
 }
 
-function validateName(name: string): void {
-  nameState.value = !(!nameRegex.test(name) || name.trim().length === 0);
+function validateName(): void {
+  nameState.value = user.validateName
 }
-function validatePassword1(password: string): void {
-  password1State.value = passwordRegex.test(password);
+
+function validatePassword1(): void {
+  password1State.value = user.validatePassword;
 }
 
 function validatePassword2(password2: string): void {
-  password2State.value = password1.value === password2;
+  password2State.value = user.state.password === password2;
 }
 
 const userRegister = () => {
-  const fields: string[] = [email.value, name.value, password1.value, password2.value]
-  const whiteFields = fields.some(filed => filed.trim().length === 0)
-  const validData = (emailState.value && nameState.value && password1State.value && password2State.value)
-
-  if(!whiteFields && validData){
-    name.value = name.value.trimEnd()
-    name.value = name.value.trimStart()
-    user.setDefaultId()
-    user.setEmail(email.value)
-    user.setName(name.value)
-    user.setPassword(password1.value)
-    user.addUser()
-    user.login(email.value, password1.value)
-    router.push("/login")
-  } else{
-    invalidFileds.value = true
-  }
+  user.setDefaultId()
+  user.addUser()
+  user.resetUser()
+  router.push("/login")
 }
 
 </script>
@@ -84,19 +63,22 @@ const userRegister = () => {
       <form @submit.prevent="userRegister">
         <div class="field">
           <div class="control">
-            <input v-model="email" @blur="validateEmail(email)" class="input is-large" type="email" placeholder="Correo eletrónico">
+            <input v-model="user.state.email" @blur="validateEmail" class="input is-large" type="email"
+                   placeholder="Correo eletrónico">
           </div>
           <p v-if="!emailState" class="help is-danger">Correo electrónico inválido</p>
         </div>
         <div class="field">
           <div class="control">
-            <input v-model="name" @blur="validateName(name)" class="input is-large" type="text" placeholder="Nombre">
+            <input v-model="user.state.name" @blur="validateName" class="input is-large" type="text"
+                   placeholder="Nombre">
           </div>
           <p v-if="!nameState" class="help is-danger">Nombre inválido</p>
         </div>
         <div class="field password">
           <div class="control has-icons-right">
-            <input v-model="password1" @blur="validatePassword1(password1)" class="input is-large" :type="showPassword" placeholder="Contraseña">
+            <input v-model="user.state.password" @blur="validatePassword1" class="input is-large" :type="showPassword"
+                   placeholder="Contraseña">
             <span @click="togglePassword" class="icon is-small is-right">
               <span class="material-symbols-outlined eye">
                 {{ iconPassword }}
@@ -117,7 +99,8 @@ const userRegister = () => {
         </div>
         <div class="field password">
           <div class="control has-icons-right">
-            <input v-model="password2" @blur="validatePassword2(password2)" class="input is-large" :type="showPassword" placeholder="Confirmar contraseña">
+            <input v-model="password2" @blur="validatePassword2(password2)" class="input is-large" :type="showPassword"
+                   placeholder="Confirmar contraseña">
             <span @click="togglePassword" class="icon is-small is-right">
               <span class="material-symbols-outlined eye">
                 {{ iconPassword }}
@@ -127,8 +110,9 @@ const userRegister = () => {
           <p v-if="!password2State" class="help is-danger">Las contraseñas no coinciden</p>
         </div>
         <div class="form-actions mt-6">
-          <button class="button is-large signup" type="submit">Registrarse</button>
-          <p v-if="invalidFileds" class="help is-danger">Hay campos faltantes o con datos inválidos</p>
+          <button class="button is-large signup" :disabled="!user.validateInfoCitizen || !password2State || !password2" type="submit">
+            Registrarse
+          </button>
         </div>
       </form>
     </div>
@@ -159,6 +143,7 @@ const userRegister = () => {
 
       & ul {
         padding-left: 15px;
+
         & li {
           list-style-type: disc;
 
@@ -166,11 +151,10 @@ const userRegister = () => {
       }
 
       .material-symbols-outlined.eye {
-        font-variation-settings:
-            'FILL' 1,
-            'wght' 400,
-            'GRAD' 0,
-            'opsz' 24
+        font-variation-settings: 'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
       }
 
       .input {
@@ -213,10 +197,12 @@ const userRegister = () => {
       }
     }
   }
+
   .login {
     display: flex;
     font-size: 1.1rem;
-    .link{
+
+    .link {
       cursor: pointer;
       font-weight: bold;
       color: var(--link-login);

@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import NewCarriage from "@/components/citizen/history/NewCarriage.vue";
 import HistoryCarriages from "@/components/citizen/history/HistoryCarriages.vue";
-import {useCarriagesStore} from "@/stores/carriages";
 import {ref} from "vue";
+import {getCurrentUser} from "@/services/user";
+import type {Carriage, User} from "@/types/intefaces";
+import {carriagesByCitizen} from "@/services/carriage";
 
-const carriagesStore = useCarriagesStore();
+
+const user: User = getCurrentUser()
+const carraiges: Carriage[] = carriagesByCitizen(user?.id!)
+
 const showInfromation = ref<boolean>(false);
 
 </script>
@@ -53,7 +58,7 @@ const showInfromation = ref<boolean>(false);
         <button class="modal-close is-large" aria-label="close" @click="showInfromation = false"></button>
       </div>
     </div>
-    <HistoryCarriages v-for="carriage in carriagesStore.carriages"  :key="carriage.guideNumber"  :carriage="carriage"/>
+    <HistoryCarriages v-for="carriage in carraiges"  :key="carriage.guideNumber"  :carriage="carriage"/>
   </main>
 </template>
 

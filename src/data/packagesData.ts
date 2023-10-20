@@ -1,5 +1,6 @@
 import type {PackageState} from "@/types/intefaces";
-import {Checkpoint, NationType} from "@/types/intefaces";
+import {Checkpoint, NationType, OrderType} from "@/types/intefaces";
+
 /**
  * @weight < 500 && > 0
  * @height < 1000 && > 1
@@ -10,6 +11,7 @@ import {Checkpoint, NationType} from "@/types/intefaces";
  * */
 export const packagesData: PackageState[] = [
     {
+        id: 0,
         price: 10000,
         weight: 50,
         height: 100,
@@ -22,8 +24,15 @@ export const packagesData: PackageState[] = [
         originCheckpoint: Checkpoint.Abbey,
         destinyNation: NationType.Air,
         destinyCheckpoint: Checkpoint.SouthernAir,
+        currentNation: NationType.Air,
+        currentCheckpoint: Checkpoint.SouthernAir,
+        citizen: 2,
+        bison: 3,
+        type: OrderType.Package
+
     },
     {
+        id: 1,
         price: 8000,
         weight: 40,
         height: 80,
@@ -36,8 +45,14 @@ export const packagesData: PackageState[] = [
         originCheckpoint: Checkpoint.NorthernWater,
         destinyNation: NationType.Air,
         destinyCheckpoint: Checkpoint.EasternAir,
+        currentNation: NationType.Water,
+        currentCheckpoint: Checkpoint.EasternAir,
+        citizen: 2,
+        bison: 3,
+        type: OrderType.Package
     },
     {
+        id: 2,
         price: 12000,
         weight: 60,
         height: 120,
@@ -50,8 +65,14 @@ export const packagesData: PackageState[] = [
         originCheckpoint: Checkpoint.BaSingSe,
         destinyNation: NationType.Fire,
         destinyCheckpoint: Checkpoint.FireCapital,
+        currentNation: NationType.Fire,
+        currentCheckpoint: Checkpoint.FireCapital,
+        citizen: 2,
+        bison: 3,
+        type: OrderType.Package
     },
     {
+        id: 3,
         price: 5000,
         weight: 25,
         height: 60,
@@ -64,5 +85,10 @@ export const packagesData: PackageState[] = [
         originCheckpoint: Checkpoint.ShuJing,
         destinyNation: NationType.Water,
         destinyCheckpoint: Checkpoint.SouthernWater,
+        currentNation: NationType.Fire,
+        currentCheckpoint: Checkpoint.SouthernWater,
+        citizen: 2,
+        bison: 3,
+        type: OrderType.Package
     },
 ];

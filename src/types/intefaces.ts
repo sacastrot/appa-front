@@ -30,6 +30,11 @@ export enum Role {
     Avatar
 }
 
+export enum OrderType {
+    Carriage,
+    Package
+}
+
 interface Steps {
     steps: number;
     listStepsComponents: StepComponent[];
@@ -41,30 +46,43 @@ interface StepComponent{
 }
 
 interface PackageState{
-    created?: Date;
-    arrived?: Date;
+    id: number;
+    created: Date | undefined;
+    arrived: Date | undefined;
     originNation: NationType,
     originCheckpoint: Checkpoint,
     destinyNation: NationType,
     destinyCheckpoint: Checkpoint,
+    currentNation: NationType,
+    currentCheckpoint: Checkpoint,
     guide: number;
     length: number | undefined,
     width: number | undefined,
     height: number | undefined,
     weight: number | undefined;
     price: number | undefined;
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
 }
 interface Carriage {
-    created?: Date;
-    arrived?: Date;
-    guideNumber?: number;
+    id: number;
+    created: Date | undefined;
+    arrived: Date | undefined;
+    guideNumber: number | undefined;
     originNation: NationType,
     originCheckpoint: Checkpoint,
     destinyNation: NationType,
     destinyCheckpoint: Checkpoint,
-    pickUpDate?: Date;
-    pickUpHour?: string;
-    description?: string;
+    currentNation: NationType,
+    currentCheckpoint: Checkpoint,
+    pickUpDate: Date | undefined;
+    pickUpHour: string | undefined;
+    description: string | undefined;
+    price: number,
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
 }
 
 interface Bisonte {
@@ -84,7 +102,7 @@ interface User {
     role: Role;
     vehicle: string | undefined;
     isAuth: boolean;
-
+    available: boolean;
 }
 interface CheckpointCoordinates {
     x: number;
