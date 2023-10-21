@@ -1,40 +1,61 @@
-# Appa Frontend 
+# Appa Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Este archivo te ayuda a iniciar el proyecto desarrollado con Vue 3 en Vite.
 
-## Recommended IDE Setup
+## Setup de IDE recomendado
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (y
+desactivar
+Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Type Support for `.vue` Imports in TS
+## Requisitos
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+1) [Node.js](https://nodejs.org/es/) (v18.17.1 o superior)
+2) [npm](https://www.npmjs.com/) (v10.1.0 o superior)
+3) [git](https://git-scm.com/) (v2.41.0 o superior)
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## Setup del proyecto
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### Clonar el repositorio
 
-## Customize configuration
+```sh
+git clone https://github.com/sacastrot/appa-front.git
+```
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+### Instalar dependencias
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Compilar y permitir Hot-Reload en desarrollo
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Credenciales
 
-```sh
-npm run build
-```
+La aplicación cuenta con tres usuarios de prueba:
+
+| Correo electrónico | Contraseña | Rol                 |
+|--------------------|------------|---------------------|
+| aang@appa.com      | Aang*1234  | Avatar              |
+| katara@appa.com    | Katara*234 | Habitante de nación |
+| appa@appa.com      | Appa*1234  | Bisonte             |
+
+## Función de cada rol
+
+| Rol                 | Función                                                                                                                                                                                |
+|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Avatar              | Puede ver, crear y eliminar bisontes además de editar o eliminar su cuenta                                                                                                             |
+| Habitante de nación | Puede calcular un estimado del valor de un paquete, ver historial de paquetes y acarreos, solicitar paquetes y acarreos, editar o eliminar su cuenta                                   |
+| Bisonte             | Puede ver el historial de paquetes y acarreos, editar su cuenta, ver su pedido asginado actual, actualizar la ubicación del pedido o el paquete, y definir el precio final del acarreo |
+
+## Contraseña de Bisontes
+
+Cuando un avatar registra un bisonte el sistema asigna una contraseña compuesta por la placa del vehiculo y el id del bisonte, por ejemplo: 
+
+| Placa | ID | Contraseña |
+|-------|----|------------|
+| BC4   | 12 | BC412      |
