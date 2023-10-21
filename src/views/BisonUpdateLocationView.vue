@@ -6,8 +6,8 @@ import { computed } from "vue";
 import type { Carriage, NationType, PackageState, User } from "@/types/intefaces";
 import { OrderType } from "@/types/intefaces";
 import { getCurrentUser } from '@/services/user';
-import { carriagesByBison, getCurrentCarriage } from '@/services/carriage';
-import { getCurrentPackage, packageByBison } from '@/services/package';
+import { getCurrentCarriage } from '@/services/carriage';
+import { getCurrentPackage } from '@/services/package';
 import { getNation } from '@/data/directions';
 import { useCarriagesStore } from '@/stores/carriages';
 import { usePackagesStore } from '@/stores/packages';
@@ -23,11 +23,7 @@ const userStore = useUserStore()
 const currentLocation = ref<Checkpoint>(Checkpoint.Unknown);
 const nationHelp = ref("Seleccione una nación.");
 const originNationShowHelp = computed(() => {
-  if (currentLocation.value === Checkpoint.Unknown) {
-    return true;
-  } else {
-    return false;
-  }
+  return currentLocation.value === Checkpoint.Unknown;
 });
 
 
@@ -97,7 +93,6 @@ function updateLocationPackage(){
 <template>
   <Hero :title="'Pedido asociado'"/>
   <main class="">
-{{ order }}
     <div v-if="currentPackage || currentCarriage">
       <div class="summary-content" v-if="showSetCheckpoint">
         <div class="logo"></div>
@@ -106,8 +101,8 @@ function updateLocationPackage(){
           Ingresa el punto de control en el que estas
         </p>
         <span class="select is-large">
-        <select v-model="currentLocation">
-          <option v-for="value in shortestPath" required>
+        <select v-model="currentLocation" required>
+          <option v-for="value in shortestPath">
             {{ value }}
           </option>
         </select>
@@ -267,7 +262,7 @@ function updateLocationPackage(){
       font-weight: bold;
       cursor: pointer;
       padding: 0.5rem 3rem;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .button_right {
@@ -281,7 +276,7 @@ function updateLocationPackage(){
       font-weight: bold;
       cursor: pointer;
       padding: 0.5rem 2rem;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
   }
 }
@@ -358,7 +353,7 @@ function updateLocationPackage(){
       font-weight: bold;
       cursor: pointer;
       padding: .5rem 3rem;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2)
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
     }
 
     .button_right {
@@ -372,7 +367,7 @@ function updateLocationPackage(){
       font-weight: bold;
       cursor: pointer;
       padding: .5rem 2rem;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2)
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
     }
   }
 }
