@@ -2,12 +2,18 @@
   --color-primary-orange: #E47120;
   --color-primary-brown: #964738;
   --color-primary-blue: #9BBFE1;
+  --color-secondary-blue: #347894;
+  --color-secondary-brown: #5A1807;
+  --color-secondary-brown-blur: rgba(90, 24, 7, 0.5);
   --color-soft-blue: #F5F8FB;
   --color-seconday-orange: #FFF5EA;
   --color-primary-white: #FFFFFF;
   /* Text */
   --color-primary-gray: #505050;
+  --color-secondary-gray: #96A29E;
+  --color-terciary-gray: #80918D;
   --color-secondary-green: #349F91;
+  --color-primary-red: #D22200;
 }
 
 /* Semantic colors */
@@ -16,13 +22,17 @@
   --active-menu: var(--color-primary-orange);
   --confirm-messagge: var(--color-primary-orange);
   --title-section: var(--color-primary-brown);
-  --stepper-steps: var(--color-primary-brown);
+  --stepper-steps: var(--color-secondary-brown);
+  --stepper-steps-blur: var(--color-secondary-brown-blur);
   --navbar: var(--color-primary-blue);
   --card-section: var(--color-primary-blue);
   --background: var(--color-soft-blue);
   --input-field: var(--color-seconday-orange);
   --primary-text: var(--color-primary-gray);
   --seconday-text: var(--color-secondary-green);
+  --pending-state: var(--color-primary-red);
+  --delivered-state: var(--color-secondary-green);
+  --link-login: var(--color-secondary-blue);
 }
 
 html{
@@ -38,13 +48,13 @@ html{
 }
 
 body {
+  padding-bottom: 50px;
   min-height: 100vh;
   color: var(--primary-text);
   background: var(--background);
   transition:
     color 0.5s,
     background-color 0.5s;
-  line-height: 1.6;
   font-family:
     Inter,
     sans-serif;
@@ -52,3 +62,4 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
