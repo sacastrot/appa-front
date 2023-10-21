@@ -24,7 +24,7 @@ export const useCarriagesStore = defineStore("carriages", () => {
         pickUpDate: undefined,
         pickUpHour: undefined,
         description: undefined,
-        price: 0,
+        price: 1700000,
         citizen: undefined,
         bison: undefined,
         type: OrderType.Carriage
@@ -156,6 +156,33 @@ export const useCarriagesStore = defineStore("carriages", () => {
         if (carriage)
             carriage.price = price
     }
+    function formatDate(date: Date | undefined) {
+        if (date === undefined) return;
+        const namesDate = [
+            "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+        ];
+
+        const dia = date.getDate();
+        const mes = date.getMonth();
+        const year = date.getFullYear();
+
+        const nameMonth = namesDate[mes];
+
+        return `${dia} de ${nameMonth}, ${year}`;
+    }
+
+    const COP = new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumFractionDigits: 0,
+    });
+
+    function formatPrice (price: number | undefined) {
+        if(price){
+            return COP.format(price)
+        }
+    }
 
     /** Add the current carriage to the carriages list
      * @returns {void} A void return.
@@ -203,6 +230,8 @@ export const useCarriagesStore = defineStore("carriages", () => {
         addCarriage,
         setCitizen,
         updateLocation,
+        formatDate,
+        formatPrice,
         setBison,
         carriages,
         setPrice,

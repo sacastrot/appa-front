@@ -54,7 +54,6 @@ onBeforeMount(() => {
 <template>
   <div class="login-container">
     <Logo></Logo>
-    {{ user.users }}
     <div class="form-container">
       <form @submit.prevent="handleLogin">
         <div class="field mt-2 mb-6">

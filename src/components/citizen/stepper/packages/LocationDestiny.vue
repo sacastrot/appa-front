@@ -20,7 +20,11 @@ const emitValidateStep = (validateValue: boolean) => {
 //Function to validate form
 watch([destinyNation, destinyCheckpoint], ([newDestinyNation, newDestinyCheckpoint]) => {
   if(newDestinyNation !== NationType.Unknown && newDestinyCheckpoint !== Checkpoint.Unknown) {
-    emitValidateStep(true)
+    if(newDestinyCheckpoint !== packageStore.state.originCheckpoint) {
+      emitValidateStep(true)
+    }else {
+      emitValidateStep(false)
+    }
   }else {
     emitValidateStep(false)
   }

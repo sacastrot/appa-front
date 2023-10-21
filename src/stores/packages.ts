@@ -47,11 +47,6 @@ export const usePackagesStore = defineStore("package", () => {
         }
     }
 
-    function resetPackagesList() {
-        packages.value.splice(0, 4);
-    }
-
-
     function setOrigin(originNation: NationType, originCheckpoint: Checkpoint) {
         if (originNation !== NationType.Unknown && originCheckpoint !== Checkpoint.Unknown) {
             state.value.originNation = originNation;
@@ -113,12 +108,6 @@ export const usePackagesStore = defineStore("package", () => {
         state.value.created = new Date();
     }
 
-    function getCreatedDate(data: PackageState) {
-        if (data.created) {
-            return formatDate(data.created);
-        }
-    }
-
     function formatDate(date: Date | undefined) {
         if (date === undefined) return;
         const namesDate = [
@@ -133,6 +122,18 @@ export const usePackagesStore = defineStore("package", () => {
         const nameMonth = namesDate[mes];
 
         return `${dia} de ${nameMonth}, ${year}`;
+    }
+
+    const COP = new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumFractionDigits: 0,
+    });
+
+    function formatPrice (price: number | undefined) {
+        if(price){
+            return COP.format(price)
+        }
     }
 
     /** Set the arrived date of a package
@@ -194,8 +195,7 @@ export const usePackagesStore = defineStore("package", () => {
         resetState,
         loadPackages,
         formatDate,
-        getCreatedDate,
-        resetPackagesList,
+        formatPrice,
         setCitizen,
         setBison,
         updateLocation,

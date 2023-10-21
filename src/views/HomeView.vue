@@ -19,21 +19,10 @@ const user: User = getCurrentUser()
 
 <template>
   <main class="home-page">
-    <HeaderName :data="{
+    <HeaderName v-if="user.name" :data="{
     name: user.name,
     message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
     }"/>
-    {{"Packages: " }}
-    <br>
-    <div v-for="pkg in packageStore.packages">
-      {{pkg}}
-    </div>
-    <br>
-    {{"Carriages: " + carriageStore.carriages}}
-    <br>
-    <div v-for="carraige in carriageStore.carriages">
-      {{carraige}}
-    </div>
     <div class="track-order">
       <h2>Rastrear envío</h2>
       <div class="field">

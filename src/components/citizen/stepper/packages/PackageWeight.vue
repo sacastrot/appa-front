@@ -33,8 +33,8 @@ onBeforeMount(() => {
 <template>
   <form action="">
     <div class="form-header">
-      <h1>Dimensiones</h1>
-      <p>¿Cuánto mide el paquete que vamos a recoger?</p>
+      <h1>Peso</h1>
+      <p>¿Cuánto pesa el paquete que vamos a recoger?</p>
     </div>
     <div class="form-content">
       <div class="form-image">
