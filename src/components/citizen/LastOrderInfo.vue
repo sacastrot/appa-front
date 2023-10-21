@@ -1,50 +1,53 @@
 <script setup lang="ts">
-import { usePackagesStore } from "@/stores/packages";
-import { useCarriagesStore } from "@/stores/carriages";
 import { computed, ref } from "vue";
+import { getCurrentUser } from "@/services/user";
+import { packagesByCitizen } from "@/services/package";
+import { carriagesByCitizen } from "@/services/carriage";
+import {OrderType} from "@/types/intefaces";
 
-const packageStore = usePackagesStore()
-const carriagesStore = useCarriagesStore();
-const existsOrder = (carriagesStore.carriages.length != 0 || packageStore.packages.length != 0) ? true : false
-const lastPackage = packageStore.packages[packageStore.packages.length -1]
-const lastCarriage = carriagesStore.carriages[carriagesStore.carriages.length -1]
+const user = getCurrentUser()
+const packages = packagesByCitizen(user.id!)
+const carriages = carriagesByCitizen(user.id!)
+const existsOrder = (carriages.length != 0 || packages.length != 0) ? true : false
+const lastPackage = packages[packages.length -1]
+const lastCarriage = carriages[carriages.length -1]
 
 const getLastItem = computed(() => {
-    if (carriagesStore.carriages.length == 0 && packageStore.packages.length == 0)
-    {
-        return []
-    } 
-    else if (carriagesStore.carriages.length == 0)
-    {
-        return [lastPackage, "Paquete"]
-    } 
-    else if (packageStore.packages.length == 0)
-    {
-        return [lastCarriage, "Acarreo"]
-    } 
-    else {
-        return Number(lastCarriage.created?.getTime()) > Number(lastPackage.created?.getTime()) ? [lastCarriage, "Acarreo"] : [lastPackage, "Paquete"]  
-    }
+  if (carriages.length == 0 && packages.length == 0)
+  {
+    return
+  }
+  else if (carriages.length == 0)
+  {
+    return lastPackage
+  }
+  else if (packages.length == 0)
+  {
+    return lastCarriage
+  }
+  else {
+    return Number(lastCarriage.created?.getTime()) > Number(lastPackage.created?.getTime()) ? lastCarriage : lastPackage
+  }
 })
 
 </script>
 
 <template>
-    <RouterLink :to="getLastItem[1] == 'Paquete' ? '/packages' : '/carriages'">
-        <div class="box" v-if="existsOrder">
-            <div id="order-state">
-              <p>{{Object(getLastItem[0]).arrived ? "Entregado" : "Sin entregar"}}</p>
-            </div>
-            <div id="order-detail">
-              <p style="padding-top: 1.2rem;">{{getLastItem[1]}}</p>
-              <p style="padding-bottom: 1.2rem;">Destino: {{Object(getLastItem[0]).destinyNation}}</p>
-              <p v-if="Object(getLastItem[0]).arrived" style="padding-bottom: 1.2rem;">Entregado el: {{Object(getLastItem[0]).arrived.toLocaleDateString()}}</p>
-            </div>
-        </div>
-    </RouterLink>
-    <div class="box" v-if="existsOrder == false">
-        <h2>Aún no ha realizado ningún pedido</h2>
+  <RouterLink :to="getLastItem?.type == OrderType.Package ? '/packages' : '/carriages'">
+    <div class="box" v-if="existsOrder">
+      <div id="order-state">
+        <p>{{getLastItem.arrived ? "Entregado" : "Sin entregar"}}</p>
+      </div>
+      <div id="order-detail">
+        <p style="padding-top: 1.2rem;">{{getLastItem?.type === OrderType.Package ? "Paquete": "Acarreo"}}</p>
+        <p style="padding-bottom: 1.2rem;">Destino: {{Object(getLastItem).destinyNation}}</p>
+        <p v-if="getLastItem.arrived" style="padding-bottom: 1.2rem;">Entregado el: {{getLastItem.arrived.toLocaleDateString()}}</p>
+      </div>
     </div>
+  </RouterLink>
+  <div class="box" v-if="existsOrder == false">
+    <h2>Aún no ha realizado ningún pedido</h2>
+  </div>
 </template>
 
 <style scoped>
@@ -77,8 +80,8 @@ const getLastItem = computed(() => {
 }
 
 h2 {
-    font-size: 1.3rem;
-    color: var(--primary-text);
-    padding: 2rem;
+  font-size: 1.3rem;
+  color: var(--primary-text);
+  padding: 2rem;
 }
 </style>
