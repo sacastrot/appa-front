@@ -17,9 +17,13 @@ const emitValidateStep = (validateValue: boolean) => {
 }
 //Function to validate form
 watch([destinyNation, destinyCheckpoint], ([newDestinyNation, newDestinyCheckpoint]) => {
-  if(newDestinyNation !== NationType.Unknown && newDestinyCheckpoint !== Checkpoint.Unknown) {
-    emitValidateStep(true)
-  }else {
+  if (newDestinyNation !== NationType.Unknown && newDestinyCheckpoint !== Checkpoint.Unknown) {
+    if (newDestinyCheckpoint !== carriageStore.currentCarriage.originCheckpoint) {
+      emitValidateStep(true)
+    } else {
+      emitValidateStep(false)
+    }
+  } else {
     emitValidateStep(false)
   }
 })
@@ -34,7 +38,7 @@ const getCheckpointsList = () => {
 * Save destiny into store
 * Set validate to false for the next step
 * */
-onBeforeUnmount( async () => {
+onBeforeUnmount(async () => {
   carriageStore.setDestiny(destinyNation.value, destinyCheckpoint.value)
   emitValidateStep(false)
 })
@@ -72,7 +76,7 @@ onBeforeMount(() => {
         <p class="control has-icons-left">
           <div class="select is-medium">
             <select v-model="destinyCheckpoint">
-              <option v-for="value in checkpointList" :value="stringToCheckpoint[value]">{{value}}</option>
+              <option v-for="value in checkpointList" :value="stringToCheckpoint[value]">{{ value }}</option>
             </select>
           </div>
           <span class="icon is-small is-left">
@@ -105,10 +109,12 @@ form {
 
     .form-inputs {
       margin: 0 auto;
-      .select{
+
+      .select {
         width: 100%;
         margin-bottom: 10px;
-        & select{
+
+        & select {
           width: 100%;
           background-color: var(--color-seconday-orange);
         }

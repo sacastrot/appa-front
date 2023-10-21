@@ -14,7 +14,6 @@ const isActive = ref<boolean>(false);
 
 
 function logoutUser() {
-  console.log("logout")
   user.logout()
 }
 
@@ -34,7 +33,6 @@ watch([route.currentRoute], () => {
   } else {
     colorBison.value = "white";
   }
-  console.log(colorAdd.value)
 })
 
 const toHome = () => {
@@ -51,7 +49,7 @@ const setInactiveColor = () => {
   if (route.currentRoute.value.path === "/bison/list") {
     colorAdd.value = "white";
     return;
-  } else if(route.currentRoute.value.path === "/bison/register") {
+  } else if (route.currentRoute.value.path === "/bison/register") {
     colorBison.value = "white";
     return;
   }
@@ -65,9 +63,10 @@ const setInactiveColor = () => {
   <div class="section">
     <nav class="navbar is-fixed-top has-shadow">
       <div class="container">
-        <div class="navbar-brand" @click="toHome">
-          <img src="/img/logo-white.svg" alt="Acarreos Appa logo">
-          <div class="brand-text"> Acarreos Appa</div>
+        <div class="navbar-brand">
+          <img @click="toHome" class="brand" src="/img/logo-white.svg" alt="Acarreos Appa logo">
+          <div @click="toHome" class="brand-text"> Acarreos Appa</div>
+
           <div
               :aria-expanded="isActive"
               :class="{ 'is-active': isActive }"
@@ -91,13 +90,13 @@ const setInactiveColor = () => {
           <div v-if="user.currentRole == Role.Citizen" class="navbar-end" @click="isActive = !isActive">
             <RouterLink to="/" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio
             </RouterLink>
-            <RouterLink to="/carriages" class="navbar-item"><span
-                class="material-symbols-outlined">local_shipping</span> Acarreos
+            <RouterLink to="/carriages" class="navbar-item" active><span class="material-symbols-outlined">local_shipping</span>
+              Acarreos
             </RouterLink>
             <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span>
               Paquetes
             </RouterLink>
-            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil
+            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil
             </RouterLink>
             <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
               Salir
@@ -105,10 +104,16 @@ const setInactiveColor = () => {
           </div>
           <!--For bison role-->
           <div v-if="user.currentRole == Role.Bison" class="navbar-end" @click="isActive = !isActive">
-            <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
-            <RouterLink to="/bison/updateLocation" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span> Actualizar</RouterLink>
-            <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">assignment</span> Pedidos</RouterLink>
-            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
+            <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio
+            </RouterLink>
+            <RouterLink to="/bison/updateLocation" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span>
+              Actualizar
+            </RouterLink>
+            <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">assignment</span>
+              Pedidos
+            </RouterLink>
+            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil
+            </RouterLink>
             <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
               Salir
             </RouterLink>
@@ -117,13 +122,15 @@ const setInactiveColor = () => {
           <div v-if="user.currentRole == Role.Avatar" class="navbar-end" @click="isActive = !isActive">
             <RouterLink to="/avatar" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio
             </RouterLink>
-            <RouterLink to="/bison/register" class="navbar-item" @mouseenter="colorAdd= '#E47120'" @mouseleave="setInactiveColor">
+            <RouterLink to="/bison/register" class="navbar-item" @mouseenter="colorAdd= '#E47120'"
+                        @mouseleave="setInactiveColor">
               <span class="bison-add">
-                <IconAdd :color="colorAdd" />
+                <IconAdd :color="colorAdd"/>
               </span>
               Registrar
             </RouterLink>
-            <RouterLink to="/bison/list" class="navbar-item" @mouseenter="colorBison= '#E47120'" @mouseleave="setInactiveColor">
+            <RouterLink to="/bison/list" class="navbar-item" @mouseenter="colorBison= '#E47120'"
+                        @mouseleave="setInactiveColor">
               <span class="bisons">
                 <IconBison :color="colorBison"/>
               </span>
@@ -143,6 +150,9 @@ const setInactiveColor = () => {
 </template>
 
 <style scoped>
+.brand {
+  cursor: pointer;
+}
 
 .bison-add {
   padding-right: 0.5rem;
@@ -164,9 +174,6 @@ const setInactiveColor = () => {
   height: 5rem;
   background-color: var(--navbar);
 }
-.navbar-brand {
-  cursor: pointer;
-}
 
 .navbar-brand .navbar-burger {
   height: 5rem;
@@ -180,6 +187,7 @@ const setInactiveColor = () => {
 }
 
 .brand-text {
+  cursor: pointer;
   padding-top: 1rem;
   padding-left: 0.5rem;
   font-size: 2rem;

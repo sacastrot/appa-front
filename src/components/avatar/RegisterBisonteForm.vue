@@ -13,7 +13,7 @@ const returnHome = () => {
   userStore.setRandomPassword();
   userStore.addUser();
   userStore.resetUser();
-  router.push("/login");
+  router.push("/avatar");
 }
 const showSuccess = async () => {
   isRegister.value = !(userStore.validateInfoUser)

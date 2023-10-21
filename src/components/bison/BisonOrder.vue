@@ -2,7 +2,6 @@
 import { useUserStore } from "@/stores/user";
 import type { Checkpoint, NationType} from "@/types/intefaces";
 import { OrderType} from "@/types/intefaces";
-import { Role } from "@/types/intefaces";
 const user = useUserStore();
 
 
