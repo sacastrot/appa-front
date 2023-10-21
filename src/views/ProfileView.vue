@@ -248,7 +248,7 @@ const togglePassword = () => {
         </span>
           Editar perfil
         </button>
-        <button v-if="readOnly" class="button is-fullwidth delete_profile_buttom" @click="modalActive=true">
+        <button v-if="readOnly && role!==Role.Bison" class="button is-fullwidth delete_profile_buttom" @click="modalActive=true">
         <span
             class="icon is-small is-left buttom_icons material-symbols-outlined mr-3"
         >

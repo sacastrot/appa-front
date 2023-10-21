@@ -14,7 +14,6 @@ const isActive = ref<boolean>(false);
 
 
 function logoutUser() {
-  console.log("logout")
   user.logout()
 }
 
@@ -97,7 +96,7 @@ const setInactiveColor = () => {
             <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">package_2</span>
               Paquetes
             </RouterLink>
-            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">settings</span> Perfil
+            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil
             </RouterLink>
             <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
               Salir

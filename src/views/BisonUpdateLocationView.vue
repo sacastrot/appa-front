@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import Hero from '@/components/core/Hero.vue';
-
-
 import { ref, watch } from "vue";
 import { Checkpoint } from "@/types/intefaces";
 import { computed } from "vue";
-import type { Carriage, CheckpointCoordinates, NationType, PackageState, User } from "@/types/intefaces";
+import type { Carriage, NationType, PackageState, User } from "@/types/intefaces";
 import { OrderType } from "@/types/intefaces";
 import { getCurrentUser } from '@/services/user';
 import { carriagesByBison, getCurrentCarriage } from '@/services/carriage';
@@ -14,6 +12,9 @@ import { getNation } from '@/data/directions';
 import { useCarriagesStore } from '@/stores/carriages';
 import { usePackagesStore } from '@/stores/packages';
 import { useUserStore } from '@/stores/user';
+import {graph} from "@/data/graph";
+import {findShortestPath} from "@/data/helpers";
+import NoOrders from "@/components/bison/NoOrders.vue";
 
 const carriageStore= useCarriagesStore()
 const packageStore= usePackagesStore()
@@ -29,271 +30,6 @@ const originNationShowHelp = computed(() => {
   }
 });
 
-type Graph = {
-  [key: string]: {
-    [key: string]: number;
-  };
-};
-
-const coordinates = ref(new Map<Checkpoint, CheckpointCoordinates>());
-coordinates.value.set(Checkpoint.Unknown, { x: 0, y: 0 });
-coordinates.value.set(Checkpoint.NorthernWater, { x: 539, y: 70 });
-coordinates.value.set(Checkpoint.SouthernWater, { x: 436, y: 675 });
-coordinates.value.set(Checkpoint.NorthernAir, { x: 624, y: 122 });
-coordinates.value.set(Checkpoint.EasternAir, { x: 907, y: 433 });
-coordinates.value.set(Checkpoint.WesternAir, { x: 311, y: 211 });
-coordinates.value.set(Checkpoint.SouthernAir, { x: 453, y: 555 });
-coordinates.value.set(Checkpoint.BaSingSe, { x: 778, y: 235 });
-coordinates.value.set(Checkpoint.Abbey, { x: 456, y: 221 });
-coordinates.value.set(Checkpoint.GaipanVillage, { x: 568, y: 280 });
-coordinates.value.set(Checkpoint.SiWong, { x: 700, y: 400 });
-coordinates.value.set(Checkpoint.FireCapital, { x: 174, y: 375 });
-coordinates.value.set(Checkpoint.ShuJing, { x: 435, y: 321 });
-
-// Crear el grafo
-const graph = ref<Graph>({
-  [Checkpoint.FireCapital]: {
-    [Checkpoint.WesternAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.FireCapital)!,
-      coordinates.value.get(Checkpoint.WesternAir)!
-    ),
-    [Checkpoint.ShuJing]: calculateDistance(
-      coordinates.value.get(Checkpoint.FireCapital)!,
-      coordinates.value.get(Checkpoint.ShuJing)!
-    ),
-    [Checkpoint.SouthernAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.FireCapital)!,
-      coordinates.value.get(Checkpoint.SouthernAir)!
-    ),
-  },
-  [Checkpoint.WesternAir]: {
-    [Checkpoint.FireCapital]: calculateDistance(
-      coordinates.value.get(Checkpoint.WesternAir)!,
-      coordinates.value.get(Checkpoint.FireCapital)!
-    ),
-    [Checkpoint.ShuJing]: calculateDistance(
-      coordinates.value.get(Checkpoint.WesternAir)!,
-      coordinates.value.get(Checkpoint.ShuJing)!
-    ),
-    [Checkpoint.Abbey]: calculateDistance(
-      coordinates.value.get(Checkpoint.WesternAir)!,
-      coordinates.value.get(Checkpoint.Abbey)!
-    ),
-  },
-  [Checkpoint.Abbey]: {
-    [Checkpoint.WesternAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.Abbey)!,
-      coordinates.value.get(Checkpoint.WesternAir)!
-    ),
-    [Checkpoint.ShuJing]: calculateDistance(
-      coordinates.value.get(Checkpoint.Abbey)!,
-      coordinates.value.get(Checkpoint.ShuJing)!
-    ),
-    [Checkpoint.GaipanVillage]: calculateDistance(
-      coordinates.value.get(Checkpoint.Abbey)!,
-      coordinates.value.get(Checkpoint.GaipanVillage)!
-    ),
-    [Checkpoint.NorthernWater]: calculateDistance(
-      coordinates.value.get(Checkpoint.Abbey)!,
-      coordinates.value.get(Checkpoint.NorthernWater)!
-    ),
-  },
-  [Checkpoint.NorthernWater]: {
-    [Checkpoint.Abbey]: calculateDistance(
-      coordinates.value.get(Checkpoint.NorthernWater)!,
-      coordinates.value.get(Checkpoint.Abbey)!
-    ),
-    [Checkpoint.NorthernAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.NorthernWater)!,
-      coordinates.value.get(Checkpoint.NorthernAir)!
-    ),
-  },
-  [Checkpoint.ShuJing]: {
-    [Checkpoint.FireCapital]: calculateDistance(
-      coordinates.value.get(Checkpoint.ShuJing)!,
-      coordinates.value.get(Checkpoint.FireCapital)!
-    ),
-    [Checkpoint.WesternAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.ShuJing)!,
-      coordinates.value.get(Checkpoint.WesternAir)!
-    ),
-    [Checkpoint.Abbey]: calculateDistance(
-      coordinates.value.get(Checkpoint.ShuJing)!,
-      coordinates.value.get(Checkpoint.Abbey)!
-    ),
-    [Checkpoint.GaipanVillage]: calculateDistance(
-      coordinates.value.get(Checkpoint.ShuJing)!,
-      coordinates.value.get(Checkpoint.GaipanVillage)!
-    ),
-    [Checkpoint.SiWong]: calculateDistance(
-      coordinates.value.get(Checkpoint.ShuJing)!,
-      coordinates.value.get(Checkpoint.SiWong)!
-    ),
-    [Checkpoint.SouthernAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.ShuJing)!,
-      coordinates.value.get(Checkpoint.SouthernAir)!
-    ),
-  },
-  [Checkpoint.NorthernAir]: {
-    [Checkpoint.NorthernWater]: calculateDistance(
-      coordinates.value.get(Checkpoint.NorthernAir)!,
-      coordinates.value.get(Checkpoint.NorthernWater)!
-    ),
-    [Checkpoint.BaSingSe]: calculateDistance(
-      coordinates.value.get(Checkpoint.NorthernAir)!,
-      coordinates.value.get(Checkpoint.BaSingSe)!
-    ),
-    [Checkpoint.GaipanVillage]: calculateDistance(
-      coordinates.value.get(Checkpoint.NorthernAir)!,
-      coordinates.value.get(Checkpoint.GaipanVillage)!
-    ),
-    [Checkpoint.Abbey]: calculateDistance(
-      coordinates.value.get(Checkpoint.NorthernAir)!,
-      coordinates.value.get(Checkpoint.Abbey)!
-    ),
-  },
-  [Checkpoint.GaipanVillage]: {
-    [Checkpoint.NorthernAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.GaipanVillage)!,
-      coordinates.value.get(Checkpoint.NorthernAir)!
-    ),
-    [Checkpoint.BaSingSe]: calculateDistance(
-      coordinates.value.get(Checkpoint.GaipanVillage)!,
-      coordinates.value.get(Checkpoint.BaSingSe)!
-    ),
-    [Checkpoint.SiWong]: calculateDistance(
-      coordinates.value.get(Checkpoint.GaipanVillage)!,
-      coordinates.value.get(Checkpoint.SiWong)!
-    ),
-    [Checkpoint.ShuJing]: calculateDistance(
-      coordinates.value.get(Checkpoint.GaipanVillage)!,
-      coordinates.value.get(Checkpoint.ShuJing)!
-    ),
-    [Checkpoint.Abbey]: calculateDistance(
-      coordinates.value.get(Checkpoint.GaipanVillage)!,
-      coordinates.value.get(Checkpoint.Abbey)!
-    ),
-  },
-  [Checkpoint.BaSingSe]: {
-    [Checkpoint.NorthernAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.BaSingSe)!,
-      coordinates.value.get(Checkpoint.NorthernAir)!
-    ),
-    [Checkpoint.GaipanVillage]: calculateDistance(
-      coordinates.value.get(Checkpoint.BaSingSe)!,
-      coordinates.value.get(Checkpoint.GaipanVillage)!
-    ),
-    [Checkpoint.EasternAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.BaSingSe)!,
-      coordinates.value.get(Checkpoint.EasternAir)!
-    ),
-  },
-  [Checkpoint.SiWong]: {
-    [Checkpoint.GaipanVillage]: calculateDistance(
-      coordinates.value.get(Checkpoint.SiWong)!,
-      coordinates.value.get(Checkpoint.GaipanVillage)!
-    ),
-    [Checkpoint.ShuJing]: calculateDistance(
-      coordinates.value.get(Checkpoint.SiWong)!,
-      coordinates.value.get(Checkpoint.ShuJing)!
-    ),
-    [Checkpoint.SouthernAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.SiWong)!,
-      coordinates.value.get(Checkpoint.SouthernAir)!
-    ),
-  },
-  [Checkpoint.SouthernAir]: {
-    [Checkpoint.SiWong]: calculateDistance(
-      coordinates.value.get(Checkpoint.SouthernAir)!,
-      coordinates.value.get(Checkpoint.SiWong)!
-    ),
-    [Checkpoint.ShuJing]: calculateDistance(
-      coordinates.value.get(Checkpoint.SouthernAir)!,
-      coordinates.value.get(Checkpoint.ShuJing)!
-    ),
-    [Checkpoint.SouthernWater]: calculateDistance(
-      coordinates.value.get(Checkpoint.SouthernAir)!,
-      coordinates.value.get(Checkpoint.SouthernWater)!
-    ),
-    [Checkpoint.FireCapital]: calculateDistance(
-      coordinates.value.get(Checkpoint.SouthernAir)!,
-      coordinates.value.get(Checkpoint.FireCapital)!
-    ),
-  },
-  [Checkpoint.SouthernWater]: {
-    [Checkpoint.SouthernAir]: calculateDistance(
-      coordinates.value.get(Checkpoint.SouthernWater)!,
-      coordinates.value.get(Checkpoint.SouthernAir)!
-    ),
-  },
-  [Checkpoint.EasternAir]: {
-    [Checkpoint.BaSingSe]: calculateDistance(
-      coordinates.value.get(Checkpoint.EasternAir)!,
-      coordinates.value.get(Checkpoint.BaSingSe)!
-    ),
-    [Checkpoint.SiWong]: calculateDistance(
-      coordinates.value.get(Checkpoint.EasternAir)!,
-      coordinates.value.get(Checkpoint.SiWong)!
-    ),
-  },
-});
-
-// Función para calcular distancias
-function calculateDistance(
-  coord1: CheckpointCoordinates,
-  coord2: CheckpointCoordinates
-): number {
-  const dx = coord1.x - coord2.x;
-  const dy = coord1.y - coord2.y;
-  return Math.sqrt(dx * dx + dy * dy);
-}
-
-function findShortestPath(
-  graph: Graph,
-  start: Checkpoint,
-  end: Checkpoint
-): Checkpoint[] | null {
-  const distances: { [key: string]: number } = {};
-  const previousNodes: { [key: string]: Checkpoint | null } = {};
-  const nodes: Checkpoint[] = Object.values(Checkpoint);
-
-  for (const node of nodes) {
-    distances[node] = node === start ? 0 : Infinity;
-    previousNodes[node] = null;
-  }
-
-  while (nodes.length) {
-    const closestNode = nodes.reduce((minNode, node) =>
-      distances[node] < distances[minNode] ? node : minNode
-    );
-
-    if (closestNode === end) {
-      const path: Checkpoint[] = [];
-      let currentNode: Checkpoint = end;
-      while (currentNode !== start) {
-        path.unshift(currentNode);
-        currentNode = previousNodes[currentNode]!;
-      }
-      path.unshift(start);
-      path.unshift(Checkpoint.Unknown);
-
-      return path;
-    }
-
-    nodes.splice(nodes.indexOf(closestNode), 1);
-
-    for (const neighbor in graph[closestNode]) {
-      const distance = distances[closestNode] + graph[closestNode][neighbor];
-      if (distance < distances[neighbor]) {
-        distances[neighbor] = distance;
-        previousNodes[neighbor] = closestNode;
-      }
-    }
-  }
-
-  return null;
-}
-
 
 const showSetCheckpoint = ref(true);
 const showSetPrice= ref(false);  
@@ -301,13 +37,11 @@ const showSuccess = ref(false);
 
 
 // Lo usamos para guardar el valor del input de setPrice
-const money = ref(0);
+const price = ref(0);
 
 
 
 const user: User = getCurrentUser()
-const myCarriages: Carriage[] = carriagesByBison(user?.id!)
-const myPackages: PackageState[] = packageByBison(user?.id!)
 const currentPackage: PackageState | undefined = getCurrentPackage(user?.id!)
 const currentCarriage: Carriage | undefined = getCurrentCarriage(user?.id!)
 
@@ -341,7 +75,7 @@ function updateLocationCarriage() {
 }
 
 function setPrice(){
-  carriageStore.setPrice(money.value, order?.id!)
+  carriageStore.setPrice(price.value, order?.id!)
   carriageStore.setArrived(new Date(),order?.id!)
   updateLocationCarriage()
   userStore.setAvailable(true, user.id!)
@@ -358,20 +92,20 @@ function updateLocationPackage(){
     setArrivedPackage()
   } 
 }
-
 </script>
 
 <template>
   <Hero :title="'Pedido asociado'"/>
   <main class="">
 {{ order }}
-    <div class="summary-content" v-if="showSetCheckpoint">
-      <div class="logo"></div>
-      <h1>Actualizar ubicaci&oacuten</h1>
-      <p class="update-location-text">
-        Ingresa el punto de control en el que estas
-      </p>
-      <span class="select is-large">
+    <div v-if="currentPackage || currentCarriage">
+      <div class="summary-content" v-if="showSetCheckpoint">
+        <div class="logo"></div>
+        <h1>Actualizar ubicaci&oacuten</h1>
+        <p class="update-location-text">
+          Ingresa el punto de control en el que estas
+        </p>
+        <span class="select is-large">
         <select v-model="currentLocation">
           <option v-for="value in shortestPath" required>
             {{ value }}
@@ -379,64 +113,64 @@ function updateLocationPackage(){
         </select>
         <p v-if="originNationShowHelp" class="help">{{ nationHelp }}</p>
       </span>
-      <div class="button-container">
-        <RouterLink to="/bison">
-          <button class="button_left">Atr&aacutes</button>
-        </RouterLink>
-        <button
-          class="button button_right"
-          :disabled="originNationShowHelp"
-          @click="showSetCheckpoint = false; showPriceInput(); showSuccess=true; updateLocationCarriage();"
-          v-if="!isPackage && !arrived"
-        >
-          Actualizar
-        </button>
-        <button
-        class="button button_right"
-        :disabled="originNationShowHelp"
-        @click="showSetCheckpoint = false; showPriceInput();"
-        v-if="!isPackage && arrived"
-      >
-        Siguiente
-      </button>
-        <button
-        class="button button_right"
-        :disabled="originNationShowHelp"
-        @click="showSuccess=true; showSetCheckpoint = false; updateLocationPackage();"
-        v-if="isPackage"
-      >
-        Actualizar
-      </button>
+        <div class="button-container">
+          <RouterLink to="/bison">
+            <button class="button_left">Atr&aacutes</button>
+          </RouterLink>
+          <button
+              class="button button_right"
+              :disabled="originNationShowHelp"
+              @click="showSetCheckpoint = false; showPriceInput(); showSuccess=true; updateLocationCarriage();"
+              v-if="!isPackage && !arrived"
+          >
+            Actualizar
+          </button>
+          <button
+              class="button button_right"
+              :disabled="originNationShowHelp"
+              @click="showSetCheckpoint = false; showPriceInput();"
+              v-if="!isPackage && arrived"
+          >
+            Siguiente
+          </button>
+          <button
+              class="button button_right"
+              :disabled="originNationShowHelp"
+              @click="showSuccess=true; showSetCheckpoint = false; updateLocationPackage();"
+              v-if="isPackage"
+          >
+            Actualizar
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="summary-content2" v-if="showSetPrice && isPackage===false">
-      <div class="logo"></div>
-      <h1>Precio definitivo</h1>
-      <p class="update-location-text">
+      <div class="summary-content2" v-if="showSetPrice && isPackage===false">
+        <div class="logo"></div>
+        <h1>Precio definitivo</h1>
+        <p class="update-location-text">
           Ingrese el costo final del pedido asociado cuando sea oportuno
-      </p>
-      <div class="field">
+        </p>
+        <div class="field">
           <p class="control has-icons-left">
-            <input v-model="money" class="input is-medium" type="number" placeholder="Precio">
+            <input v-model="price" class="input is-medium" type="number" placeholder="Precio">
             <span class="icon is-small is-left">
               <fa icon="dollar-sign"></fa>
             </span>
           </p>
         </div>
-      <div class="button-container">
-        <button class="button button_left" @click="showSetPrice=false; showSetCheckpoint=true">Atr&aacutes</button>
-        <button class="button button_right" :disabled="!money" @click="showSuccess=true; showSetPrice=false; setPrice()">Actualizar</button>
+        <div class="button-container">
+          <button class="button button_left" @click="showSetPrice=false; showSetCheckpoint=true">Atr&aacutes</button>
+          <button class="button button_right" :disabled="!price" @click="showSuccess=true; showSetPrice=false; setPrice()">Actualizar</button>
+        </div>
       </div>
-    </div>
 
-    <div class="summary-content3" v-if="showSuccess">
-      <div class="success-title">
+      <div class="summary-content3" v-if="showSuccess">
+        <div class="success-title">
           <img src="/stepper/package/success.png" />
           <h1>Actualizaci&oacuten completada</h1>
           <p>El {{order?.type === OrderType.Package ? "paquete" : "acarreo"}} se completo con &eacutexito</p>
-      </div>
-      <div class="package-card">
+        </div>
+        <div class="package-card">
           <div class="location">
             <img src="/img/BisonLocation.svg" />
             <div class="location-text">
@@ -460,7 +194,11 @@ function updateLocationPackage(){
             <p>{{order?.arrived === undefined ? "Pendiente" : "Entregado"}}</p>
           </div>
         </div>
-  </div>
+      </div>
+    </div>
+    <div v-else class="no-orders">
+      <NoOrders/>
+    </div>
   </main>
 </template>
 
@@ -639,7 +377,9 @@ function updateLocationPackage(){
   }
 }
 
-
+.no-orders{
+  margin-top: 30px;
+}
 
 .success-title{
   display: flex;
