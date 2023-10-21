@@ -342,6 +342,9 @@ const togglePassword = () => {
   z-index: 1;
   overflow: hidden;
   align-items: center;
+  @media screen and (max-width: 360px) {
+    height: 12rem;
+  }
 }
 
 .squared {
@@ -371,6 +374,9 @@ const togglePassword = () => {
   z-index: 3;
 
   border-bottom-left-radius: 0.8rem;
+  @media screen and (max-width: 360px) {
+    left: 60%;
+  }
 }
 
 .citizen_information {
@@ -401,6 +407,10 @@ const togglePassword = () => {
   border-radius: 50%;
   overflow: hidden;
   margin-right: 40%;
+  @media screen and (max-width: 360px) {
+    margin-left: 1rem;
+    height: 9rem;
+  }
 }
 
 .avatar {
