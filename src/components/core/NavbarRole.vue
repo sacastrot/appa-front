@@ -104,16 +104,10 @@ const setInactiveColor = () => {
           </div>
           <!--For bison role-->
           <div v-if="user.currentRole == Role.Bison" class="navbar-end" @click="isActive = !isActive">
-            <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio
-            </RouterLink>
-            <RouterLink to="/bison/updateLocation" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span>
-              Actualizar
-            </RouterLink>
-            <RouterLink to="/packages" class="navbar-item"><span class="material-symbols-outlined">assignment</span>
-              Pedidos
-            </RouterLink>
-            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil
-            </RouterLink>
+            <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
+            <RouterLink to="/bison/updateLocation" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span> Actualizar</RouterLink>
+            <RouterLink to="/bison/orders" class="navbar-item"><span class="material-symbols-outlined">assignment</span> Pedidos</RouterLink>
+            <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
             <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
               Salir
             </RouterLink>

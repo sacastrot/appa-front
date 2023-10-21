@@ -15,9 +15,6 @@ const isActive = ref(false);
 
 const user: User = getCurrentUser()
 
-onBeforeMount(() => {
-  packageStore.loadPackages();
-})
 </script>
 
 <template>
