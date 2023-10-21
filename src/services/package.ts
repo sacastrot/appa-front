@@ -9,7 +9,6 @@ export const packagesByCitizen = (citizenId: number): PackageState[] => {
 
 export const packageByBison = (bisonId: number): PackageState[] => {
     const packageStore = usePackagesStore();
-
     return packageStore.packages.filter(pkg => pkg.bison === bisonId)
 }
 

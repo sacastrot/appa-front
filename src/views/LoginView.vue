@@ -4,9 +4,11 @@ import {onBeforeMount, ref} from 'vue';
 import {useRouter} from "vue-router";
 import {useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
+import {usePackagesStore} from "@/stores/packages";
 
 const router = useRouter()
 const user = useUserStore();
+const packageStore = usePackagesStore()
 const showPassword = ref<string>("password")
 const iconPassword = ref("visibility")
 const email = ref("");
@@ -44,7 +46,9 @@ const resetError = () => {
 
 onBeforeMount(() => {
   user.loadUsers();
+  packageStore.loadPackages();
 })
+
 
 </script>
 <template>

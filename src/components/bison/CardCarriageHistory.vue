@@ -1,12 +1,33 @@
 <script setup lang="ts">
 import {ref} from "vue";
+import {Checkpoint, NationType, OrderType} from "@/types/intefaces";
 
 const expand = ref<boolean>(false);
 const toggleExpand = () => {
     expand.value = !expand.value
 };
 
-const type = ref("packages");
+const {currentCarriage} = defineProps<{
+  currentCarriage: {
+    id: number;
+    created: Date | undefined;
+    arrived: Date | undefined;
+    guideNumber: number | undefined;
+    originNation: NationType,
+    originCheckpoint: Checkpoint,
+    destinyNation: NationType,
+    destinyCheckpoint: Checkpoint,
+    currentNation: NationType,
+    currentCheckpoint: Checkpoint,
+    pickUpDate: Date | undefined;
+    pickUpHour: string | undefined;
+    description: string | undefined;
+    price: number,
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
+  }
+}>()
 </script>
 
 <template>
@@ -16,44 +37,33 @@ const type = ref("packages");
                 <img src="/img/location-history.svg">
                 <div class="location-text">
                     <div class="location-origin">
-                        <h1> Nación de la tierra </h1>
+                        <h1> {{ currentCarriage.originNation }} </h1>
                         <!-- <p>{{ packagesStore.getCreatedDate(packageValue) }}</p> -->
-                        <p>7 de Agosto, 2021</p>
+                        <p>{{ currentCarriage.created?.toLocaleDateString('es-CO') }}</p>
                     </div>
                     <div class="location-destination">
-                        <h1>Nación del agua</h1>
+                        <h1>{{ currentCarriage.destinyNation }}</h1>
                         <!-- <p>{{ packagesStore.formatDate(packageValue.arrived) }}</p> -->
-                        <p>7 de Agosto, 2021</p>
+                        <p>{{ currentCarriage.arrived?.toLocaleDateString('es-CO') }}</p>
                     </div>
                 </div>
             </div>
         </Transition>
-        <div @click="toggleExpand" class="square" :class="[expand ? 'order-active' : 'order-inactive']">
-            <span v-if="type === 'packages'" class="material-symbols-outlined">package_2</span>
-            <span v-else class="material-symbols-outlined">local_shipping</span>
+        <div class="square" @click="toggleExpand" :class="[expand ? 'order-active' : 'order-inactive']">
+          <div class="logo" >
+            <span class="material-symbols-outlined">local_shipping</span>
+          </div>
         </div>
-        <Transition name="fade-description">
             <div class="order-details" :class="[expand ? 'description-active' : 'description-inactive']">
+              <div class="description">
                 <h1>Descripción</h1>
-                <div v-if="type === 'packages'" class="package-description">
-                    <h1>Alto</h1>
-                    <p>1.2 cm</p>
-                    <h1>Largo</h1>
-                    <p>3 cm</p>
-                    <h1>Ancho</h1>
-                    <p>5 cm</p>
-                    <h1>Peso</h1>
-                    <p>2 kg</p>
-                </div>
-                <div v-else class="carriage-description">
-                    <p>Necesito ir a la nación del aire lo más pronto posible</p>
-                </div>
+                <p>{{ currentCarriage.description }}</p>
+              </div>  
                 <div class="price">
-                    <h1>Precio</h1>
-                    <h1>$350.000</h1>
+                    <h1>Precio final</h1>
+                    <h1>{{ currentCarriage.price?.toLocaleString('es-CO') }}</h1>
                 </div>
             </div>
-        </Transition>
 
     </div>
 
@@ -63,10 +73,7 @@ const type = ref("packages");
 .order-card {
   position: relative;
   display: flex;
-  align-items: center;
-  overflow: hidden;
-  width: 100%;
-  height: 150px;
+  height: 20rem;
   border-radius: 1rem;
   padding: 0 0 0 1rem;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
@@ -75,6 +82,7 @@ const type = ref("packages");
   .location {
     display: flex;
     justify-content: flex-start;
+    align-self: center;
     height: 70%;
 
     .location-text {
@@ -108,11 +116,12 @@ const type = ref("packages");
 
 .square {
   position: absolute;
+  cursor: pointer;
   right: 0;
   width: 8rem;
   height: 100%;
   background-color: var(--color-primary-blue);
-  border-radius: 1em;
+  border-radius: 1rem;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -120,52 +129,41 @@ const type = ref("packages");
 }
 
 .order-details {
-  width: 97%;
-  display: grid;
-  grid-template: repeat(4, 1fr) / 2fr 1fr 1fr;
-  grid-gap: 0 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 2rem;
   & h1 {
     font-size: 1.2rem;
     font-weight: bold;
-    align-self: end;
-    margin: 0;
-    padding-left: 0.5rem;
-    color: var(--color-primary-white);
+    color: var(--color-primary-grey);
   }
   & p {
-    margin: 0;
-    padding: 0;
-    align-self: end;
-    font-size: 1.2rem;
-    color: var(--color-primary-white);
-  }
-  .material-symbols-outlined {
-    justify-self: center;
-    grid-area: 1/ 1 / 2 span/ 2;
-    font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
-    font-size: 5rem;
-    .package-pending {
-      color: var(--pending-state);
-    }
-    .package-delivered {
-      color: var(--delivered-state);
-    }
+    font-size: 1.1rem;
+    color: var(--color-primary-grey);
+    overflow-wrap: anywhere;
   }
   .price {
-    grid-area: 3/ 1/ 2 span/ 2;
-    text-align: center;
-    align-self: end;
+    color: var(--color-primary-orange);
+    margin-left: 100px;
   }
 }
 
-.order-details.description-inactive:hover {
-  background-color: rgba(155, 191, 225, 0.27);
-
+.logo {
+  position: absolute;
+  background-size: 70px 80px;
+  right: calc(0% + 1.5rem);
+  top: calc(50% - 3rem);
+  & span {
+    font-size: 50px;
+    color: var(--color-primary-white);
+  }
 }
 
 .description-active {
-  width: 90%;
-  /* transition: width 0.3s ease-in-out; */
+  margin-left: calc(0% + 9rem);
   opacity: 100;
   transition: opacity 0.4s ease-in-out;
   transition-delay: 0.2s;
@@ -173,21 +171,27 @@ const type = ref("packages");
 }
 
 .description-inactive {
-  width: 80px;
-  /* transition: width 0.3s ease-in-out; */
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
   pointer-events: none;
 }
 
 .order-active {
-  right: calc(100% - 9rem);
+  right: calc(100% - 8rem);
   transition: right 0.5s ease-in-out;
 }
 
 .order-inactive {
   width: 80px;
   transition: right 0.5s ease-in-out;
+}
+
+.order-inactive:hover {
+  background-color: rgba(155, 191, 225, 0.27);
+  & span {
+    color: var(--color-primary-blue);
+    font-variation-settings: 'opsz' 60;
+  }
 }
 
 .fade-location-leave-active {
