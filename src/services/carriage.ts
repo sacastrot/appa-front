@@ -7,6 +7,12 @@ export const carriagesByCitizen = (citizenId: number): Carriage[] => {
     return carriageStore.carriages.filter(carriage => carriage.citizen === citizenId)
 }
 
+export const carriagesByCitizenAndGuide = (citizenId: number, guideId: number): Carriage[] => {
+    const carriageStore = useCarriagesStore();
+    console.log("estoy adentrooo")
+    return carriageStore.carriages.filter(carriage => carriage.citizen === citizenId && carriage.id == guideId)
+}
+
 export const carriagesByBison = (bisonId: number): Carriage[] => {
     const carriageStore = useCarriagesStore();
 

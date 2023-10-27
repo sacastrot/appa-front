@@ -1,64 +1,103 @@
 <script setup lang="ts">
-import {ref, onBeforeMount} from "vue";
+import { ref, onBeforeMount, watch } from "vue";
 import LastOrderInfo from "@/components/citizen/LastOrderInfo.vue";
 import PriceCalculator from "@/components/citizen/PriceCalculator.vue";
-import type {User} from "@/types/intefaces";
-import {useCarriagesStore} from "@/stores/carriages";
-import {usePackagesStore} from "@/stores/packages";
-import {getCurrentUser} from "@/services/user";
+import type { Carriage, PackageState, User } from "@/types/intefaces";
+import { useCarriagesStore } from "@/stores/carriages";
+import { usePackagesStore } from "@/stores/packages";
+import { getCurrentUser } from "@/services/user";
 import HeaderName from "@/components/core/HeaderName.vue";
+import { packagesByCitizenAndGuide } from "@/services/package";
+import HistoryPackage from "@/components/citizen/history/HistoryPackage.vue";
+import HistoryCarriages from "@/components/citizen/history/HistoryCarriages.vue";
+import {carriagesByCitizenAndGuide } from "@/services/carriage";
 
-const carriageStore = useCarriagesStore()
-const packageStore = usePackagesStore()
+const carriageStore = useCarriagesStore();
+const packageStore = usePackagesStore();
 
 const isActive = ref(false);
 
-const user: User = getCurrentUser()
+const user: User = getCurrentUser();
 
+const guideIsActive = ref(false);
+const search = ref<number>();
+let packages : PackageState[]
+let carriages: Carriage[]
+
+watch([search], () => {
+  !search.value ? guideIsActive.value = false : guideIsActive.value = true
+  packages = packagesByCitizenAndGuide(user?.id!, search?.value!)
+  carriages = carriagesByCitizenAndGuide(user?.id!, search?.value!)
+  console.log(carriages)
+  console.log(user.id)
+  console.log(search.value)
+})
 </script>
 
 <template>
   <main class="home-page">
-    <HeaderName v-if="user.name" :data="{
-    name: user.name,
-    message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
-    }"/>
+    <HeaderName
+      v-if="user.name"
+      :data="{
+        name: user.name,
+        message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.',
+      }"
+    />
     <div class="track-order">
       <h2>Rastrear envío</h2>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input is-medium" type="text" placeholder="Número de guía">
+          <input
+            class="input is-medium"
+            type="text"
+            placeholder="Número de guía"
+            v-model="search"
+          />
           <span class="icon is-small is-left">
             <fa icon="magnifying-glass"></fa>
           </span>
         </p>
       </div>
     </div>
-    <div class="last-order">
-      <h2>Último pedido</h2>
-      <LastOrderInfo/>
+    <div class="default-info" v-if="!guideIsActive">
+      <div class="last-order">
+        <h2>Último pedido</h2>
+        <LastOrderInfo />
+      </div>
+
+      <h2>Calculadora</h2>
+      <p>Te damos un estimado del valor de tu paquete</p>
+      <PriceCalculator />
+
+      <div
+        class="action-button"
+        :class="{ 'is-active': isActive }"
+        @click="isActive = !isActive"
+      >
+        <span class="add">+</span>
+        <ul>
+          <RouterLink to="/carriages/register">
+            <li>
+              <p>Nuevo Acarreo&nbsp;</p>
+              <div class="symbol">
+                <span class="material-symbols-outlined">local_shipping</span>
+              </div>
+            </li>
+          </RouterLink>
+          <RouterLink to="/packages/register">
+            <li>
+              <p>Nuevo Paquete</p>
+              <div class="symbol">
+                <span class="material-symbols-outlined">package_2</span>
+              </div>
+            </li>
+          </RouterLink>
+        </ul>
+      </div>
     </div>
-
-    <h2>Calculadora</h2>
-    <p>Te damos un estimado del valor de tu paquete</p>
-    <PriceCalculator/>
-
-    <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
-      <span class="add">+</span>
-      <ul>
-        <RouterLink to="/carriages/register">
-          <li>
-            <p>Nuevo Acarreo&nbsp;</p>
-            <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
-          </li>
-        </RouterLink>
-        <RouterLink to="/packages/register">
-          <li>
-            <p>Nuevo Paquete</p>
-            <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
-          </li>
-        </RouterLink>
-      </ul>
+    <div v-else>
+      <HistoryPackage class="my-4" v-for="(value, index) in packages" :packageValue="value" :key="index"/>
+      <HistoryCarriages v-for="carriage in carriages"  :key="carriage.guideNumber"  :carriage="carriage"/>
     </div>
   </main>
 </template>
@@ -109,7 +148,8 @@ header .image {
   width: 80rem;
   background-color: var(--input-field);
   font-size: 1.5rem;
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.02);
 }
 .action-button {
   position: fixed;
