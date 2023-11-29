@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import {onBeforeUnmount, onBeforeMount, ref, watch} from "vue";
-import {Checkpoint, NationType} from "@/types/intefaces";
+import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
+import {Checkpoint, NationType, OrderType} from "@/types/intefaces";
 import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
-import {usePackagesStore} from "@/stores/packages";
+import {useServiceStore} from "@/stores/service";
 
 //Store to packages
-const packageStore = usePackagesStore()
+const serviceStore = useServiceStore();
 
 //Data to send store
-const destinyNation = ref<NationType>(packageStore.state.destinyNation);
-const destinyCheckpoint = ref<Checkpoint>(packageStore.state.destinyCheckpoint);
+const destinyNation = ref<NationType>(serviceStore.state.destinyNation);
+const destinyCheckpoint = ref<Checkpoint>(serviceStore.state.destinyCheckpoint);
 
 
 //Validate form
@@ -20,7 +20,7 @@ const emitValidateStep = (validateValue: boolean) => {
 //Function to validate form
 watch([destinyNation, destinyCheckpoint], ([newDestinyNation, newDestinyCheckpoint]) => {
   if(newDestinyNation !== NationType.Unknown && newDestinyCheckpoint !== Checkpoint.Unknown) {
-    if(newDestinyCheckpoint !== packageStore.state.originCheckpoint) {
+    if(newDestinyCheckpoint !== serviceStore.state.originCheckpoint) {
       emitValidateStep(true)
     }else {
       emitValidateStep(false)
@@ -40,15 +40,16 @@ const getCheckpointsList = () => {
 * Set validate to false for the next step
 * */
 onBeforeUnmount( async () => {
-  packageStore.setDestiny(destinyNation.value, destinyCheckpoint.value);
+  serviceStore.setDestiny(destinyNation.value, destinyCheckpoint.value);
+  serviceStore.setType(OrderType.Package);
   emitValidateStep(false);
 })
 
 //Charge values of package destiny location and validate form if is already filled
 onBeforeMount(() => {
   //Charge values of package origin location
-  destinyNation.value = packageStore.state.destinyNation;
-  destinyCheckpoint.value = packageStore.state.destinyCheckpoint;
+  destinyNation.value = serviceStore.state.destinyNation;
+  destinyCheckpoint.value = serviceStore.state.destinyCheckpoint;
   checkpointList.value = getCheckpoints(destinyNation.value);
 
   //Validate if form is already filled

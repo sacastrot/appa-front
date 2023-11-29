@@ -13,13 +13,14 @@ export const useUserStore = defineStore("user", () => {
         phone: undefined,
         role: Role.Citizen,
         vehicle: undefined,
-        isAuth: false,
         available: true,
     })
     const loadData = ref(false);
     const users = ref<User[]>([])
     const currentUser = ref<number | undefined>(undefined);
     const currentRole = ref<Role>();
+    const currentToken = ref<string | undefined>(undefined);
+
 
     //validation
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
@@ -60,6 +61,12 @@ export const useUserStore = defineStore("user", () => {
         return false
     });
 
+    const setToken = (token: string | undefined) => {
+        if (token) {
+            currentToken.value = token;
+        }
+    }
+
     const validatePassword = computed(() => {
         return passwordRegex.test(state.value.password as string);
     });
@@ -86,7 +93,7 @@ export const useUserStore = defineStore("user", () => {
         return users.value.find(user => user.id === id)
     }
 
-    function filterBisonByEmail(email:string) : User[] {
+    function filterBisonByEmail(email: string): User[] {
         return users.value.filter(user => user.email?.includes(email) && user.role === Role.Bison)
     }
 
@@ -97,23 +104,11 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    function login(email: string, password: string): boolean {
-        const user = users.value.find(data => data.email === email && data.password === password)
-        console.log(user)
-        if (user) {
-            currentUser.value = user.id;
-            currentRole.value = user.role;
-            user.isAuth = true;
-            return true;
-        }
-        return false;
-    }
 
     function logout() {
-        const user = users.value.find(data => data.id === currentUser.value)
-        if (user) {
-            user.isAuth = false;
-        }
+        currentUser.value = undefined;
+        currentRole.value = undefined;
+        currentToken.value = undefined;
         resetUser();
     }
 
@@ -182,6 +177,18 @@ export const useUserStore = defineStore("user", () => {
             user.available = available
     }
 
+    function setCurrentUser(id: number | undefined) {
+        if (id) {
+            currentUser.value = id;
+        }
+    }
+
+    function setCurrentRole(role: Role | undefined) {
+        if (role !== undefined) {
+            currentRole.value = role;
+        }
+    }
+
     function resetUser() {
         state.value = {
             id: undefined,
@@ -191,7 +198,6 @@ export const useUserStore = defineStore("user", () => {
             phone: undefined,
             role: Role.Citizen,
             vehicle: undefined,
-            isAuth: false,
             available: true,
         }
     }
@@ -204,7 +210,6 @@ export const useUserStore = defineStore("user", () => {
         setPhone,
         setRole,
         setVehicle,
-        login,
         logout,
         addUser,
         resetUser,
@@ -226,6 +231,10 @@ export const useUserStore = defineStore("user", () => {
         setDefaultId,
         deleteUser,
         filterBisonByEmail,
-        setAvailable
+        setAvailable,
+        setToken,
+        setCurrentUser,
+        setCurrentRole,
+        currentToken,
     }
 });

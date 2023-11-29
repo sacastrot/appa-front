@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-import {usePackagesStore} from "@/stores/packages";
+import {useServiceStore} from "@/stores/service";
+import {getServicePrice} from "@/services/service";
+import {OrderType} from "@/types/intefaces";
 
-const packageStore = usePackagesStore()
+const serviceStore = useServiceStore();
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
-const weight = ref(packageStore.state.weight);
+const weight = ref(serviceStore.state.weight);
 
 watch(weight, (newWeight) => {
   if (newWeight !== undefined) {
@@ -19,13 +21,11 @@ watch(weight, (newWeight) => {
   }
 })
 onBeforeUnmount(async () => {
-  if (weight.value !== undefined) {
-    packageStore.setWeight(weight.value);
-  }
-  packageStore.setPrice();
+  serviceStore.setWeight(weight.value);
+  const status = await getServicePrice(OrderType.Package);
 })
 onBeforeMount(() => {
-  weight.value = packageStore.state.weight;
+  weight.value = serviceStore.state.weight;
   emitValidateStep(Boolean(weight.value !== undefined))
 })
 </script>

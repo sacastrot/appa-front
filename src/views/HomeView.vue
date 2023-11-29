@@ -3,13 +3,9 @@ import {ref, onBeforeMount} from "vue";
 import LastOrderInfo from "@/components/citizen/LastOrderInfo.vue";
 import PriceCalculator from "@/components/citizen/PriceCalculator.vue";
 import type {User} from "@/types/intefaces";
-import {useCarriagesStore} from "@/stores/carriages";
-import {usePackagesStore} from "@/stores/packages";
 import {getCurrentUser} from "@/services/user";
 import HeaderName from "@/components/core/HeaderName.vue";
 
-const carriageStore = useCarriagesStore()
-const packageStore = usePackagesStore()
 
 const isActive = ref(false);
 

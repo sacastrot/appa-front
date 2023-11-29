@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import type {Carriage, PackageState, User} from "@/types/intefaces";
 import {getCurrentUser} from "@/services/user";
-import {getCurrentCarriage} from "@/services/carriage";
-import {getCurrentPackage} from "@/services/package";
 import HeaderName from "@/components/core/HeaderName.vue";
 import Hero from "@/components/core/Hero.vue";
 import BisonOrder from "@/components/bison/BisonOrder.vue";
 import NoOrders from "@/components/bison/NoOrders.vue";
 
 const user: User = getCurrentUser()
-const currentPackage: PackageState | undefined = getCurrentPackage(user?.id!)
-const currentCarriage: Carriage | undefined = getCurrentCarriage(user?.id!)
 
-const order: Carriage | PackageState | undefined = currentPackage? currentPackage : currentCarriage
 </script>
 
 <template>

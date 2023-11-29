@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import {useCarriagesStore} from "@/stores/carriages";
-import {onBeforeMount} from "vue";
+import {onBeforeMount, onBeforeUnmount} from "vue";
+import {useServiceStore} from "@/stores/service";
+import {createService} from "@/services/service";
+import {OrderType} from "@/types/intefaces";
 
-const carriagesStore = useCarriagesStore();
+const serviceStore = useServiceStore();
 
 //Event to verify if all fields are filled out
 const emit = defineEmits(["validateStep"]);
@@ -10,6 +12,10 @@ const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (value: boolean) => {
   emit("validateStep", value);
 }
+
+onBeforeUnmount(async () =>{
+  const status = await createService(OrderType.Carriage);
+});
 
 onBeforeMount(async () => {
   emitValidateStep(true);
@@ -25,22 +31,22 @@ onBeforeMount(async () => {
     <div class="ticket-description">
       <div class="origin">
         <h1>Origen</h1>
-        <p class="nation">{{ carriagesStore.currentCarriage.originNation }} -
-          {{ carriagesStore.currentCarriage.originCheckpoint }}</p>
+        <p class="nation">{{ serviceStore.state.originNation }} -
+          {{ serviceStore.state.originCheckpoint }}</p>
       </div>
       <div class="destiny">
         <h1>Destino</h1>
-        <p class="nation">{{ carriagesStore.currentCarriage.destinyNation }} -
-          {{ carriagesStore.currentCarriage.destinyCheckpoint }}</p>
+        <p class="nation">{{ serviceStore.state.destinyNation }} -
+          {{ serviceStore.state.destinyCheckpoint }}</p>
       </div>
       <div class="weight">
         <h1>Descripción</h1>
-        <p class="weight-data">{{ carriagesStore.currentCarriage.description }} kg</p>
+        <p class="weight-data">{{ serviceStore.state.description }} kg</p>
       </div>
     </div>
     <div class="price">
       <p class="price-title">Precio máximo</p>
-      <p class="price-title">{{ carriagesStore.formatPrice(carriagesStore.currentCarriage.price) }}</p>
+      <p class="price-title">{{ serviceStore.getPrice() }}</p>
     </div>
   </div>
 </template>

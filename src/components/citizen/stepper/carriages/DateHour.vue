@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-import  {useCarriagesStore} from "@/stores/carriages";
+import {useServiceStore} from "@/stores/service";
 
-const carriagesStore = useCarriagesStore();
+const serviceStore = useServiceStore();
 //Take the values from the store if they exist or undefined if not
-const date = ref<Date | undefined>(carriagesStore.currentCarriage.pickUpDate);
-const time = ref<string | undefined>(carriagesStore.currentCarriage.pickUpHour);
+const date = ref<Date | undefined>(serviceStore.state.pickUpDate);
+const time = ref<string | undefined>(serviceStore.state.pickUpHour);
 
 //Event to verify if all fields are filled out
 const emit = defineEmits(["validateStep"]);
@@ -24,13 +24,8 @@ watch([date, time], () => {
 
 //Save data in the store before leaving the component
 onBeforeUnmount(async () =>{
-  if(date.value){
-    carriagesStore.setPickUpDate(date.value);
-  }
-  if(time.value){
-    carriagesStore.setPickUpHour(time.value);
-  }
-  emitValidateStep(false);
+  serviceStore.setPickUpDate(date.value);
+  serviceStore.setPickUpHour(time.value);
 })
 
 //Verify if the fields was filled out before when the component is mounted

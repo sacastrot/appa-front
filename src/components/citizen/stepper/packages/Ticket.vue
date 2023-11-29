@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import {usePackagesStore} from "@/stores/packages";
-import {onBeforeMount} from "vue";
+import {onBeforeMount, onBeforeUnmount, ref} from "vue";
+import {useServiceStore} from "@/stores/service";
+import {createService} from "@/services/service";
+import {OrderType} from "@/types/intefaces";
 
-const packageStore = usePackagesStore()
+const serviceStore = useServiceStore();
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
-
+onBeforeUnmount(async () => {
+  const status = await createService(OrderType.Package);
+});
 onBeforeMount(async () => {
   emitValidateStep(true);
 })
@@ -20,24 +24,24 @@ onBeforeMount(async () => {
   <div class="ticket">
     <div class="origin">
       <h1>Origen</h1>
-      <p class="nation">{{ packageStore.state.originNation }} - {{ packageStore.state.originCheckpoint }}</p>
+      <p class="nation">{{ serviceStore.state.originNation }} - {{ serviceStore.state.originCheckpoint }}</p>
     </div>
     <div class="destiny">
       <h1>Destino</h1>
-      <p class="nation">{{ packageStore.state.destinyNation }} - {{ packageStore.state.destinyCheckpoint }}</p>
+      <p class="nation">{{ serviceStore.state.destinyNation }} - {{ serviceStore.state.destinyCheckpoint }}</p>
     </div>
     <div class="weight">
       <h1>Peso</h1>
-      <p class="weight-data">{{ packageStore.state.weight }} kg</p>
+      <p class="weight-data">{{ serviceStore.state.weight }} kg</p>
     </div>
     <div class="dimensions">
       <h1>Dimensiones</h1>
-      <p class="dimensions-data">{{ packageStore.state.width }} x
-        {{ packageStore.state.length }} x {{ packageStore.state.height }} cm</p>
+      <p class="dimensions-data">{{ serviceStore.state.width }} x
+        {{ serviceStore.state.length }} x {{ serviceStore.state.height }} cm</p>
     </div>
     <div class="price">
       <p class="price-title">Precio</p>
-      <p class="price-title">{{ packageStore.formatPrice(packageStore.state.price) }}</p>
+      <p class="price-title">{{ serviceStore.getPrice() }}</p>
     </div>
   </div>
 </template>

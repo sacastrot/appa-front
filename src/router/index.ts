@@ -17,9 +17,9 @@ import LoginLayout from "@/layouts/LoginLayout.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import AvatarHomeView from "@/views/HomeAvatarView.vue";
 import RegisteredBisontesView from "@/views/RegisteredBisontesView.vue";
-import {getCurrentUser} from "@/services/user";
 import BisonUpdateLocationView from "@/views/BisonUpdateLocationView.vue";
 import OrdersHistoryView from "@/views/OrdersHistoryView.vue";
+import {useUserStore} from "@/stores/user";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -205,18 +205,18 @@ const router = createRouter({
 router.beforeEach(async (to, from,next) => {
     const layoutStore = useLayoutStore();
 
-    const userData = getCurrentUser();
+    const userStore = useUserStore();
     layoutStore.setLayout(to.meta.layout);
 
     document.title = to.meta.title as string;
 
-    if(userData) {
+    if(userStore.currentUser) {
         if(to.meta.requiredAuth){
-            if (!userData.isAuth) {
+            if (!userStore.currentToken) {
                 return next({name: "login"});
             } else {
                 //@ts-ignore
-                if (!to.meta.roles.includes(userData.role)) {
+                if (!to.meta.roles.includes(userStore.currentRole)) {
                     return next({name: "access-denied"});
                 } else {
                     return next();

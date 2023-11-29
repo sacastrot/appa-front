@@ -4,7 +4,9 @@ import {useRouter} from "vue-router";
 import type {StepComponent} from "@/types/intefaces";
 import {useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
+import {useServiceStore} from "@/stores/service";
 const user = useUserStore();
+const service = useServiceStore();
 //steps
 const {steps} = defineProps<{
   steps: {
@@ -49,6 +51,7 @@ const backStep = () => {
 
 <template>
   <div class="container">
+    {{service.state}}
     <div class="steps">
       <div
           class="step"

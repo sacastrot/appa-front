@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {Checkpoint, NationType} from "@/types/intefaces";
-import {usePackagesStore} from "@/stores/packages";
-const packagesStore = usePackagesStore();
+import {useServiceStore} from "@/stores/service";
+const serviceStore = useServiceStore();
 
 const expand = ref<boolean>(false);
 const toggleExpand = () => {
@@ -46,11 +46,11 @@ if (packageValue.arrived) {
         <div v-if="!expand" class="location-text">
           <div class="location-origin">
             <h1>{{ packageValue.originNation }}</h1>
-            <p>{{ packagesStore.formatDate(packageValue.created) }}</p>
+            <p>{{ serviceStore.formatDate(packageValue.created) }}</p>
           </div>
           <div class="location-destination">
             <h1>{{ packageValue.destinyNation }}</h1>
-            <p>{{ packagesStore.formatDate(packageValue.arrived) }}</p>
+            <p>{{ serviceStore.formatDate(packageValue.arrived) }}</p>
           </div>
         </div>
       </Transition>
