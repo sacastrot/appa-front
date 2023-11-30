@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {Carriage, Checkpoint, NationType, OrderType, Package} from "@/types/intefaces";
+import {Checkpoint, NationType, OrderType} from "@/types/intefaces";
 import {formatDate, formatPrice} from "../../helpers/services";
 
 const expand = ref<boolean>(false);
@@ -148,11 +148,11 @@ const {currentPackage} = defineProps<{
   & h1 {
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(--color-primary-grey);
+    color: var(--color-primary-gray);
   }
   & p {
     font-size: 1.1rem;
-    color: var(--color-primary-grey);
+    color: var(--color-primary-gray);
     overflow-wrap: anywhere;
   }
   .price {
