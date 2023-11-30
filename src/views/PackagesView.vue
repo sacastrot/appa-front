@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import NewPackage from "@/components/citizen/history/NewPackage.vue";
+import {onBeforeMount, ref} from "vue";
+import type {Service} from "@/types/intefaces";
+import {OrderType} from "@/types/intefaces";
+import {getServiceByUser} from "@/services/service";
 import HistoryPackage from "@/components/citizen/history/HistoryPackage.vue";
-import {ref} from "vue";
-import {getCurrentUser} from "@/services/user";
-import {packagesByCitizen} from "@/services/package";
-import type {PackageState, User} from "@/types/intefaces";
-
-const user: User = getCurrentUser()
-const packages: PackageState[] = packagesByCitizen(user?.id!)
 
 const modalActive = ref<boolean>(false);
+
+const packages = ref<Service[]>([]);
+
+onBeforeMount(async () => {
+  packages.value = await getServiceByUser(OrderType.Package);
+})
+
 
 </script>
 

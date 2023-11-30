@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {Checkpoint, NationType, OrderType} from "@/types/intefaces";
+import {formatDate, formatPrice} from "@/helpers/services";
 
 const expand = ref<boolean>(false);
 const toggleExpand = () => {
@@ -9,23 +10,28 @@ const toggleExpand = () => {
 
 const {currentCarriage} = defineProps<{
   currentCarriage: {
-    id: number;
-    created: Date | undefined;
-    arrived: Date | undefined;
-    guideNumber: number | undefined;
-    originNation: NationType,
-    originCheckpoint: Checkpoint,
-    destinyNation: NationType,
-    destinyCheckpoint: Checkpoint,
-    currentNation: NationType,
-    currentCheckpoint: Checkpoint,
-    pickUpDate: Date | undefined;
-    pickUpHour: string | undefined;
-    description: string | undefined;
-    price: number,
-    citizen: number | undefined;
-    bison: number | undefined;
-    type: OrderType;
+    id: 0,
+    citizen: undefined,
+    bison: undefined,
+    type: OrderType.Undefined,
+    created: undefined,
+    arrived: undefined,
+    price: undefined,
+    origin_nation: NationType.Unknown,
+    origin_checkpoint: Checkpoint.Unknown,
+    destiny_nation: NationType.Unknown,
+    destiny_checkpoint: Checkpoint.Unknown,
+    package: {
+      width: undefined,
+      length: undefined,
+      height: undefined,
+      weight: undefined,
+    },
+    carriage: {
+      pickUp: undefined,
+      description: undefined,
+    },
+    guide: undefined,
   }
 }>()
 </script>
@@ -37,14 +43,14 @@ const {currentCarriage} = defineProps<{
                 <img src="/img/location-history.svg">
                 <div class="location-text">
                     <div class="location-origin">
-                        <h1> {{ currentCarriage.originNation }} </h1>
+                        <h1> {{ currentCarriage.origin_nation }} </h1>
                         <!-- <p>{{ packagesStore.getCreatedDate(packageValue) }}</p> -->
-                        <p>{{ currentCarriage.created?.toLocaleDateString('es-CO') }}</p>
+                        <p>{{ formatDate(currentCarriage.created) }}</p>
                     </div>
                     <div class="location-destination">
-                        <h1>{{ currentCarriage.destinyNation }}</h1>
+                        <h1>{{ currentCarriage.destiny_nation }}</h1>
                         <!-- <p>{{ packagesStore.formatDate(packageValue.arrived) }}</p> -->
-                        <p>{{ currentCarriage.arrived?.toLocaleDateString('es-CO') }}</p>
+                        <p>{{ formatDate(currentCarriage.arrived)}}</p>
                     </div>
                 </div>
             </div>
@@ -57,11 +63,11 @@ const {currentCarriage} = defineProps<{
             <div class="order-details" :class="[expand ? 'description-active' : 'description-inactive']">
               <div class="description">
                 <h1>Descripción</h1>
-                <p>{{ currentCarriage.description }}</p>
+                <p>{{ currentCarriage.carriage.description }}</p>
               </div>  
                 <div class="price">
                     <h1>Precio final</h1>
-                    <h1>{{ currentCarriage.price?.toLocaleString('es-CO') }}</h1>
+                    <h1>{{ formatPrice(currentCarriage.price) }}</h1>
                 </div>
             </div>
 
@@ -138,11 +144,11 @@ const {currentCarriage} = defineProps<{
   & h1 {
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(--color-primary-grey);
+    color: var(--color-primary-gray);
   }
   & p {
     font-size: 1.1rem;
-    color: var(--color-primary-grey);
+    color: var(--color-primary-gray);
     overflow-wrap: anywhere;
   }
   .price {

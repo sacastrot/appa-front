@@ -1,51 +1,59 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { getCurrentUser } from "@/services/user";
-import { packagesByCitizen } from "@/services/package";
-import { carriagesByCitizen } from "@/services/carriage";
-import {OrderType} from "@/types/intefaces";
+import {computed, onBeforeMount, ref} from "vue";
+import {getCurrentUser, getLastService} from "@/services/user";
+import {Carriage, Checkpoint, NationType, OrderType, Package, type Service} from "@/types/intefaces";
+import {useUserStore} from "@/stores/user";
+import {formatDate} from "../../helpers/services";
 
-const user = getCurrentUser()
-const packages = packagesByCitizen(user.id!)
-const carriages = carriagesByCitizen(user.id!)
-const existsOrder = (carriages.length != 0 || packages.length != 0) ? true : false
-const lastPackage = packages[packages.length -1]
-const lastCarriage = carriages[carriages.length -1]
+const service = ref<Service>(<Service>{
+  id: 0,
+  citizen: undefined,
+  bison: undefined,
+  type: OrderType.Undefined,
+  created: undefined,
+  arrived: undefined,
+  price: undefined,
+  originNation: NationType.Unknown,
+  originCheckpoint: Checkpoint.Unknown,
+  destinyNation: NationType.Unknown,
+  destinyCheckpoint: Checkpoint.Unknown,
+  package: <Package>{
+    width: undefined,
+    length: undefined,
+    height: undefined,
+    weight: undefined,
+  },
+  carriage: <Carriage>{
+    pickUp: undefined,
+    description: undefined,
+  },
+  guide: undefined,
+});
 
-const getLastItem = computed(() => {
-  if (carriages.length == 0 && packages.length == 0)
-  {
-    return
-  }
-  else if (carriages.length == 0)
-  {
-    return lastPackage
-  }
-  else if (packages.length == 0)
-  {
-    return lastCarriage
-  }
-  else {
-    return Number(lastCarriage.created?.getTime()) > Number(lastPackage.created?.getTime()) ? lastCarriage : lastPackage
-  }
+const userStore = useUserStore( );
+
+
+onBeforeMount(async () => {
+  service.value = await getLastService(userStore.currentUser!)
 })
 
 </script>
 
 <template>
-  <RouterLink :to="getLastItem?.type == OrderType.Package ? '/packages' : '/carriages'">
-    <div class="box" v-if="existsOrder">
+  <RouterLink :to="service.type == OrderType.Package ? '/packages' : '/carriages'">
+    <div class="box">
       <div id="order-state">
-        <p>{{getLastItem.arrived ? "Entregado" : "Sin entregar"}}</p>
+        <p>{{ service.arrived ? "Entregado" : "Sin entregar" }}</p>
       </div>
       <div id="order-detail">
-        <p style="padding-top: 1.2rem;">{{getLastItem?.type === OrderType.Package ? "Paquete": "Acarreo"}}</p>
-        <p style="padding-bottom: 1.2rem;">Destino: {{Object(getLastItem).destinyNation}}</p>
-        <p v-if="getLastItem.arrived" style="padding-bottom: 1.2rem;">Entregado el: {{getLastItem.arrived.toLocaleDateString()}}</p>
+        <p style="padding-top: 1.2rem;">{{ service?.type === OrderType.Package ? "Paquete" : "Acarreo" }}</p>
+        <p style="padding-bottom: 1.2rem;">Destino: {{ service.destiny_nation }}</p>
+        <p v-if="service.arrived" style="padding-bottom: 1.2rem;">Entregado el:
+          {{ formatDate(service.arrived) }}</p>
       </div>
     </div>
   </RouterLink>
-  <div class="box" v-if="existsOrder == false">
+  <div class="box" v-if="false">
     <h2>Aún no ha realizado ningún pedido</h2>
   </div>
 </template>

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-import {usePackagesStore} from "@/stores/packages";
+import {useServiceStore} from "@/stores/service";
 //Store to packages
-const packageStore = usePackagesStore()
+const serviceStore = useServiceStore();
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
 //Data to send store
-const width = ref(packageStore.state.width);
-const length = ref(packageStore.state.length);
-const height = ref(packageStore.state.height);
+const width = ref(serviceStore.state.package ? serviceStore.state.package.width : undefined);
+const length = ref(serviceStore.state.package ? serviceStore.state.package.length : undefined);
+const height = ref(serviceStore.state.package ? serviceStore.state.package.height : undefined);
 
 //Validate form
 watch([width,length,height], ([newWidth, newLength, newHeight]) => {
@@ -35,15 +35,15 @@ watch([width,length,height], ([newWidth, newLength, newHeight]) => {
 //Save origin into store and set validate to false for the next step
 onBeforeUnmount(async () => {
   if(width.value !== undefined && height.value !== undefined && length.value !== undefined){
-    packageStore.setDimension(width.value, length.value, height.value)
+    serviceStore.setDimension(width.value, length.value, height.value)
   }
   emitValidateStep(false)
 })
 //Charge values of package origin location and validate form if is already filled
 onBeforeMount(() => {
-  width.value = packageStore.state.width;
-  length.value = packageStore.state.length;
-  height.value = packageStore.state.height;
+  width.value   = serviceStore.getWidth();
+  length.value  = serviceStore.getLength();
+  height.value  = serviceStore.getHeight();
   emitValidateStep(Boolean(width.value !== undefined && height.value !== undefined && length.value !== undefined))
 })
 </script>

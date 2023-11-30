@@ -2,13 +2,12 @@
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
 import {Checkpoint, NationType} from "@/types/intefaces";
 import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
-import {usePackagesStore} from "@/stores/packages";
+import {useServiceStore} from "@/stores/service";
 //Store to packages
-const packageStore = usePackagesStore()
-
+const serviceStore = useServiceStore();
 //Data to send store
-const originNation = ref<NationType>(packageStore.state.originNation)
-const originCheckpoint = ref<Checkpoint>(packageStore.state.originCheckpoint)
+const originNation = ref<NationType>(serviceStore.state.origin_nation)
+const originCheckpoint = ref<Checkpoint>(serviceStore.state.origin_checkpoint)
 
 //Validate form
 const emit = defineEmits(["validateStep"]);
@@ -35,14 +34,14 @@ const getCheckpointsList = () => {
 * Set validate to false for the next step
 * */
 onBeforeUnmount( async () => {
-  packageStore.setOrigin(originNation.value, originCheckpoint.value)
+  serviceStore.setOrigin(originNation.value, originCheckpoint.value)
   emitValidateStep(false)
 })
 
 onBeforeMount(() => {
   //Charge values of package origin location
-  originNation.value = packageStore.state.originNation;
-  originCheckpoint.value = packageStore.state.originCheckpoint;
+  originNation.value = serviceStore.state.origin_nation;
+  originCheckpoint.value = serviceStore.state.origin_checkpoint;
   checkpointList.value = getCheckpoints(originNation.value);
 
   //Validate form if is already filled

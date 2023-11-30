@@ -5,23 +5,17 @@ import {Role} from "@/types/intefaces";
 import {ref, watch} from "vue";
 import IconAdd from "@/components/core/IconAdd.vue";
 import IconBison from "@/components/core/IconBison.vue";
+import {logout} from "@/services/user";
 
 const user = useUserStore();
 
 const route = useRouter();
 
 const isActive = ref<boolean>(false);
-
-
-function logoutUser() {
-  user.logout()
-}
-
 const colorAdd = ref("white");
 const colorBison = ref("white");
 
 watch([route.currentRoute], () => {
-  console.log(route.currentRoute.value.path)
   if (route.currentRoute.value.path === "/bison/register") {
     colorAdd.value = "#E47120";
   } else {
@@ -98,17 +92,17 @@ const setInactiveColor = () => {
             </RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil
             </RouterLink>
-            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
+            <RouterLink to="/login" @click="logout" class="navbar-item"><span class="material-symbols-outlined">logout</span>
               Salir
             </RouterLink>
           </div>
           <!--For bison role-->
           <div v-if="user.currentRole == Role.Bison" class="navbar-end" @click="isActive = !isActive">
             <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">home</span> Inicio</RouterLink>
-            <RouterLink to="/bison/updateLocation" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span> Actualizar</RouterLink>
+<!--            <RouterLink to="/bison" class="navbar-item"><span class="material-symbols-outlined">article_shortcut</span> Actualizar</RouterLink>-->
             <RouterLink to="/bison/orders" class="navbar-item"><span class="material-symbols-outlined">assignment</span> Pedidos</RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil</RouterLink>
-            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
+            <RouterLink to="/login" @click="logout" class="navbar-item"><span class="material-symbols-outlined">logout</span>
               Salir
             </RouterLink>
           </div>
@@ -132,7 +126,7 @@ const setInactiveColor = () => {
             </RouterLink>
             <RouterLink to="/profile" class="navbar-item"><span class="material-symbols-outlined">person</span> Perfil
             </RouterLink>
-            <RouterLink to="/logout" @click="logoutUser" class="navbar-item"><span class="material-symbols-outlined">logout</span>
+            <RouterLink to="/login" @click="logout()" class="navbar-item"><span class="material-symbols-outlined">logout</span>
               Salir
             </RouterLink>
           </div>

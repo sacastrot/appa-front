@@ -24,15 +24,23 @@ export enum Checkpoint {
     ShuJing       ="Shu Jing",
 }
 
+// Crear objeto inverso
+
 export enum Role {
     Citizen,
     Bison,
     Avatar
 }
+export const stringToRole: {[key: string]: Role} = {
+    "CITIZEN" : Role.Citizen,
+    "BISON" : Role.Bison,
+    "AVATAR" : Role.Avatar
+}
 
 export enum OrderType {
     Carriage,
-    Package
+    Package,
+    Undefined,
 }
 
 interface Steps {
@@ -65,7 +73,46 @@ interface PackageState{
     bison: number | undefined;
     type: OrderType;
 }
+
+interface UserData {
+    email: string;
+    password: string;
+}
+interface Guide {
+    guide_number: number;
+    current_nation: NationType;
+    current_checkpoint: Checkpoint;
+}
+interface Package {
+    length: number | undefined,
+    width: number | undefined,
+    height: number | undefined,
+    weight: number | undefined;
+}
+
 interface Carriage {
+    pickUp: string | undefined;
+    description: string | undefined;
+}
+
+interface Service{
+    id: number;
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
+    created: Date | undefined;
+    arrived: Date | undefined;
+    price: number | undefined;
+    origin_nation: NationType,
+    origin_checkpoint: Checkpoint,
+    destiny_nation: NationType,
+    destiny_checkpoint: Checkpoint,
+    package: Package;
+    carriage: Carriage;
+    guide: Guide | undefined;
+}
+
+interface Carriag {
     id: number;
     created: Date | undefined;
     arrived: Date | undefined;
@@ -101,11 +148,10 @@ interface User {
     phone: number | undefined;
     role: Role;
     vehicle: string | undefined;
-    isAuth: boolean;
     available: boolean;
 }
 interface CheckpointCoordinates {
     x: number;
     y: number;
 }
-export type {Steps, StepComponent, PackageState, Carriage, Bisonte, CheckpointCoordinates, User}
+export type {Steps, StepComponent, PackageState,Package, Carriage,Guide, Bisonte, CheckpointCoordinates, User, Service, UserData}

@@ -43,7 +43,7 @@ const calculatePriceDimensions = computed(() => {
 
 // calculate price
 const calculatePrice = computed(() => {
-  if (calculateDistance.value != 0 && calculatePriceDimensions.value != 0) {
+  if (calculateDistance.value != 0 && np.value != 0) {
     // 80 is an estimate of the shortest distance range between checkpoints
     return calculateDistance.value >= 80 ? basePriceLongDistance.value + (calculateDistance.value * 3.141592) : basePriceShortDistance.value + calculatePriceDimensions.value
   }

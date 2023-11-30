@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-import  {useCarriagesStore} from "@/stores/carriages";
+import {useServiceStore} from "@/stores/service";
+import {getServicePrice} from "@/services/service";
+import {OrderType} from "@/types/intefaces";
 
-const carriagesStore = useCarriagesStore();
+const serviceStore = useServiceStore();
 //Take the values from the store if they exist or undefined if not
-const description = ref<string | undefined>(carriagesStore.currentCarriage.description);
+const description = ref<string | undefined>(serviceStore.state.carriage ? serviceStore.state.carriage.description : undefined);
 
 //Event to verify if all fields are filled out
 const emit = defineEmits(["validateStep"]);
@@ -24,8 +26,13 @@ watch(description, () => {
 //Save data in the store before leaving the component
 onBeforeUnmount(async () =>{
   if(description.value){
-    carriagesStore.setDescription(description.value);
+    serviceStore.setDescription(description.value);
   }
+
+  onBeforeUnmount(async () =>{
+    const status = await getServicePrice(OrderType.Carriage);
+  });
+
   emitValidateStep(false);
 })
 
