@@ -1,5 +1,5 @@
 import {useServiceStore} from "@/stores/service";
-import {OrderType} from "@/types/intefaces";
+import {Checkpoint, NationType, OrderType, type Service} from "@/types/intefaces";
 import BaseApi from "@/services/axiosInstance";
 import {useUserStore} from "@/stores/user";
 
@@ -7,15 +7,20 @@ export const getServicePrice = async (type: OrderType) => {
     const service = useServiceStore();
 
     if (type === OrderType.Package) {
-        const packageData: {[key: string]: any} = {
-            "origin_checkpoint": service.state.originCheckpoint,
-            "destiny_checkpoint": service.state.destinyCheckpoint,
+
+        if (!service.state.package) {
+            return false;
+        }
+
+        const packageData: { [key: string]: any } = {
+            "origin_checkpoint": service.state.origin_checkpoint,
+            "destiny_checkpoint": service.state.destiny_checkpoint,
             "type": "PACKAGE",
             "package": {
-                "length": service.state.length,
-                "width": service.state.width,
-                "height": service.state.height,
-                "weight": service.state.weight
+                "length": service.state.package.length,
+                "width": service.state.package.width,
+                "height": service.state.package.height,
+                "weight": service.state.package.weight,
             }
         }
         try {
@@ -27,9 +32,9 @@ export const getServicePrice = async (type: OrderType) => {
             return false;
         }
     } else if (type === OrderType.Carriage) {
-        const carriageData: {[key: string]: string} = {
-            "origin_checkpoint": service.state.originCheckpoint,
-            "destiny_checkpoint": service.state.destinyCheckpoint,
+        const carriageData: { [key: string]: string } = {
+            "origin_checkpoint": service.state.origin_checkpoint,
+            "destiny_checkpoint": service.state.destiny_checkpoint,
             "type": "CARRIAGE",
         }
 
@@ -50,21 +55,25 @@ export const getServicePrice = async (type: OrderType) => {
 export const createService = async (type: OrderType) => {
     const service = useServiceStore();
     const user = useUserStore();
-
     if (type === OrderType.Package) {
-        const packageData: {[key: string]: any} = {
+
+        if (!service.state.package) {
+            return false;
+        }
+
+        const packageData: { [key: string]: any } = {
             "user_citizen": user.currentUser,
             "type": "PACKAGE",
-            "origin_nation": service.state.originNation,
-            "destiny_nation": service.state.destinyNation,
-            "origin_checkpoint": service.state.originCheckpoint,
-            "destiny_checkpoint": service.state.destinyCheckpoint,
+            "origin_nation": service.state.origin_nation,
+            "destiny_nation": service.state.destiny_nation,
+            "origin_checkpoint": service.state.origin_checkpoint,
+            "destiny_checkpoint": service.state.destiny_checkpoint,
             "price": service.state.price,
             "package": {
-                "length": service.state.length,
-                "width": service.state.width,
-                "height": service.state.height,
-                "weight": service.state.weight
+                "length": service.getLength(),
+                "width": service.getWidth(),
+                "height": service.getHeight(),
+                "weight": service.getWeight(),
             }
         }
 
@@ -78,22 +87,26 @@ export const createService = async (type: OrderType) => {
 
         return true;
     } else if (type === OrderType.Carriage) {
-        const carriageData: {[key: string]: any} = {
+
+        if (!service.state.carriage) {
+            return false;
+        }
+
+        const carriageData: { [key: string]: any } = {
             "user_citizen": user.currentUser,
             "type": "CARRIAGE",
-            "origin_nation": service.state.originNation,
-            "destiny_nation": service.state.destinyNation,
-            "origin_checkpoint": service.state.originCheckpoint,
-            "destiny_checkpoint": service.state.destinyCheckpoint,
+            "origin_nation": service.state.origin_nation,
+            "destiny_nation": service.state.destiny_nation,
+            "origin_checkpoint": service.state.origin_checkpoint,
+            "destiny_checkpoint": service.state.destiny_checkpoint,
             "price": service.state.price,
             "carriage": {
                 "pick_up": service.getPickUpDate(),
-                "description": service.state.description
+                "description": service.state.carriage.description,
             }
         }
 
         try {
-            console.log(carriageData)
             const {data} = await BaseApi.post("/services/carriage/", carriageData);
             service.resetState();
         } catch (e) {
@@ -105,4 +118,101 @@ export const createService = async (type: OrderType) => {
     } else {
         return 0;
     }
+};
+
+export const getServiceByUser = async (type: OrderType): Promise<Service[]> => {
+    const user = useUserStore();
+    const requestType = type === OrderType.Package ? "package" : "carriage";
+
+    try {
+        const {data} = await BaseApi.get(`/user/services/${user.currentUser}/${requestType}`);
+        data.map((service: Service) => {
+            if (service.created) {
+                service.created = new Date(service.created);
+            }
+            if (service.arrived) {
+                service.arrived = new Date(service.arrived);
+            }
+            //@ts-ignore
+            service.type = service.type === "PACKAGE" ? OrderType.Package : OrderType.Carriage;
+        });
+        return data;
+    } catch (e) {
+        console.log(e);
+        return [];
+    }
 }
+
+/* Services for Bison */
+export const getActiveService = async (): Promise<Service | undefined> => {
+
+    try {
+        const {data} = await BaseApi.get(`/service/active/`);
+        if (data.created) {
+            data.created = new Date(data.created);
+        }
+        if (data.arrived) {
+            data.arrived = new Date(data.arrived);
+        }
+        data.type = data.type === "PACKAGE" ? OrderType.Package : OrderType.Carriage;
+        return data;
+    } catch (e) {
+        console.log(e);
+        return undefined;
+    }
+}
+
+export const getPath = async (origin: string, destiny: string): Promise<string[]> => {
+    const request = {
+        origin_checkpoint: origin,
+        destiny_checkpoint: destiny,
+    }
+    try {
+        const {data} = await BaseApi.post(`/services/route/`, request);
+        return data.route;
+    } catch (e) {
+        console.log(e);
+        return [""];
+    }
+}
+
+export const updateService = async (serviceId: number, current_nation: NationType, current_checkpoint: Checkpoint, price: number = 0): Promise<boolean> => {
+    let request;
+    if (price === 0) {
+        request = {
+            current_nation: current_nation,
+            current_checkpoint: current_checkpoint,
+        }
+    } else if (price > 0) {
+        request = {
+            current_nation: current_nation,
+            current_checkpoint: current_checkpoint,
+            price: price,
+        }
+    }
+    try {
+        const {data} = await BaseApi.patch(`/services/${serviceId}/`, request);
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+export const getServiceById = async (serviceId: number): Promise<Service | undefined> => {
+    try {
+        const {data} = await BaseApi.get(`/services/${serviceId}/`);
+        if (data.created) {
+            data.created = new Date(data.created);
+        }
+        if (data.arrived) {
+            data.arrived = new Date(data.arrived);
+        }
+        data.type = data.type === "PACKAGE" ? OrderType.Package : OrderType.Carriage;
+        return data;
+    } catch (e) {
+        console.log(e);
+        return undefined;
+    }
+}
+

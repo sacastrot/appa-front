@@ -5,7 +5,7 @@ const waterCheckpoints: Checkpoint[] = [Checkpoint.NorthernWater, Checkpoint.Sou
 const earthCheckpoints: Checkpoint[] = [Checkpoint.Abbey, Checkpoint.GaipanVillage, Checkpoint.SiWong, Checkpoint.BaSingSe];
 const fireCheckpoints:  Checkpoint[] = [Checkpoint.FireCapital, Checkpoint.ShuJing]
 
-const nationByCheckpoint: {[key: Checkpoint]: NationType} = {
+export const nationByCheckpoint: {[key in Checkpoint]: NationType} = {
     [Checkpoint.NorthernAir]: NationType.Air,
     [Checkpoint.SouthernAir]: NationType.Air,
     [Checkpoint.EasternAir]: NationType.Air,
@@ -18,6 +18,7 @@ const nationByCheckpoint: {[key: Checkpoint]: NationType} = {
     [Checkpoint.BaSingSe]: NationType.Earth,
     [Checkpoint.FireCapital]: NationType.Fire,
     [Checkpoint.ShuJing]: NationType.Fire,
+    [Checkpoint.Unknown]: NationType.Unknown,
 }
 
 export const getNation = (checkpoint:Checkpoint): NationType => {

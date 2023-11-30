@@ -51,7 +51,6 @@ const backStep = () => {
 
 <template>
   <div class="container">
-    {{service.state}}
     <div class="steps">
       <div
           class="step"

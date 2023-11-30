@@ -4,8 +4,13 @@ import {useServiceStore} from "@/stores/service";
 
 const serviceStore = useServiceStore();
 //Take the values from the store if they exist or undefined if not
-const date = ref<Date | undefined>(serviceStore.state.pickUpDate);
-const time = ref<string | undefined>(serviceStore.state.pickUpHour);
+const pickUp = serviceStore.state.carriage ? serviceStore.state.carriage.pickUp : undefined;
+let dateValue = pickUp ? pickUp.split(" ")[0]: undefined;
+let hour = pickUp ? pickUp.split(" ")[1]: undefined;
+
+
+const date = ref<string | undefined>(dateValue);
+const time = ref<string | undefined>(hour);
 
 //Event to verify if all fields are filled out
 const emit = defineEmits(["validateStep"]);
@@ -24,8 +29,7 @@ watch([date, time], () => {
 
 //Save data in the store before leaving the component
 onBeforeUnmount(async () =>{
-  serviceStore.setPickUpDate(date.value);
-  serviceStore.setPickUpHour(time.value);
+  serviceStore.setPickUpDate(`${date.value} ${time.value}`)
 })
 
 //Verify if the fields was filled out before when the component is mounted

@@ -7,8 +7,8 @@ import {useServiceStore} from "@/stores/service";
 const serviceStore = useServiceStore();
 
 //Data to send store
-const originNation = ref<NationType>(serviceStore.state.originNation)
-const originCheckpoint = ref<Checkpoint>(serviceStore.state.originCheckpoint)
+const originNation = ref<NationType>(serviceStore.state.origin_nation)
+const originCheckpoint = ref<Checkpoint>(serviceStore.state.origin_checkpoint)
 
 //Validate form
 const emit = defineEmits(["validateStep"]);
@@ -41,8 +41,8 @@ onBeforeUnmount( async () => {
 
 onBeforeMount(() => {
   //Charge values of package origin location
-  originNation.value = serviceStore.state.originNation;
-  originCheckpoint.value = serviceStore.state.originCheckpoint;
+  originNation.value = serviceStore.state.origin_nation;
+  originCheckpoint.value = serviceStore.state.origin_checkpoint;
   checkpointList.value = getCheckpoints(originNation.value);
 
   //Validate form if is already filled

@@ -24,6 +24,7 @@ export enum Checkpoint {
     ShuJing       ="Shu Jing",
 }
 
+// Crear objeto inverso
 
 export enum Role {
     Citizen,
@@ -77,29 +78,41 @@ interface UserData {
     email: string;
     password: string;
 }
-
-interface Service{
-    id: number;
-    citizen: number | undefined;
-    created: Date | undefined;
-    arrived: Date | undefined;
-    price: number | undefined;
-    originNation: NationType,
-    originCheckpoint: Checkpoint,
-    destinyNation: NationType,
-    destinyCheckpoint: Checkpoint,
-    guide: undefined | number;
+interface Guide {
+    guide_number: number;
+    current_nation: NationType;
+    current_checkpoint: Checkpoint;
+}
+interface Package {
     length: number | undefined,
     width: number | undefined,
     height: number | undefined,
     weight: number | undefined;
-    pickUpDate: undefined | Date,
-    pickUpHour: undefined | string,
-    description: undefined | string,
-    type: OrderType;
-
 }
+
 interface Carriage {
+    pickUp: string | undefined;
+    description: string | undefined;
+}
+
+interface Service{
+    id: number;
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
+    created: Date | undefined;
+    arrived: Date | undefined;
+    price: number | undefined;
+    origin_nation: NationType,
+    origin_checkpoint: Checkpoint,
+    destiny_nation: NationType,
+    destiny_checkpoint: Checkpoint,
+    package: Package;
+    carriage: Carriage;
+    guide: Guide | undefined;
+}
+
+interface Carriag {
     id: number;
     created: Date | undefined;
     arrived: Date | undefined;
@@ -141,4 +154,4 @@ interface CheckpointCoordinates {
     x: number;
     y: number;
 }
-export type {Steps, StepComponent, PackageState, Carriage, Bisonte, CheckpointCoordinates, User, Service, UserData}
+export type {Steps, StepComponent, PackageState,Package, Carriage,Guide, Bisonte, CheckpointCoordinates, User, Service, UserData}

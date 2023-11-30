@@ -5,18 +5,19 @@ import PriceCalculator from "@/components/citizen/PriceCalculator.vue";
 import type {User} from "@/types/intefaces";
 import {getCurrentUser} from "@/services/user";
 import HeaderName from "@/components/core/HeaderName.vue";
+import {useUserStore} from "@/stores/user";
 
 
 const isActive = ref(false);
 
-const user: User = getCurrentUser()
+const user = useUserStore();
 
 </script>
 
 <template>
   <main class="home-page">
-    <HeaderName v-if="user.name" :data="{
-    name: user.name,
+    <HeaderName :data="{
+    name: user.getName(),
     message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
     }"/>
     <div class="track-order">

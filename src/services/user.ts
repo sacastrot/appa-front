@@ -1,5 +1,15 @@
 import {useUserStore} from "@/stores/user";
-import {Role, stringToRole, type User, type UserData} from "@/types/intefaces";
+import {
+    type Carriage,
+    Checkpoint,
+    NationType,
+    OrderType, type Package,
+    Role,
+    type Service,
+    stringToRole,
+    type User,
+    type UserData
+} from "@/types/intefaces";
 import BaseApi from "@/services/axiosInstance";
 import {useRouter} from "vue-router";
 
@@ -11,10 +21,10 @@ export const login = async (user: UserData): Promise<boolean> => {
         const { data } = await BaseApi.post('/login/', user);
         // BaseApi.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
         userStore.setToken(data.access);
-        console.log(data.access);
         const decodedToken = JSON.parse(atob(data.access.split('.')[1]));
         userStore.setCurrentUser(decodedToken.user_id);
         userStore.setCurrentRole(stringToRole[decodedToken.user_role]);
+        userStore.state.name = decodedToken.user_name;
         window.sessionStorage.setItem('userData', btoa(JSON.stringify(data)));
         return true;
     }
@@ -23,6 +33,20 @@ export const login = async (user: UserData): Promise<boolean> => {
     }
 
 }
+
+export const logout = async () => {
+    const user = useUserStore();
+    try {
+        user.logout();
+        await BaseApi.post("/logout/");
+        window.sessionStorage.removeItem("userData");
+        window.location.reload();
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+};
 
 export const loadToken = (): void => {
     const userStore = useUserStore();
@@ -93,4 +117,45 @@ export const searchAvailableBison = (): User | undefined => {
     const userStore = useUserStore();
 
     return userStore.users.find(user => user.role === Role.Bison && user.available)
+}
+
+export const getLastService = async (userId: number): Promise<Service> => {
+    try {
+        const {data} = await BaseApi.get(`/user/last-service/${userId}/`);
+        if (data.created) {
+            data.created = new Date(data.created);
+        }
+        if (data.arrived) {
+            data.arrived = new Date(data.arrived);
+        }
+        data.type = data.type === "PACKAGE" ? OrderType.Package : OrderType.Carriage;
+
+        return data;
+    } catch (e) {
+        console.log(e);
+        return <Service>{
+            id: 0,
+            citizen: undefined,
+            bison: undefined,
+            type: OrderType.Undefined,
+            created: undefined,
+            arrived: undefined,
+            price: undefined,
+            origin_nation: NationType.Unknown,
+            origin_checkpoint: Checkpoint.Unknown,
+            destiny_nation: NationType.Unknown,
+            destiny_checkpoint: Checkpoint.Unknown,
+            package: <Package>{
+                width: undefined,
+                length: undefined,
+                height: undefined,
+                weight: undefined,
+            },
+            carriage: <Carriage>{
+                pickUp: undefined,
+                description: undefined,
+            },
+            guide: undefined,
+        };
+    }
 }

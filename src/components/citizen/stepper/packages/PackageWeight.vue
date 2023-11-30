@@ -9,7 +9,7 @@ const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
-const weight = ref(serviceStore.state.weight);
+const weight = ref(serviceStore.state.package ? serviceStore.state.package.weight : undefined);
 
 watch(weight, (newWeight) => {
   if (newWeight !== undefined) {
@@ -25,7 +25,7 @@ onBeforeUnmount(async () => {
   const status = await getServicePrice(OrderType.Package);
 })
 onBeforeMount(() => {
-  weight.value = serviceStore.state.weight;
+  weight.value = serviceStore.getWeight();
   emitValidateStep(Boolean(weight.value !== undefined))
 })
 </script>

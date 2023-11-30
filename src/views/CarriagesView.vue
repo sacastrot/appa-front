@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import NewCarriage from "@/components/citizen/history/NewCarriage.vue";
 import HistoryCarriages from "@/components/citizen/history/HistoryCarriages.vue";
-import {ref} from "vue";
-import {getCurrentUser} from "@/services/user";
-import type {Carriage, User} from "@/types/intefaces";
-import {carriagesByCitizen} from "@/services/carriage";
+import {onBeforeMount, ref} from "vue";
+import {OrderType, Service} from "@/types/intefaces";
+import {getServiceByUser} from "@/services/service";
 
+const showInformation = ref<boolean>(false);
 
-const user: User = getCurrentUser()
-const carraiges: Carriage[] = carriagesByCitizen(user?.id!)
+const carriages = ref<Service[]>([]);
 
-const showInfromation = ref<boolean>(false);
+onBeforeMount(async () => {
+  carriages.value = await getServiceByUser(OrderType.Carriage);
+})
+
 
 </script>
 
@@ -25,10 +27,10 @@ const showInfromation = ref<boolean>(false);
         <h1>Historial</h1>
         <p>Tus acarreos anteriores</p>
       </div>
-      <div class="action-button" @click="showInfromation = true">
+      <div class="action-button" @click="showInformation = true">
         <span class="add">?</span>
       </div>
-      <div class="modal" :class="{ 'is-active': showInfromation}">
+      <div class="modal" :class="{ 'is-active': showInformation}">
         <div class="modal-background"></div>
         <div class="modal-content">
           <div class="card">
@@ -55,10 +57,10 @@ const showInfromation = ref<boolean>(false);
             </div>
           </div>
         </div>
-        <button class="modal-close is-large" aria-label="close" @click="showInfromation = false"></button>
+        <button class="modal-close is-large" aria-label="close" @click="showInformation = false"></button>
       </div>
     </div>
-    <HistoryCarriages v-for="carriage in carraiges"  :key="carriage.guideNumber"  :carriage="carriage"/>
+    <HistoryCarriages v-for="(carriage, index) in carriages"  :key="index"  :carriage="carriage"/>
   </main>
 </template>
 

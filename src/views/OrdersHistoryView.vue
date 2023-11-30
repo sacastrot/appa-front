@@ -2,14 +2,24 @@
 import Hero from '@/components/core/Hero.vue';
 import CardPackageHistory from "@/components/bison/CardPackageHistory.vue"
 import CardCarriageHistory from "@/components/bison/CardCarriageHistory.vue"
-import { getCurrentUser } from "@/services/user";
-import { packageByBison } from '@/services/package';
-import { carriagesByBison } from '@/services/carriage';
+import {getCurrentUser} from "@/services/user";
+import type {Service} from "@/types/intefaces";
+import {OrderType} from "@/types/intefaces";
+import {onBeforeMount, ref} from "vue";
+import {getServiceByUser} from "@/services/service";
+import {useUserStore} from "@/stores/user";
 
-const currentBison = getCurrentUser();
+const packages = ref<Service[]>([]);
+const carriages = ref<Service[]>([]);
+const userStore = useUserStore();
 
-const bisonPackages = packageByBison(currentBison.id!)
-const bisonCarriages = carriagesByBison(currentBison.id!)
+
+onBeforeMount(async () => {
+  if (userStore.currentUser){
+    packages.value = await getServiceByUser(OrderType.Package)
+    carriages.value = await getServiceByUser(OrderType.Carriage)
+  }
+});
 </script>
 
 <template>
@@ -18,8 +28,8 @@ const bisonCarriages = carriagesByBison(currentBison.id!)
       <div class="content">
           <h1>Historial</h1>
           <p>Pedidos completados</p>
-          <CardPackageHistory class="my-4" v-for="(pkgvalue, pkgindex) in bisonPackages" :key="pkgindex" :current-package="pkgvalue"/>
-          <CardCarriageHistory class="my-4" v-for="(value, index) in bisonCarriages" :key="index" :currentCarriage="value"/>
+          <CardPackageHistory class="my-4" v-for="(pkgvalue, pkgindex) in packages" :key="pkgindex" :current-package="pkgvalue"/>
+          <CardCarriageHistory class="my-4" v-for="(value, index) in carriages" :key="index" :currentCarriage="value"/>
       </div>
   </main>
 

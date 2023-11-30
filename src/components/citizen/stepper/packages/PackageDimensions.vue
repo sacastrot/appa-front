@@ -9,9 +9,9 @@ const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
 //Data to send store
-const width = ref(serviceStore.state.width);
-const length = ref(serviceStore.state.length);
-const height = ref(serviceStore.state.height);
+const width = ref(serviceStore.state.package ? serviceStore.state.package.width : undefined);
+const length = ref(serviceStore.state.package ? serviceStore.state.package.length : undefined);
+const height = ref(serviceStore.state.package ? serviceStore.state.package.height : undefined);
 
 //Validate form
 watch([width,length,height], ([newWidth, newLength, newHeight]) => {
@@ -41,9 +41,9 @@ onBeforeUnmount(async () => {
 })
 //Charge values of package origin location and validate form if is already filled
 onBeforeMount(() => {
-  width.value = serviceStore.state.width;
-  length.value = serviceStore.state.length;
-  height.value = serviceStore.state.height;
+  width.value   = serviceStore.getWidth();
+  length.value  = serviceStore.getLength();
+  height.value  = serviceStore.getHeight();
   emitValidateStep(Boolean(width.value !== undefined && height.value !== undefined && length.value !== undefined))
 })
 </script>

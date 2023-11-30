@@ -24,20 +24,23 @@ onBeforeMount(async () => {
   <div class="ticket">
     <div class="origin">
       <h1>Origen</h1>
-      <p class="nation">{{ serviceStore.state.originNation }} - {{ serviceStore.state.originCheckpoint }}</p>
+      <p class="nation">{{ serviceStore.getOriginNation() }} - {{ serviceStore.getOriginCheckpoint() }}</p>
     </div>
     <div class="destiny">
       <h1>Destino</h1>
-      <p class="nation">{{ serviceStore.state.destinyNation }} - {{ serviceStore.state.destinyCheckpoint }}</p>
+      <p class="nation">{{ serviceStore.getDestinyNation() }} - {{ serviceStore.getDestinyCheckpoint() }}</p>
     </div>
     <div class="weight">
       <h1>Peso</h1>
-      <p class="weight-data">{{ serviceStore.state.weight }} kg</p>
+      <p class="weight-data">{{ serviceStore.state.package ? serviceStore.state.package.weight : 0}} kg</p>
     </div>
     <div class="dimensions">
       <h1>Dimensiones</h1>
-      <p class="dimensions-data">{{ serviceStore.state.width }} x
-        {{ serviceStore.state.length }} x {{ serviceStore.state.height }} cm</p>
+      <p class="dimensions-data">
+        {{ serviceStore.state.package ? serviceStore.state.package.width : 0 }} x
+        {{ serviceStore.state.package ? serviceStore.state.package.length : 0 }} x
+        {{ serviceStore.state.package ? serviceStore.state.package.height : 0 }} cm
+      </p>
     </div>
     <div class="price">
       <p class="price-title">Precio</p>

@@ -2,7 +2,6 @@ import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 import type {User} from "@/types/intefaces";
 import {Role} from "@/types/intefaces";
-import {userData} from "@/data/userData";
 
 export const useUserStore = defineStore("user", () => {
     const state = ref<User>({
@@ -97,13 +96,6 @@ export const useUserStore = defineStore("user", () => {
         return users.value.filter(user => user.email?.includes(email) && user.role === Role.Bison)
     }
 
-    function loadUsers() {
-        if (!loadData.value) {
-            users.value = userData;
-            loadData.value = true;
-        }
-    }
-
 
     function logout() {
         currentUser.value = undefined;
@@ -189,6 +181,11 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    function getName() {
+        if (!state.value.name) return "";
+        return state.value.name;
+    }
+
     function resetUser() {
         state.value = {
             id: undefined,
@@ -214,7 +211,6 @@ export const useUserStore = defineStore("user", () => {
         addUser,
         resetUser,
         users,
-        loadUsers,
         validateName,
         validateId,
         validateEmail,
@@ -236,5 +232,6 @@ export const useUserStore = defineStore("user", () => {
         setCurrentUser,
         setCurrentRole,
         currentToken,
+        getName,
     }
 });

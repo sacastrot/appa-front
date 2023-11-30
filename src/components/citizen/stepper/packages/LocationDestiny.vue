@@ -8,8 +8,8 @@ import {useServiceStore} from "@/stores/service";
 const serviceStore = useServiceStore();
 
 //Data to send store
-const destinyNation = ref<NationType>(serviceStore.state.destinyNation);
-const destinyCheckpoint = ref<Checkpoint>(serviceStore.state.destinyCheckpoint);
+const destinyNation = ref<NationType>(serviceStore.state.destiny_nation);
+const destinyCheckpoint = ref<Checkpoint>(serviceStore.state.destiny_checkpoint);
 
 
 //Validate form
@@ -20,7 +20,7 @@ const emitValidateStep = (validateValue: boolean) => {
 //Function to validate form
 watch([destinyNation, destinyCheckpoint], ([newDestinyNation, newDestinyCheckpoint]) => {
   if(newDestinyNation !== NationType.Unknown && newDestinyCheckpoint !== Checkpoint.Unknown) {
-    if(newDestinyCheckpoint !== serviceStore.state.originCheckpoint) {
+    if(newDestinyCheckpoint !== serviceStore.state.origin_checkpoint) {
       emitValidateStep(true)
     }else {
       emitValidateStep(false)
@@ -48,8 +48,8 @@ onBeforeUnmount( async () => {
 //Charge values of package destiny location and validate form if is already filled
 onBeforeMount(() => {
   //Charge values of package origin location
-  destinyNation.value = serviceStore.state.destinyNation;
-  destinyCheckpoint.value = serviceStore.state.destinyCheckpoint;
+  destinyNation.value = serviceStore.state.destiny_nation;
+  destinyCheckpoint.value = serviceStore.state.destiny_checkpoint;
   checkpointList.value = getCheckpoints(destinyNation.value);
 
   //Validate if form is already filled

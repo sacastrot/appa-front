@@ -1,53 +1,87 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import {Checkpoint, NationType, OrderType, type Service} from "@/types/intefaces";
+import {type Carriage, Checkpoint, NationType, OrderType, type Package, type Service} from "@/types/intefaces";
+import {formatDate, formatPrice} from "@/helpers/services";
 
 export const useServiceStore = defineStore("service", () => {
     const state = ref<Service>({
         id: 0,
         citizen: undefined,
+        bison: undefined,
+        type: OrderType.Undefined,
         created: undefined,
         arrived: undefined,
         price: undefined,
-        originNation: NationType.Unknown,
-        originCheckpoint: Checkpoint.Unknown,
-        destinyNation: NationType.Unknown,
-        destinyCheckpoint: Checkpoint.Unknown,
+        origin_nation: NationType.Unknown,
+        origin_checkpoint: Checkpoint.Unknown,
+        destiny_nation: NationType.Unknown,
+        destiny_checkpoint: Checkpoint.Unknown,
+        package: <Package>{
+            width: undefined,
+            length: undefined,
+            height: undefined,
+            weight: undefined,
+        },
+        carriage: <Carriage>{
+            pickUp: undefined,
+            description: undefined,
+        },
         guide: undefined,
-        length: undefined,
-        width: undefined,
-        height: undefined,
-        weight: undefined,
-        pickUpDate: undefined,
-        pickUpHour: undefined,
-        description: undefined,
-        type: OrderType.Undefined
     });
 
+    function getOriginNation() {
+        if (state.value.origin_nation) {
+            return state.value.origin_nation
+        }
+    }
+
+    function getOriginCheckpoint() {
+        if (state.value.origin_checkpoint) {
+            return state.value.origin_checkpoint
+        }
+    }
+
+    function getDestinyNation() {
+        if (state.value.destiny_nation) {
+            return state.value.destiny_nation
+        }
+    }
+
+    function getDestinyCheckpoint() {
+        if (state.value.destiny_checkpoint) {
+            return state.value.destiny_checkpoint
+        }
+    }
+
+    function getDescription() {
+        if (state.value.carriage) {
+            return state.value.carriage.description
+        }
+    }
 
     function setOrigin(originNation: NationType, originCheckpoint: Checkpoint) {
         if (originNation !== NationType.Unknown && originCheckpoint !== Checkpoint.Unknown) {
-            state.value.originNation = originNation;
-            state.value.originCheckpoint = originCheckpoint;
+            state.value.origin_nation = originNation;
+            state.value.origin_checkpoint = originCheckpoint;
         }
     }
 
     function setDestiny(destinyNation: NationType, destinyCheckpoint: Checkpoint) {
         if (destinyNation !== NationType.Unknown && destinyCheckpoint !== Checkpoint.Unknown) {
-            state.value.destinyNation = destinyNation;
-            state.value.destinyCheckpoint = destinyCheckpoint;
+            state.value.destiny_nation = destinyNation;
+            state.value.destiny_checkpoint = destinyCheckpoint;
         }
     }
 
     function setDimension(width: number, length: number, height: number) {
-        state.value.length = length;
-        state.value.width = width;
-        state.value.height = height;
+        state.value.package.width = width;
+        state.value.package.length = length;
+        state.value.package.height = height;
     }
 
     function setWeight(weight: number | undefined) {
-        if (weight !== undefined) {
-            state.value.weight = weight;
+        if (weight && state.value.package) {
+            state.value.package.weight = weight;
         }
     }
 
@@ -57,15 +91,15 @@ export const useServiceStore = defineStore("service", () => {
         }
     }
 
-    const COP = new Intl.NumberFormat("es-CO", {
-        style: "currency",
-        currency: "COP",
-        maximumFractionDigits: 0,
-    });
-
     function getPrice() {
-        if(state.value.price){
-            return COP.format(state.value.price)
+        if (state.value.price) {
+            return formatPrice(state.value.price)
+        }
+    }
+
+    function getGuideNumber() {
+        if (state.value.guide) {
+            return state.value.guide.guide_number
         }
     }
 
@@ -73,60 +107,64 @@ export const useServiceStore = defineStore("service", () => {
         state.value.type = type;
     }
 
+    function setPickUpDate(date: string | undefined): void {
+        if (date) {
+            state.value.carriage.pickUp = date;
+        }
+    }
+
+    function getWidth() {
+        if (state.value.package && state.value.package.width) {
+            return state.value.package.width
+        } else {
+            return undefined
+        }
+    }
+
+    function getLength() {
+        if (state.value.package && state.value.package.length) {
+            return state.value.package.length
+        } else {
+            return undefined
+        }
+    }
+
+    function getHeight() {
+        if (state.value.package && state.value.package.height) {
+            return state.value.package.height
+        } else {
+            return undefined
+        }
+    }
+
+    function getWeight() {
+        if (state.value.package && state.value.package.weight) {
+            return state.value.package.weight
+        } else {
+            return undefined
+        }
+    }
+
     function setDescription(description: string | undefined) {
         if (description) {
-            state.value.description = description;
+            state.value.carriage.description = description;
         }
-    }
-
-    function setPickUpDate(date: Date | undefined): void {
-        if (date) {
-            state.value.pickUpDate = date
-        }
-    }
-
-    /** Set the pick-up hour of the current carriage
-     * @param {string}  hour - A string param.
-     * @returns {void} A void return.
-     */
-    function setPickUpHour(hour: string | undefined): void {
-        if (hour) {
-            state.value.pickUpHour = hour
-        }
-    }
-
-    function formatDate(date: Date | undefined) {
-        if (date === undefined) return;
-        const namesDate = [
-            "Ene", "Feb", "Mar", "Abr", "May", "Jun",
-            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
-        ];
-
-        const dia = date.getDate();
-        const mes = date.getMonth();
-        const year = date.getFullYear();
-
-        const nameMonth = namesDate[mes];
-
-        return `${dia} de ${nameMonth}, ${year}`;
     }
 
     function getPickUpDate() {
-        if(state.value.pickUpDate){
-            if (state.value.pickUpHour) {
-                return `${state.value.pickUpDate} ${state.value.pickUpHour}`
-            }
+        if (state.value.carriage) {
+            return state.value.carriage.pickUp
         }
     }
 
     function getCreatedDate() {
-        if(state.value.created){
+        if (state.value.created) {
             return formatDate(state.value.created)
         }
     }
 
     function getArrivedDate() {
-        if(state.value.arrived){
+        if (state.value.arrived) {
             return formatDate(state.value.arrived)
         }
     }
@@ -136,22 +174,26 @@ export const useServiceStore = defineStore("service", () => {
         state.value = {
             id: 0,
             citizen: undefined,
+            bison: undefined,
+            type: OrderType.Undefined,
             created: undefined,
             arrived: undefined,
             price: undefined,
-            originNation: NationType.Unknown,
-            originCheckpoint: Checkpoint.Unknown,
-            destinyNation: NationType.Unknown,
-            destinyCheckpoint: Checkpoint.Unknown,
+            origin_nation: NationType.Unknown,
+            origin_checkpoint: Checkpoint.Unknown,
+            destiny_nation: NationType.Unknown,
+            destiny_checkpoint: Checkpoint.Unknown,
+            package: <Package>{
+                width: undefined,
+                length: undefined,
+                height: undefined,
+                weight: undefined,
+            },
+            carriage: <Carriage>{
+                pickUp: undefined,
+                description: undefined,
+            },
             guide: undefined,
-            length: undefined,
-            width: undefined,
-            height: undefined,
-            weight: undefined,
-            pickUpDate: undefined,
-            pickUpHour: undefined,
-            description: undefined,
-            type: OrderType.Undefined
         }
     }
 
@@ -167,10 +209,18 @@ export const useServiceStore = defineStore("service", () => {
         setType,
         setDescription,
         setPickUpDate,
-        setPickUpHour,
         getPickUpDate,
         getCreatedDate,
         getArrivedDate,
-        formatDate
+        getWidth,
+        getLength,
+        getHeight,
+        getWeight,
+        getGuideNumber,
+        getOriginNation,
+        getOriginCheckpoint,
+        getDestinyNation,
+        getDestinyCheckpoint,
+        getDescription,
     }
 });

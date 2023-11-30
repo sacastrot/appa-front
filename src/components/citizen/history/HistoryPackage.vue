@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {Checkpoint, NationType} from "@/types/intefaces";
+import type {Carriage, Guide, NationType, OrderType, Package} from "@/types/intefaces";
+import {Checkpoint} from "@/types/intefaces";
 import {useServiceStore} from "@/stores/service";
+import {formatDate, formatPrice} from "../../../helpers/services";
+
 const serviceStore = useServiceStore();
 
 const expand = ref<boolean>(false);
@@ -11,25 +14,26 @@ const toggleExpand = () => {
 
 let colorStatus = '';
 
-
-
-
 const {packageValue} = defineProps<{
   packageValue: {
-    created?: Date;
-    arrived?: Date;
-    originNation: NationType,
-    originCheckpoint: Checkpoint,
-    destinyNation: NationType,
-    destinyCheckpoint: Checkpoint,
-    guide: number,
-    length: number | undefined,
-    width: number | undefined,
-    height: number | undefined,
-    weight: number | undefined;
+    id: number;
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
+    created: Date | undefined;
+    arrived: Date | undefined;
     price: number | undefined;
+    origin_nation: NationType,
+    originCheckpoint: Checkpoint,
+    destiny_nation: NationType,
+    destinyCheckpoint: Checkpoint,
+    package: Package | undefined;
+    carriage: Carriage | undefined;
+    guide: Guide | undefined;
   }
 }>()
+
+// const {packageValue} = defineProps(['packageValue'])
 
 if (packageValue.arrived) {
   colorStatus = '#349F91FF';
@@ -40,46 +44,46 @@ if (packageValue.arrived) {
 
 <template>
   <div class="package-card">
-    <div class="location">
-      <img src="/img/location-history.svg">
-      <Transition name="fade-location">
-        <div v-if="!expand" class="location-text">
-          <div class="location-origin">
-            <h1>{{ packageValue.originNation }}</h1>
-            <p>{{ serviceStore.formatDate(packageValue.created) }}</p>
-          </div>
-          <div class="location-destination">
-            <h1>{{ packageValue.destinyNation }}</h1>
-            <p>{{ serviceStore.formatDate(packageValue.arrived) }}</p>
-          </div>
-        </div>
-      </Transition>
-    </div>
-    <div @click="toggleExpand" class="package-details" :class="[expand ? 'package-active' : 'package-inactive']">
-      <Transition name="fade-details">
-        <span v-if="!expand" class="material-symbols-outlined" :style="{color: colorStatus}" >package_2</span>
-        <div v-else class="content-header">
-          <div class="features">
-            <span class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
-            <div class="price">
-              <h1>Precio</h1>
-              <h1>{{ packagesStore.formatPrice(packageValue.price) }}</h1>
+        <div class="location">
+          <img src="/img/location-history.svg">
+          <Transition name="fade-location">
+            <div v-if="!expand" class="location-text">
+              <div class="location-origin">
+                <h1>{{ packageValue.origin_nation }}</h1>
+                <p>{{ formatDate(packageValue.created) }}</p>
+              </div>
+              <div class="location-destination">
+                <h1>{{ packageValue.destiny_nation }}</h1>
+                <p>{{ formatDate(packageValue.arrived) }}</p>
+              </div>
             </div>
-            <h1>Alto</h1>
-            <p>{{ packageValue.height }} cm</p>
-            <h1>Largo</h1>
-            <p>{{ packageValue.length }} cm</p>
-            <h1>Ancho</h1>
-            <p>{{ packageValue.width }} cm</p>
-            <h1>Peso</h1>
-            <p>{{ packageValue.weight }} kg</p>
-          </div>
-          <div class="guide">
-            <p>Guía No. {{ packageValue.guide }}</p>
-          </div>
+          </Transition>
         </div>
-      </Transition>
-    </div>
+        <div @click="toggleExpand" class="package-details" :class="[expand ? 'package-active' : 'package-inactive']">
+          <Transition name="fade-details">
+            <span v-if="!expand" class="material-symbols-outlined" :style="{color: colorStatus}" >package_2</span>
+            <div v-else class="content-header">
+              <div class="features">
+                <span class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
+                <div class="price">
+                  <h1>Precio</h1>
+                  <h1>{{ formatPrice(packageValue.price) }}</h1>
+                </div>
+                <h1>Alto</h1>
+                <p>{{ packageValue.package.height }} cm</p>
+                <h1>Largo</h1>
+                <p>{{ packageValue.package.length }} cm</p>
+                <h1>Ancho</h1>
+                <p>{{ packageValue.package.width}} cm</p>
+                <h1>Peso</h1>
+                <p>{{ packageValue.package.weight }} kg</p>
+              </div>
+              <div class="guide">
+                <p>Guía No. {{ packageValue.guide.guide_number}}</p>
+              </div>
+            </div>
+          </Transition>
+        </div>
   </div>
 </template>
 

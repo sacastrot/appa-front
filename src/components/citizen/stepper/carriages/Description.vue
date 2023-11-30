@@ -6,7 +6,7 @@ import {OrderType} from "@/types/intefaces";
 
 const serviceStore = useServiceStore();
 //Take the values from the store if they exist or undefined if not
-const description = ref<string | undefined>(serviceStore.state.description);
+const description = ref<string | undefined>(serviceStore.state.carriage ? serviceStore.state.carriage.description : undefined);
 
 //Event to verify if all fields are filled out
 const emit = defineEmits(["validateStep"]);
