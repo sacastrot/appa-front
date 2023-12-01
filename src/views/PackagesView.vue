@@ -1,20 +1,9 @@
 <script setup lang="ts">
 import NewPackage from "@/components/citizen/history/NewPackage.vue";
-import {onBeforeMount, ref} from "vue";
-import type {Service} from "@/types/intefaces";
-import {OrderType} from "@/types/intefaces";
-import {getServiceByUser} from "@/services/service";
-import HistoryPackage from "@/components/citizen/history/HistoryPackage.vue";
-
+import {ref} from "vue";
+import HistoryPackagesList from "@/components/citizen/history/HistoryPackagesList.vue";
+import HistoryCardSekeleton from "@/components/core/HistoryCardSekeleton.vue";
 const modalActive = ref<boolean>(false);
-
-const packages = ref<Service[]>([]);
-
-onBeforeMount(async () => {
-  packages.value = await getServiceByUser(OrderType.Package);
-})
-
-
 </script>
 
 <template>
@@ -47,7 +36,14 @@ onBeforeMount(async () => {
         </div>
       </div>
     </transition>
-    <HistoryPackage class="my-4" v-for="(value, index) in packages" :packageValue="value" :key="index"/>
+    <Suspense>
+      <template #default>
+        <HistoryPackagesList/>
+      </template>
+      <template #fallback>
+        <HistoryCardSekeleton class="mb-6" v-for="value in 4"/>
+      </template>
+    </Suspense>
   </main>
 </template>
 

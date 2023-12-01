@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Carriage, Checkpoint, Guide, NationType, OrderType, Package} from "@/types/intefaces";
+import {type Carriage, Checkpoint,type Guide, NationType, OrderType,type Package} from "@/types/intefaces";
 
 const {order} = defineProps<{
   order: {
@@ -25,7 +25,7 @@ const {order} = defineProps<{
 <template>
   <div class="package-card">
     <div class="location">
-      <img src="/img/BisonLocation.svg"/>
+      <img src="/img/BisonLocation.svg" alt="Bison image with location icon"/>
       <div class="location-text">
         <div class="location-origin">
           <h1>{{ order.origin_nation }}</h1>

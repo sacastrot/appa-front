@@ -7,8 +7,9 @@ import {useServiceStore} from "@/stores/service";
 const serviceStore = useServiceStore();
 
 //Data to send store
-const destinyNation = ref<NationType>(serviceStore.state.destiny_nation)
-const destinyCheckpoint = ref<Checkpoint>(serviceStore.state.destiny_checkpoint)
+const destinyNation = ref<NationType>(serviceStore.getDestinyNation())
+const destinyCheckpoint = ref<Checkpoint>(serviceStore.getDestinyCheckpoint())
+const helpMessage = ref<string>("Selecciona una nación y un punto de control válido")
 
 //Validate form
 const emit = defineEmits(["validateStep"]);
@@ -20,11 +21,14 @@ watch([destinyNation, destinyCheckpoint], ([newDestinyNation, newDestinyCheckpoi
   if (newDestinyNation !== NationType.Unknown && newDestinyCheckpoint !== Checkpoint.Unknown) {
     if (newDestinyCheckpoint !== serviceStore.state.origin_checkpoint) {
       emitValidateStep(true)
+      helpMessage.value = ""
     } else {
       emitValidateStep(false)
+      helpMessage.value = "El punto de control de destino no puede ser el mismo que el de origen"
     }
   } else {
     emitValidateStep(false)
+    helpMessage.value = "Selecciona una nación y un punto de control válido"
   }
 })
 
@@ -50,7 +54,14 @@ onBeforeMount(() => {
   checkpointList.value = getCheckpoints(destinyNation.value);
 
   //Validate form if is already filled
-  emitValidateStep(Boolean(destinyNation.value != NationType.Unknown && destinyCheckpoint.value !== Checkpoint.Unknown))
+  const validate = Boolean(destinyNation.value !== NationType.Unknown && destinyCheckpoint.value !== Checkpoint.Unknown)
+  const validateSameCheckpoint = Boolean(destinyCheckpoint.value !== serviceStore.state.origin_checkpoint)
+
+  helpMessage.value = validate ? "" : "Selecciona una nación y un punto de control válido"
+  if (!helpMessage.value){
+    helpMessage.value = validateSameCheckpoint ? "" : "El punto de control de destino no puede ser el mismo que el de origen"
+  }
+  emitValidateStep(validate && validateSameCheckpoint)
 })
 
 </script>
@@ -86,9 +97,15 @@ onBeforeMount(() => {
       </div>
     </div>
   </form>
+  <p class="help-message"> {{ helpMessage }} </p>
 </template>
 
 <style scoped>
+.help-message {
+  color: var(--color-primary-red);
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
 form {
   .form-header {
     max-width: 80%;

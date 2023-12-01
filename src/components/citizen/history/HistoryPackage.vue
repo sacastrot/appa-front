@@ -44,46 +44,46 @@ if (packageValue.arrived) {
 
 <template>
   <div class="package-card">
-        <div class="location">
-          <img src="/img/location-history.svg">
-          <Transition name="fade-location">
-            <div v-if="!expand" class="location-text">
-              <div class="location-origin">
-                <h1>{{ packageValue.origin_nation }}</h1>
-                <p>{{ formatDate(packageValue.created) }}</p>
-              </div>
-              <div class="location-destination">
-                <h1>{{ packageValue.destiny_nation }}</h1>
-                <p>{{ formatDate(packageValue.arrived) }}</p>
-              </div>
-            </div>
-          </Transition>
+    <div class="location">
+      <img src="/img/location-history.svg">
+      <Transition name="fade-location">
+        <div v-if="!expand" class="location-text">
+          <div class="location-origin">
+            <h1>{{ packageValue.origin_nation }}</h1>
+            <p>{{ formatDate(packageValue.created) }}</p>
+          </div>
+          <div class="location-destination">
+            <h1>{{ packageValue.destiny_nation }}</h1>
+            <p>{{ formatDate(packageValue.arrived) }}</p>
+          </div>
         </div>
-        <div @click="toggleExpand" class="package-details" :class="[expand ? 'package-active' : 'package-inactive']">
-          <Transition name="fade-details">
-            <span v-if="!expand" class="material-symbols-outlined" :style="{color: colorStatus}" >package_2</span>
-            <div v-else class="content-header">
-              <div class="features">
-                <span class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
-                <div class="price">
-                  <h1>Precio</h1>
-                  <h1>{{ formatPrice(packageValue.price) }}</h1>
-                </div>
-                <h1>Alto</h1>
-                <p>{{ packageValue.package.height }} cm</p>
-                <h1>Largo</h1>
-                <p>{{ packageValue.package.length }} cm</p>
-                <h1>Ancho</h1>
-                <p>{{ packageValue.package.width}} cm</p>
-                <h1>Peso</h1>
-                <p>{{ packageValue.package.weight }} kg</p>
-              </div>
-              <div class="guide">
-                <p>Guía No. {{ packageValue.guide.guide_number}}</p>
-              </div>
+      </Transition>
+    </div>
+    <div @click="toggleExpand" class="package-details" :class="[expand ? 'package-active' : 'package-inactive']">
+      <Transition name="fade-details">
+        <span v-if="!expand" class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
+        <div v-else class="content-header">
+          <div class="features">
+            <span class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
+            <div class="price">
+              <h1>Precio</h1>
+              <h1>{{ formatPrice(packageValue.price) }}</h1>
             </div>
-          </Transition>
+            <h1>Alto</h1>
+            <p>{{ packageValue.package.height }} cm</p>
+            <h1>Largo</h1>
+            <p>{{ packageValue.package.length }} cm</p>
+            <h1>Ancho</h1>
+            <p>{{ packageValue.package.width }} cm</p>
+            <h1>Peso</h1>
+            <p>{{ packageValue.package.weight }} kg</p>
+          </div>
+          <div class="guide">
+            <p>Guía No. {{ packageValue.guide.guide_number }}</p>
+          </div>
         </div>
+      </Transition>
+    </div>
   </div>
 </template>
 
@@ -182,9 +182,11 @@ if (packageValue.arrived) {
         grid-area: 1/ 1 / 2 span/ 2;
         font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
         font-size: 5rem;
+
         .package-pending {
           color: var(--pending-state);
         }
+
         .package-delivered {
           color: var(--delivered-state);
         }
@@ -216,7 +218,6 @@ if (packageValue.arrived) {
     }
   }
 }
-
 
 
 .package-details.package-inactive:hover {

@@ -78,7 +78,7 @@ export const createService = async (type: OrderType) => {
         }
 
         try {
-            const {data} = await BaseApi.post("/services/package/", packageData);
+            await BaseApi.post("/services/package/", packageData);
             service.resetState();
         } catch (e) {
             console.log(e);
@@ -107,7 +107,7 @@ export const createService = async (type: OrderType) => {
         }
 
         try {
-            const {data} = await BaseApi.post("/services/carriage/", carriageData);
+            await BaseApi.post("/services/carriage/", carriageData);
             service.resetState();
         } catch (e) {
             console.log(e);
@@ -120,7 +120,7 @@ export const createService = async (type: OrderType) => {
     }
 };
 
-export const getServiceByUser = async (type: OrderType): Promise<Service[]> => {
+export const getServiceByUser = async (type: OrderType): Promise< {status: boolean, data: Service[]} > => {
     const user = useUserStore();
     const requestType = type === OrderType.Package ? "package" : "carriage";
 
@@ -136,16 +136,15 @@ export const getServiceByUser = async (type: OrderType): Promise<Service[]> => {
             //@ts-ignore
             service.type = service.type === "PACKAGE" ? OrderType.Package : OrderType.Carriage;
         });
-        return data;
+        return {status: true, data: data};
     } catch (e) {
         console.log(e);
-        return [];
+        return {status: false, data: [] as Service[]};
     }
 }
 
 /* Services for Bison */
-export const getActiveService = async (): Promise<Service | undefined> => {
-
+export const getActiveService = async (): Promise<{status: boolean, data: Service}> => {
     try {
         const {data} = await BaseApi.get(`/service/active/`);
         if (data.created) {
@@ -155,10 +154,10 @@ export const getActiveService = async (): Promise<Service | undefined> => {
             data.arrived = new Date(data.arrived);
         }
         data.type = data.type === "PACKAGE" ? OrderType.Package : OrderType.Carriage;
-        return data;
+        return {status: true, data: data};
     } catch (e) {
         console.log(e);
-        return undefined;
+        return {status: false, data: {} as Service};
     }
 }
 
@@ -191,7 +190,7 @@ export const updateService = async (serviceId: number, current_nation: NationTyp
         }
     }
     try {
-        const {data} = await BaseApi.patch(`/services/${serviceId}/`, request);
+        await BaseApi.patch(`/services/${serviceId}/`, request);
         return true;
     } catch (e) {
         console.log(e);

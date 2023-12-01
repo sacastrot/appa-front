@@ -119,7 +119,7 @@ export const searchAvailableBison = (): User | undefined => {
     return userStore.users.find(user => user.role === Role.Bison && user.available)
 }
 
-export const getLastService = async (userId: number): Promise<Service> => {
+export const getLastService = async (userId: number): Promise<{status: boolean, data: Service}> => {
     try {
         const {data} = await BaseApi.get(`/user/last-service/${userId}/`);
         if (data.created) {
@@ -130,32 +130,8 @@ export const getLastService = async (userId: number): Promise<Service> => {
         }
         data.type = data.type === "PACKAGE" ? OrderType.Package : OrderType.Carriage;
 
-        return data;
+        return {status: true, data: data};
     } catch (e) {
-        console.log(e);
-        return <Service>{
-            id: 0,
-            citizen: undefined,
-            bison: undefined,
-            type: OrderType.Undefined,
-            created: undefined,
-            arrived: undefined,
-            price: undefined,
-            origin_nation: NationType.Unknown,
-            origin_checkpoint: Checkpoint.Unknown,
-            destiny_nation: NationType.Unknown,
-            destiny_checkpoint: Checkpoint.Unknown,
-            package: <Package>{
-                width: undefined,
-                length: undefined,
-                height: undefined,
-                weight: undefined,
-            },
-            carriage: <Carriage>{
-                pickUp: undefined,
-                description: undefined,
-            },
-            guide: undefined,
-        };
+        return {status: false, data: {} as Service};
     }
 }

@@ -9,26 +9,45 @@ const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
 //Data to send store
-const width = ref(serviceStore.state.package ? serviceStore.state.package.width : undefined);
-const length = ref(serviceStore.state.package ? serviceStore.state.package.length : undefined);
-const height = ref(serviceStore.state.package ? serviceStore.state.package.height : undefined);
+const width = ref(serviceStore.getWidth());
+const length = ref(serviceStore.getLength());
+const height = ref(serviceStore.getHeight());
+const helpMessage = ref<string>("Ingresa las dimensiones del paquete");
 
 //Validate form
 watch([width,length,height], ([newWidth, newLength, newHeight]) => {
-  if(newWidth !== undefined && newHeight !== undefined && newLength !== undefined){
-    if (newWidth !== 0 && newHeight !== 0 && newLength !== 0) {
-      if (newWidth > 1 && newHeight > 1 && newLength > 1) {
-        if (newWidth < 1000 && newHeight < 1000 && newLength < 1000) {
-          emitValidateStep(true)
+  const validateUndefined = Boolean(newWidth !== undefined && newHeight !== undefined && newLength !== undefined)
+  const validateVoid = Boolean(newWidth && newHeight  && newLength)
+  const validateGtOne = Boolean(newWidth > 1 && newHeight > 1 && newLength > 1)
+  const validateGtZero = Boolean(newWidth !== 0 && newHeight !== 0 && newLength !== 0)
+  const validateLtThousand = Boolean(newWidth < 1000 && newHeight < 1000 && newLength < 1000)
+
+  if (validateUndefined) {
+    if (validateVoid) {
+      if (validateGtOne) {
+        if (validateGtZero) {
+          if (validateLtThousand) {
+            emitValidateStep(true)
+            helpMessage.value = "";
+          } else {
+            emitValidateStep(false)
+            helpMessage.value = "Las dimensiones del paquete no pueden ser mayores a 1000cm"
+          }
         } else {
           emitValidateStep(false)
+          helpMessage.value = "Las dimensiones del paquete no pueden ser 0cm"
         }
       } else {
         emitValidateStep(false)
+        helpMessage.value = "Las dimensiones del paquete deben ser mayores a 1cm"
       }
     } else {
       emitValidateStep(false)
+      helpMessage.value = "Ingresa todas las dimensiones del paquete"
     }
+  } else {
+    emitValidateStep(false)
+    helpMessage.value = "Ingresa todas las dimensiones del paquete"
   }
 })
 
@@ -44,7 +63,24 @@ onBeforeMount(() => {
   width.value   = serviceStore.getWidth();
   length.value  = serviceStore.getLength();
   height.value  = serviceStore.getHeight();
-  emitValidateStep(Boolean(width.value !== undefined && height.value !== undefined && length.value !== undefined))
+
+  const validate = Boolean(width.value && height.value && length.value)
+  if (validate) {
+    const validateGtOne = Boolean(width.value > 1 && height.value > 1 && length.value > 1)
+    const validateGtZero = Boolean(width.value !== 0 && height.value !== 0 && length.value !== 0)
+    const validateLtThousand = Boolean(width.value < 1000 && height.value < 1000 && length.value < 1000)
+    helpMessage.value = validateGtOne ? "" : "Las dimensiones del paquete deben ser mayores a 1cm"
+    if (!helpMessage.value){
+      helpMessage.value = validateGtZero ? "" : "Las dimensiones del paquete no pueden ser 0cm"
+    }
+    if (!helpMessage.value){
+      helpMessage.value = validateLtThousand ? "" : "Las dimensiones del paquete no pueden ser mayores a 1000cm"
+    }
+  } else {
+    helpMessage.value = "Ingresa todas las dimensiones del paquete"
+  }
+
+  emitValidateStep(validate && helpMessage.value === "")
 })
 </script>
 
@@ -88,9 +124,15 @@ onBeforeMount(() => {
       </div>
     </div>
   </form>
+  <p class="help-message"> {{ helpMessage }} </p>
 </template>
 
 <style scoped>
+.help-message {
+  color: var(--color-primary-red);
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
 form {
   .form-header{
     margin-bottom: 30px;
