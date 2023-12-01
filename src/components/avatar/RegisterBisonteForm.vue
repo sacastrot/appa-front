@@ -61,6 +61,7 @@ onBeforeUnmount(async () => {
 </script>
 
 <template>
+  {{userStore.validateInfoBison}}
   <form v-if="!isRegister" @submit.prevent="registerUser">
     <div class="form-content">
       <div class="form-inputs">
@@ -114,7 +115,7 @@ onBeforeUnmount(async () => {
         </div>
 
         <div class="control">
-          <button class="button is-link" type="submit" :disabled="!userStore.validateInfoUser">Registrar</button>
+          <button class="button is-link" type="submit" :disabled="!userStore.validateInfoBison">Registrar</button>
         </div>
       </div>
     </div>

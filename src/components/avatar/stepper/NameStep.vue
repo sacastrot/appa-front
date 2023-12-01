@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {watch} from "vue";
-import {useUserStore} from "@/stores/user";
+import {useUserManagementStore} from "@/stores/user";
 
-const user = useUserStore();
+const user = useUserManagementStore();
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {

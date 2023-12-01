@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {onBeforeMount, watch} from "vue";
-import {useUserStore} from "@/stores/user";
+import {useUserStore, useUserManagementStore} from "@/stores/user";
 
-const user = useUserStore();
+const user = useUserManagementStore();
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
@@ -10,10 +10,10 @@ const emitValidateStep = (validateValue: boolean) => {
 }
 
 watch(user.state, () => {
-  emitValidateStep(user.validateId)
+  // emitValidateStep(user.validateId)
 })
 onBeforeMount(async () =>{
-  emitValidateStep(user.validateId)
+  // emitValidateStep(user.validateId)
 })
 </script>
 

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {onBeforeUnmount} from "vue";
-import {useUserStore} from "@/stores/user";
+import {useUserStore, useUserManagementStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
 
-const user = useUserStore();
+const user = useUserManagementStore();
 onBeforeUnmount(() =>{
-  user.setRole(Role.Bison);
+  // user.setRole(Role.Bison);
   user.setRandomPassword();
   user.addUser();
   user.resetUser();
@@ -40,7 +40,7 @@ onBeforeUnmount(() =>{
         <div class="summary-section">
           <h1>Documento de identidad</h1>
           <p>
-            {{user.state.id}}
+            {{user.state.document}}
           </p>
           <hr>
         </div>
