@@ -14,7 +14,7 @@ const modalActive = ref<boolean>(false);
     </RouterLink>
     <div class="header">
       <h1>Historial</h1>
-      <span class="material-symbols-outlined" @click="modalActive = true">help</span>
+      <span class=" icon material-symbols-outlined" @click="modalActive = true">help</span>
     </div>
     <p>Tus paquetes anteriores</p>
     <transition name="fade">
@@ -109,6 +109,7 @@ const modalActive = ref<boolean>(false);
     font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
     font-size: 2.5rem;
     color: var(--color-primary-brown);
+    cursor: pointer;
   }
 }
 
