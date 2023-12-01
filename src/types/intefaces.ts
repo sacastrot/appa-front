@@ -148,6 +148,7 @@ interface User {
     phone: number | undefined;
     role: Role;
     vehicle: string | undefined;
+    document: string | undefined;
     available: boolean;
 }
 interface CheckpointCoordinates {

@@ -12,10 +12,13 @@ export const useUserStore = defineStore("user", () => {
         phone: undefined,
         role: Role.Citizen,
         vehicle: undefined,
+        document: undefined,
         available: true,
     })
-    const loadData = ref(false);
-    const users = ref<User[]>([])
+
+    //Remove in integration with backend
+    const users = ref<User[]>([]);
+
     const currentUser = ref<number | undefined>(undefined);
     const currentRole = ref<Role>();
     const currentToken = ref<string | undefined>(undefined);
@@ -33,6 +36,7 @@ export const useUserStore = defineStore("user", () => {
         return false
     });
 
+    //Change in integration with backend
     const validateId = computed(() => {
 
         if (state.value.id !== undefined && state.value.id !== 0 && state.value.id !== null && (state.value.id).toString().length !== 0) {
@@ -42,6 +46,7 @@ export const useUserStore = defineStore("user", () => {
         return false
     });
 
+    //Change in integration with backend
     const validateEmail = computed(() => {
         if (state.value.email) {
             if (emailRegex.test(state.value.email)) {
@@ -52,6 +57,7 @@ export const useUserStore = defineStore("user", () => {
         return false
     });
 
+    //Change in integration with backend
     const validateVehicle = computed(() => {
         if (state.value.vehicle) {
             const response = searchUserByVehicle(state.value.vehicle);
@@ -70,28 +76,34 @@ export const useUserStore = defineStore("user", () => {
         return passwordRegex.test(state.value.password as string);
     });
 
-
+    //Change in integration with backend
     const validateInfoBison = computed(() => {
         return !(validateName.value && validateId.value && validateEmail.value && validateVehicle.value)
     });
 
+    //Change in integration with backend
     const validateInfoCitizen = computed(() => {
         return validateEmail.value && validateName.value && validatePassword.value
     });
 
     //actions
+
+    //Remove in integration with backend
     function searchUserByVehicle(vehicle: string): User | undefined {
         return users.value.find(user => user.vehicle === vehicle)
     }
 
+    //Remove in integration with backend
     function searchUserByEmail(email: string): User | undefined {
         return users.value.find(user => user.email === email)
     }
 
+    //Remove in integration with backend
     function searchUserById(id: number): User | undefined {
         return users.value.find(user => user.id === id)
     }
 
+    //Remove in integration with backend
     function filterBisonByEmail(email: string): User[] {
         return users.value.filter(user => user.email?.includes(email) && user.role === Role.Bison)
     }
@@ -104,10 +116,12 @@ export const useUserStore = defineStore("user", () => {
         resetUser();
     }
 
+    //Remove in integration with backend
     function addUser() {
         users.value.push(state.value)
     }
 
+    //Remove in integration with backend
     function deleteUser(id: number | undefined) {
         if (!id) return;
         const index = users.value.findIndex(user => user.id === id);
@@ -149,12 +163,18 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    function setDocument(document: string) {
+        state.value.document = document;
+    }
+
+    //Remove in integration with backend
     function setRandomPassword() {
         if (state.value.vehicle && state.value.id !== undefined) {
             state.value.password = (state.value.vehicle + state.value.id).toString();
         }
     }
 
+    //Remove in integration with backend
     function setDefaultId() {
         let tempId = Math.floor(Math.random() * 1000000000000000);
         while (searchUserById(tempId)) {
@@ -181,6 +201,7 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    //Remove in integration with backend
     function getName() {
         if (!state.value.name) return "";
         return state.value.name;
@@ -195,6 +216,7 @@ export const useUserStore = defineStore("user", () => {
             phone: undefined,
             role: Role.Citizen,
             vehicle: undefined,
+            document: undefined,
             available: true,
         }
     }
@@ -207,6 +229,7 @@ export const useUserStore = defineStore("user", () => {
         setPhone,
         setRole,
         setVehicle,
+        setDocument,
         logout,
         addUser,
         resetUser,
