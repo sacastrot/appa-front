@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import Logo from '@/components/core/Logo.vue';
-import {useUserStore} from "@/stores/user";
+import {useUserManagementStore} from "@/stores/user";
 import {ref} from 'vue';
 import {useRouter} from "vue-router";
 
 //Store to save the user data
-const user = useUserStore();
+const user = useUserManagementStore();
 //User fields (Citizen)
 const password2 = ref<string>("")
 
@@ -49,7 +49,6 @@ function validatePassword2(password2: string): void {
 }
 
 const userRegister = () => {
-  user.setDefaultId()
   user.addUser()
   user.resetUser()
   router.push("/login")

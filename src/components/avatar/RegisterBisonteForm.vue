@@ -1,27 +1,67 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, onBeforeUnmount} from "vue";
 import {useRouter} from "vue-router";
-import {useUserStore} from "@/stores/user";
-import {Role} from "@/types/intefaces";
+import {useUserManagementStore} from "@/stores/user";
+import {registerBison} from "@/services/user";
 
 const isRegister = ref(false)
 const router = useRouter();
-const userStore = useUserStore();
+const userStore = useUserManagementStore();
+
+//Errors that can be returned by the backend
+const nameError = ref<boolean>(false)
+const emailError = ref<boolean>(false)
+const documentError = ref<boolean>(false)
+const vehicleError = ref<boolean>(false)
+
+const errors: {[key: string]: ref<boolean>} = {
+  "name": nameError,
+  "email": emailError,
+  "document": documentError,
+  "vehicle": vehicleError
+}
+
+//Function to validate the fields
+function checkErrors(data: Array<string>): void {
+  // Reset errors
+  nameError.value = false
+  emailError.value = false
+  documentError.value = false
+  vehicleError.value = false
+
+  data.forEach( (error: string) => {
+    if (errors.hasOwnProperty(error))
+      errors[error].value = true
+  })
+}
 
 const returnHome = () => {
-  userStore.setRole(Role.Bison)
-  userStore.setRandomPassword();
-  userStore.addUser();
-  userStore.resetUser();
   router.push("/avatar");
 }
-const showSuccess = async () => {
-  isRegister.value = !(userStore.validateInfoUser)
+
+
+const registerUser = async () => {
+  //This line will be deleted when the backend generates the password
+  userStore.setRandomPassword();
+
+  const { status, data } = await registerBison()
+  if (status) {
+    isRegister.value = userStore.validateInfoUser
+  } else {
+    isRegister.value = false
+    checkErrors(Object.keys(data))
+  }
+
 }
+
+onBeforeUnmount(async () => {
+  userStore.resetUser();
+})
+
 </script>
 
 <template>
-  <form v-if="isRegister == false" @submit.prevent="showSuccess">
+  <form v-if="!isRegister" @submit.prevent="registerUser">
     <div class="form-content">
       <div class="form-inputs">
 
@@ -34,17 +74,19 @@ const showSuccess = async () => {
                     <fa icon="user"></fa>
                     </span>
           </div>
+          <p v-if="nameError" class="help is-danger is-size-6">Nombre inválido</p>
         </div>
 
         <h2>Documento de identidad</h2>
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="userStore.state.id" class="input is-medium" type="number"
+            <input v-model.trim="userStore.state.document" class="input is-medium" type="number"
                    placeholder="Documento de identidad" required>
             <span class="icon is-medium is-left">
                     <fa icon="id-card"></fa>
                     </span>
           </div>
+          <p v-if="documentError" class="help is-danger is-size-6">Documento inválido</p>
         </div>
 
         <h2>Correo electrónico</h2>
@@ -56,6 +98,7 @@ const showSuccess = async () => {
                         <fa icon="envelope"></fa>
                         </span>
           </div>
+          <p v-if="emailError" class="help is-danger is-size-6">Correo electrónico inválido</p>
         </div>
 
         <h2>Placa del vehículo</h2>
@@ -67,10 +110,11 @@ const showSuccess = async () => {
                         <fa icon="truck"></fa>
                         </span>
           </div>
+          <p v-if="vehicleError" class="help is-danger is-size-6">Placa inválida</p>
         </div>
 
         <div class="control">
-          <button class="button is-link" type="submit" :disabled="userStore.validateInfoUser">Registrar</button>
+          <button class="button is-link" type="submit" :disabled="!userStore.validateInfoUser">Registrar</button>
         </div>
       </div>
     </div>
@@ -102,7 +146,7 @@ const showSuccess = async () => {
         <div class="summary-section">
           <h1>Documento de identidad</h1>
           <p>
-            {{ userStore.state.id }}
+            {{ userStore.state.document }}
           </p>
           <hr>
         </div>
