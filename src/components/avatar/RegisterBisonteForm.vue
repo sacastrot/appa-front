@@ -46,7 +46,7 @@ const registerUser = async () => {
 
   const { status, data } = await registerBison()
   if (status) {
-    isRegister.value = userStore.validateInfoUser
+    isRegister.value = userStore.validateInfoBison
   } else {
     isRegister.value = false
     checkErrors(Object.keys(data))

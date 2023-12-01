@@ -25,7 +25,7 @@ export const login = async (user: UserData): Promise<boolean> => {
         const decodedToken = JSON.parse(atob(data.access.split('.')[1]));
         userStore.setCurrentUser(decodedToken.user_id);
         userStore.setCurrentRole(stringToRole[decodedToken.user_role]);
-        userStore.state.name = decodedToken.user_name;
+        userStore.setCurrentName(decodedToken.user_name);
         window.sessionStorage.setItem('userData', btoa(JSON.stringify(data)));
         return true;
     }
@@ -58,6 +58,7 @@ export const loadToken = (): void => {
         userStore.setToken(decodedData.access);
         const decodedToken = JSON.parse(atob(decodedData.access.split('.')[1]));
         userStore.setCurrentUser(decodedToken.user_id);
+        userStore.setCurrentName(decodedToken.user_name);
         userStore.setCurrentRole(stringToRole[decodedToken.user_role]);
     }
 
@@ -162,13 +163,13 @@ export const getLastService = async (userId: number): Promise<Service> => {
 
 
 export const getCurrentUser = (): User => {
+    //This function was modified and does not work as expected !!!!
     const userStore = useUserStore();
 
     let userData: User = {
         id: undefined,
         name: "",
         vehicle: "",
-        role: Role.Citizen,
         password: undefined,
         phone: undefined,
         email: undefined,
@@ -176,27 +177,10 @@ export const getCurrentUser = (): User => {
         available: true,
     };
 
-    if(userStore.currentUser){
-        const temp = userStore.searchUserById(userStore.currentUser);
-        if (temp){
-            userData = temp;
-        }
-    }
-
     return userData;
 }
 
 export const getUsersByRole = (targetRole: Role, limit:number = -1): User[] => {
-    const userStore = useUserStore();
-    const filteredUsers = userStore.users.filter(user => user.role === targetRole);
-    if(limit !== -1){
-        return filteredUsers.slice(0,limit);
-    }
-    return filteredUsers;
-}
-
-export const searchAvailableBison = (): User | undefined => {
-    const userStore = useUserStore();
-
-    return userStore.users.find(user => user.role === Role.Bison && user.available)
+    //This function was modified and does not work as expected !!!!
+    return [];
 }

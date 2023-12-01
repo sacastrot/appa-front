@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const {data} = defineProps<{
   data: {
-    name: string,
+    name: string | undefined,
     message: string,
   }
 }>();

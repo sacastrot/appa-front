@@ -2,11 +2,11 @@
 import {ref, watch} from "vue";
 import type {User} from "@/types/intefaces";
 import {Role} from "@/types/intefaces";
-import {useUserStore} from "@/stores/user";
+import {useUserManagementStore} from "@/stores/user";
 import {getUsersByRole} from "@/services/user";
 import BisonCard from "@/components/avatar/BisonCard.vue";
 
-const store = useUserStore();
+const store = useUserManagementStore();
 const search = ref<string>("");
 
 const bisonList: User[] = getUsersByRole(Role.Bison);
@@ -14,13 +14,13 @@ let filteredBisonList = ref<User[] | undefined[]>(bisonList);
 
 watch([search], () => {
   filteredBisonList.value = store.filterBisonByEmail(
-      search.value.toLowerCase().trim()
+      search.value.toLowerCase().trim(), []
   )
 })
 
 function deleteBison(bisonId: number) {
   store.deleteUser(bisonId)
-  filteredBisonList.value = store.users.filter((user) => user.role === Role.Bison)
+  // filteredBisonList.value = store.users.filter((user) => user.role === Role.Bison)
 }
 </script>
 

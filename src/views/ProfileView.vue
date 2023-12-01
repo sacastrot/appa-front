@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {computed, ref} from "vue";
-import {useUserStore} from "@/stores/user";
+import {useUserManagementStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
 import {getCurrentUser} from "@/services/user";
 import {useRouter} from "vue-router";
 
 
-const userStore = useUserStore();
+const userStore = useUserManagementStore();
 const router = useRouter();
 const modalActive = ref<boolean>(false);
 const readOnly = ref<boolean>(true);
