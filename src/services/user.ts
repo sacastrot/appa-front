@@ -119,6 +119,19 @@ export const registerBison = async (): Promise<{status: boolean, data: Object}> 
     }
 }
 
+export const deleteUser = async (userId: number): Promise<{data: Object}> => {
+    try {
+        const {data} = await BaseApi.delete(`/user/delete/${userId}/`);
+        console.log(`/user/delete/${userId}/`);
+        return {
+            data : data
+        }
+    } catch (e: any) {
+        return {
+            data : e.response.data
+        }
+    }
+}
 
 export const getLastService = async (userId: number): Promise<Service> => {
     try {
