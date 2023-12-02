@@ -162,22 +162,32 @@ export const getLastService = async (userId: number): Promise<Service> => {
 }
 
 
-export const getCurrentUser = (): User => {
+export const getCurrentUser = async (): Promise<{status: boolean, data: Object}> => {
     //This function was modified and does not work as expected !!!!
     const userStore = useUserStore();
+    const bisonStore = useUserManagementStore();
 
-    let userData: User = {
-        id: undefined,
-        name: "",
-        vehicle: "",
-        password: undefined,
-        phone: undefined,
-        email: undefined,
-        document: undefined,
-        available: true,
-    };
-
-    return userData;
+    try{
+        const {data} = await BaseApi.get(`/user/users/?id=${userStore.currentUser}`);
+        console.log("data", data)
+        bisonStore.setName(data.name);
+        bisonStore.setPhone(data.phone);
+        bisonStore.setEmail(data.email);
+        bisonStore.setDocument(data.document);
+        bisonStore.setVehicle(data.vehicle);
+        bisonStore.setPassword(data.password);
+        return {
+            status : true,
+            data : data
+        }
+    }
+    catch (e: AxiosError) {
+        console.log(e);
+        return {
+            status : false,
+            data : e.response.data
+        }
+    }
 }
 
 export const getUsersByRole = (targetRole: Role, limit:number = -1): User[] => {

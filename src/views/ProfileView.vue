@@ -113,6 +113,20 @@ const togglePassword = () => {
   }
 }
 
+const currentUser = useUserManagementStore()
+
+const getDataCurrentUser = async () => {
+
+  const { status, data } = await getCurrentUser()
+  // if (status) {
+  //   isRegister.value = userStore.validateInfoBison
+  // } else {
+  //   isRegister.value = false
+  //   checkErrors(Object.keys(data))
+  // }
+
+}
+
 </script>
 
 <template>
@@ -127,12 +141,12 @@ const togglePassword = () => {
           </div>
           <div class="rotate"></div>
           <div class="citizen_information">
-            <span>{{ user.name }}</span>
+            <span>{{ currentUser.state.name }}</span>
             <div class="box_information">
               <span class="icon is-small is-left material-symbols-outlined">
                 Email
               </span>
-              <p>{{ user.email }}</p>
+              <p>{{ currentUser.state.email }}</p>
             </div>
           </div>
         </div>
@@ -145,7 +159,7 @@ const togglePassword = () => {
                   class="input custom-input"
                   type="text"
                   :readonly="readOnly"
-                  v-model="name"
+                  v-model="currentUser.state.name"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
@@ -161,7 +175,7 @@ const togglePassword = () => {
                   class="input custom-input"
                   type="tel"
                   :readonly="readOnly"
-                  v-model="phone"
+                  v-model="currentUser.state.phone"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
@@ -177,7 +191,7 @@ const togglePassword = () => {
                   class="input custom-input"
                   type="email"
                   :readonly="readOnly"
-                  v-model="email"
+                  v-model="currentUser.state.email"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
@@ -194,7 +208,7 @@ const togglePassword = () => {
                     class="input custom-input"
                     type="text"
                     readonly
-                    :value="document"
+                    :value="currentUser.state.document"
                 />
                 <span
                     class="icon is-small is-left form_icons material-symbols-outlined"
@@ -210,7 +224,7 @@ const togglePassword = () => {
                     class="input custom-input"
                     type="text"
                     readonly
-                    :value="vehicle"
+                    :value="currentUser.state.vehicle"
                 />
                 <span
                     class="icon is-small is-left form_icons material-symbols-outlined"
@@ -227,7 +241,7 @@ const togglePassword = () => {
                   class="input custom-input"
                   :type="showPassword"
                   :readonly="readOnly"
-                  v-model="password"
+                  v-model="currentUser.state.password"
               />
               <span
                   class="icon is-small is-left form_icons material-symbols-outlined"
