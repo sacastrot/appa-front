@@ -1,19 +1,46 @@
 <script setup lang="ts">
-import {onBeforeUnmount} from "vue";
-import {useUserStore, useUserManagementStore} from "@/stores/user";
-import {Role} from "@/types/intefaces";
+import {onBeforeUnmount, onBeforeMount, ref} from "vue";
+import {useUserManagementStore} from "@/stores/user";
+import {registerBison} from "@/services/user";
 
-const user = useUserManagementStore();
-onBeforeUnmount(() =>{
-  // user.setRole(Role.Bison);
-  user.setRandomPassword();
-  user.addUser();
-  user.resetUser();
+
+const userStore = useUserManagementStore();
+const isRegister = ref<boolean>(true)
+let errors: Array<string> = []
+
+const errorsTranslation: {[key: string]: string} = {
+  "name": "Nombre",
+  "email": "Correo electrónico",
+  "document": "Documento",
+  "vehicle": "Vehículo"
+}
+
+onBeforeUnmount(async () => {
+  userStore.resetUser();
 })
+
+const registerUser = async () => {
+  //This line will be deleted when the backend generates the password
+  userStore.setRandomPassword();
+
+  const { status, data } = await registerBison()
+  if (status) {
+    isRegister.value = userStore.validateInfoBison
+  } else {
+    isRegister.value = false
+    errors = Object.keys(data)
+  }
+
+}
+
+onBeforeMount(async () => {
+  await registerUser()
+})
+
 </script>
 
 <template>
-  <div class="success">
+  <div v-if="isRegister" class="content">
     <figure class="image is-64x64 success-image">
       <img src="/stepper/package/success.png" alt="">
     </figure>
@@ -33,30 +60,59 @@ onBeforeUnmount(() =>{
         <div class="summary-section">
           <h1>Nombre</h1>
           <p>
-            {{user.state.name}}
+            {{userStore.state.name}}
           </p>
           <hr>
         </div>
         <div class="summary-section">
           <h1>Documento de identidad</h1>
           <p>
-            {{user.state.document}}
+            {{userStore.state.document}}
           </p>
           <hr>
         </div>
         <div class="summary-section">
           <h1>Correo electrónico</h1>
           <p>
-            {{user.state.email}}
+            {{userStore.state.email}}
           </p>
           <hr>
         </div>
         <div class="summary-section">
           <h1>Vehiculo</h1>
           <p>
-            {{user.state.vehicle}}
+            {{userStore.state.vehicle}}
           </p>
           <hr>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else class="content">
+    <div class="fail">
+      <h1>!</h1>
+    </div>
+    <div class="title">
+      <h1>Registro Fallido</h1>
+    </div>
+    <div class="summary">
+      <div class="summary-header">
+        <h1>
+          Errores
+        </h1>
+      </div>
+      <div class="summary-content">
+<!--        <figure class="image is-64x64 logo">-->
+<!--          <img src="/stepper/avatar/logo-orange.png" alt="">-->
+<!--        </figure>-->
+        <div v-for="(value, index) in errors" :key="index">
+          <div class="summary-section">
+            <h1>{{errorsTranslation[value]}}</h1>
+            <p>
+              Al parecer ya existe un usuario con este {{errorsTranslation[value].toLowerCase()}}
+            </p>
+            <hr>
+          </div>
         </div>
       </div>
     </div>
@@ -65,13 +121,28 @@ onBeforeUnmount(() =>{
 </template>
 
 <style scoped>
-.success{
+.content{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   .success-image{
     margin-top: 30px;
+  }
+  .fail{
+    margin-top: 30px;
+    font-weight: bold;
+    color: var(--color-primary-orange);
+    border: #E47120 solid 7px;
+    border-radius: 50%;
+    width: 58px;
+    height: 58px;
+    text-align: center;
+    & h1{
+      font-size: 4.5rem;
+      font-weight: bold;
+      color: var(--color-primary-orange);
+    }
   }
   .title{
     & h1{
