@@ -9,6 +9,12 @@ const router = useRouter();
 const userStore = useUserManagementStore();
 
 //Errors that can be returned by the backend
+const nameState = ref<boolean>(true)
+const emailState = ref<boolean>(true)
+const documentState = ref<boolean>(true)
+const vehicleState = ref<boolean>(true)
+
+//Errors that can be returned by the backend
 const nameError = ref<boolean>(false)
 const emailError = ref<boolean>(false)
 const documentError = ref<boolean>(false)
@@ -19,6 +25,23 @@ const errors: {[key: string]: ref<boolean>} = {
   "email": emailError,
   "document": documentError,
   "vehicle": vehicleError
+}
+
+//validations
+function validateName(): void {
+  nameState.value = userStore.validateName
+}
+
+function validateEmail(): void {
+  emailState.value = userStore.validateEmail;
+}
+
+function validateDocument(): void {
+  documentState.value = userStore.validateDocument;
+}
+
+function validateVehicle(): void {
+  vehicleState.value = userStore.validateVehicle;
 }
 
 //Function to validate the fields
@@ -61,7 +84,6 @@ onBeforeUnmount(async () => {
 </script>
 
 <template>
-  {{userStore.validateInfoBison}}
   <form v-if="!isRegister" @submit.prevent="registerUser">
     <div class="form-content">
       <div class="form-inputs">
@@ -69,49 +91,53 @@ onBeforeUnmount(async () => {
         <h2>Nombre</h2>
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="userStore.state.name" class="input is-medium" type="text" placeholder="Nombre"
+            <input v-model.trim="userStore.state.name" @blur="validateName" class="input is-medium" type="text" placeholder="Nombre"
                    minlength="3" required>
             <span class="icon is-medium is-left">
                     <fa icon="user"></fa>
                     </span>
           </div>
-          <p v-if="nameError" class="help is-danger is-size-6">Nombre inválido</p>
+          <p v-if="nameError" class="help is-danger is-size-6">Al parecer hay un problema con el nombre ingresado</p>
+          <p v-if="!nameState" class="help is-danger is-size-6">Nombre inválido</p>
         </div>
 
         <h2>Documento de identidad</h2>
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="userStore.state.document" class="input is-medium" type="number"
+            <input v-model.trim="userStore.state.document" @blur="validateDocument" class="input is-medium" type="number"
                    placeholder="Documento de identidad" required>
             <span class="icon is-medium is-left">
                     <fa icon="id-card"></fa>
                     </span>
           </div>
-          <p v-if="documentError" class="help is-danger is-size-6">Documento inválido</p>
+          <p v-if="documentError" class="help is-danger is-size-6">Al parecer ya existe un usuario con este documento</p>
+          <p v-if="!documentState" class="help is-danger is-size-6">Documento inválido</p>
         </div>
 
         <h2>Correo electrónico</h2>
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="userStore.state.email" class="input is-medium" type="email"
+            <input v-model.trim="userStore.state.email" @blur="validateEmail" class="input is-medium" type="email"
                    placeholder="Correo electrónico" required>
             <span class="icon is-medium is-left">
                         <fa icon="envelope"></fa>
                         </span>
           </div>
-          <p v-if="emailError" class="help is-danger is-size-6">Correo electrónico inválido</p>
+          <p v-if="emailError" class="help is-danger is-size-6">Al parecer ya existe un usuario con este correo</p>
+          <p v-if="!emailState" class="help is-danger is-size-6">Correo inválido</p>
         </div>
 
         <h2>Placa del vehículo</h2>
         <div class="field">
           <div class="control has-icons-left">
-            <input v-model.trim="userStore.state.vehicle" class="input is-medium" type="text"
+            <input v-model.trim="userStore.state.vehicle" @blur="validateVehicle" class="input is-medium" type="text"
                    placeholder="Placa del vehiculo" required>
             <span class="icon is-medium is-left">
                         <fa icon="truck"></fa>
                         </span>
           </div>
-          <p v-if="vehicleError" class="help is-danger is-size-6">Placa inválida</p>
+          <p v-if="vehicleError" class="help is-danger is-size-6">Al parecer ya existe un usuario con este vehículo</p>
+          <p v-if="!vehicleState" class="help is-danger is-size-6">Placa inválida</p>
         </div>
 
         <div class="control">
