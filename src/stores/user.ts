@@ -105,6 +105,7 @@ export const useUserManagementStore = defineStore("userManagement", () => {
 
     //actions
     function filterBisonByEmail(email: string, users: User[]): User[] {
+        console.log(users.filter(user => user.email?.includes(email)))
         return users.filter(user => user.email?.includes(email))
     }
 
