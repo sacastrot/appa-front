@@ -3,13 +3,13 @@ import {Checkpoint, NationType, OrderType, type Service} from "@/types/intefaces
 import BaseApi from "@/services/axiosInstance";
 import {useUserStore} from "@/stores/user";
 
-export const getServicePrice = async (type: OrderType) => {
+export const getServicePrice = async (type: OrderType): Promise<number> => {
     const service = useServiceStore();
 
     if (type === OrderType.Package) {
 
         if (!service.state.package) {
-            return false;
+            return 0;
         }
 
         const packageData: { [key: string]: any } = {
@@ -26,10 +26,10 @@ export const getServicePrice = async (type: OrderType) => {
         try {
             const {data} = await BaseApi.post("/services/price/", packageData);
             service.setPrice(data.price)
-            return true;
+            return data.price;
         } catch (e) {
             console.log(e);
-            return false;
+            return 0;
         }
     } else if (type === OrderType.Carriage) {
         const carriageData: { [key: string]: string } = {
@@ -41,10 +41,10 @@ export const getServicePrice = async (type: OrderType) => {
         try {
             const {data} = await BaseApi.post("/services/price/", carriageData);
             service.setPrice(data.price)
-            return true;
+            return data.price;
         } catch (e) {
             console.log(e);
-            return false;
+            return 0;
         }
 
     } else {
