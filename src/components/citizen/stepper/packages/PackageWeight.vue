@@ -9,15 +9,26 @@ const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
-const weight = ref(serviceStore.state.package ? serviceStore.state.package.weight : undefined);
+const weight = ref(serviceStore.getWeight());
+const helpMessage = ref<string>("Ingresa el peso del paquete");
 
 watch(weight, (newWeight) => {
-  if (newWeight !== undefined) {
-    if (newWeight > 0 && newWeight < 500) {
-      emitValidateStep(true)
+  if (newWeight) {
+    if (newWeight > 0) {
+      if (newWeight < 500) {
+        helpMessage.value = "";
+        emitValidateStep(true)
+      } else {
+        helpMessage.value = "El peso del paquete debe ser menor que 500kg"
+        emitValidateStep(false)
+      }
     } else {
+      helpMessage.value = "El peso del paquete debe ser mayor que 0kg"
       emitValidateStep(false)
     }
+  }else {
+    helpMessage.value = "Ingresa el peso del paquete"
+    emitValidateStep(false)
   }
 })
 onBeforeUnmount(async () => {
@@ -26,6 +37,28 @@ onBeforeUnmount(async () => {
 })
 onBeforeMount(() => {
   weight.value = serviceStore.getWeight();
+  const validate = Boolean(weight.value)
+  const validateGtZero = Boolean(weight.value > 0)
+  const validateLtFiveHundred = Boolean(weight.value < 500)
+
+  if (validate) {
+    if (validateGtZero) {
+      if (validateLtFiveHundred) {
+        helpMessage.value = "";
+        emitValidateStep(true)
+      } else {
+        helpMessage.value = "El peso del paquete debe ser menor que 500kg"
+        emitValidateStep(false)
+      }
+    } else {
+      helpMessage.value = "El peso del paquete debe ser mayor que 0kg"
+      emitValidateStep(false)
+    }
+  }else {
+    helpMessage.value = "Ingresa el peso del paquete"
+    emitValidateStep(false)
+  }
+
   emitValidateStep(Boolean(weight.value !== undefined))
 })
 </script>
@@ -51,12 +84,19 @@ onBeforeMount(() => {
           </span>
           </p>
         </div>
+        <p class="help-message"> {{ helpMessage }} </p>
       </div>
     </div>
   </form>
 </template>
 
 <style scoped>
+.help-message {
+  color: var(--color-primary-red);
+  font-size: 1.2rem;
+  text-align: left;
+  margin-top: 10px;
+}
 form {
   .form-header {
     margin-bottom: 30px;

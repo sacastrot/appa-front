@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import {useRouter} from "vue-router";
-import {getCurrentUser, getUsersByRole} from "@/services/user";
+import {getUsersByRole} from "@/services/user";
 import HeaderName from "@/components/core/HeaderName.vue";
 import {Role} from "@/types/intefaces";
 import BisonCardHome from "@/components/avatar/BisonCardHome.vue";
+import {useUserStore} from "@/stores/user";
+
+const userStore = useUserStore();
 
 const showFirst = 4
-const userData = getCurrentUser()
 const router = useRouter();
 const headerData = {
-  name: userData.name.toString(),
+  name: userStore.currentName,
   message: "Bienvenido a la mejor aplicación de pedidos y acarreos."
 }
 const bisonList = getUsersByRole(Role.Bison, showFirst)

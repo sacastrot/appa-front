@@ -8,16 +8,11 @@ import NoOrders from "@/components/bison/NoOrders.vue";
 import {useUserStore} from "@/stores/user";
 import {onBeforeMount, ref} from "vue";
 import {getActiveService} from "@/services/service";
+import ActiveService from "@/components/bison/ActiveService.vue";
+import HistoryCardSekeleton from "@/components/core/HistoryCardSekeleton.vue";
 
 const user = useUserStore();
-// const currentPackage: PackageState | undefined = getCurrentPackage(user?.id!)
-// const currentCarriage: Carriage | undefined = getCurrentCarriage(user?.id!)
 
-// const order: Carriage | PackageState | undefined = currentPackage? currentPackage : currentCarriage
-const order = ref<Service>();
-onBeforeMount(async () => {
-  order.value = await getActiveService();
-});
 </script>
 
 <template>
@@ -27,9 +22,15 @@ onBeforeMount(async () => {
     name: user.currentName,
     message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
     }"/>
-    <BisonOrder v-if="order" :order="order"/>
+    <Suspense>
+      <template #default>
+        <ActiveService/>
+      </template>
+      <template #fallback>
+        <HistoryCardSekeleton class="skeleton"/>
+      </template>
+    </Suspense>
   </div>
-    <NoOrders class="mt-5" v-if="!order"/>
 </template>
 <style scoped>
 .home-page {
@@ -38,7 +39,7 @@ onBeforeMount(async () => {
   margin: 0 auto;
 }
 
-.no-order {
-  margin-top: 30px;
+.skeleton {
+  margin-top: 5rem;
 }
 </style>
