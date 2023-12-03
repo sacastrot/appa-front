@@ -69,6 +69,7 @@ export const useUserManagementStore = defineStore("userManagement", () => {
     })
 
 
+
     //validation
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -104,6 +105,7 @@ export const useUserManagementStore = defineStore("userManagement", () => {
 
     //actions
     function filterBisonByEmail(email: string, users: User[]): User[] {
+        console.log(users.filter(user => user.email?.includes(email)))
         return users.filter(user => user.email?.includes(email))
     }
 

@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import {useRouter} from "vue-router";
-import {getUsersByRole} from "@/services/user";
+import {getCurrentUser, getUsersByRole} from "@/services/user";
 import HeaderName from "@/components/core/HeaderName.vue";
-import {Role} from "@/types/intefaces";
+import {Role, type User} from "@/types/intefaces";
 import BisonCardHome from "@/components/avatar/BisonCardHome.vue";
-import {useUserStore} from "@/stores/user";
-
-const userStore = useUserStore();
+import { useUserStore } from "@/stores/user";
+import { onBeforeMount, ref } from "vue";
 
 const showFirst = 4
+const userData = useUserStore()
 const router = useRouter();
 const headerData = {
-  name: userStore.currentName,
+  name: userData.currentName,
   message: "Bienvenido a la mejor aplicación de pedidos y acarreos."
 }
-const bisonList = getUsersByRole(Role.Bison, showFirst)
+
+const bisonList = ref<User[] | undefined>([]);
+
+onBeforeMount(async () => {
+  bisonList.value = await getUsersByRole();
+})
 </script>
 <template>
   <main class="avatar-home-page">
@@ -23,7 +28,7 @@ const bisonList = getUsersByRole(Role.Bison, showFirst)
     <div class="bisontes">
       <div
           class="bisonte-card"
-          v-for="(bison) in bisonList"
+          v-for="(bison, index) in bisonList?.slice(0, showFirst)"
           :key="bison.id"
       >
         <BisonCardHome :name="bison.name" :email="bison.email"/>

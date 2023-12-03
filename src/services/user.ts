@@ -205,25 +205,85 @@ export const getLastService = async (userId: number): Promise<{status: boolean, 
 }
 
 
-export const getCurrentUser = (): User => {
+export const getCurrentUser = async (): Promise<{status: boolean, data: Object}> => {
     //This function was modified and does not work as expected !!!!
     const userStore = useUserStore();
+    const managementStore = useUserManagementStore();
 
-    let userData: User = {
-        id: undefined,
-        name: "",
-        vehicle: "",
-        password: undefined,
-        phone: undefined,
-        email: undefined,
-        document: undefined,
-        available: true,
-    };
+    try{
+        const {data} = await BaseApi.get(`/user/users/?id=${userStore.currentUser}`);
+        managementStore.setName(data.name);
+        managementStore.setPhone(data.phone);
+        managementStore.setEmail(data.email);
+        managementStore.setDocument(data.document);
+        managementStore.setVehicle(data.vehicle);
+        managementStore.setPassword(data.password);
+        return {
+            status : true,
+            data : data
+        }
+    }
+    catch (e: AxiosError) {
+        console.log(e);
+        return {
+            status : false,
+            data : e.response.data
+        }
+    }
+}	
 
-    return userData;
-}
 
-export const getUsersByRole = (targetRole: Role, limit:number = -1): User[] => {
+export const patchProfile = async (name: String, email: String, phone: String, password: String, document: String, vehicle: String): Promise<{status: boolean, data: Object}> => {
     //This function was modified and does not work as expected !!!!
-    return [];
-}
+    const userStore = useUserStore();
+    const managementStore = useUserManagementStore();
+
+    const userData: {[key: string]: any} = {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "password": password,
+        "document": document,
+        "vehicle": vehicle
+    }
+
+    try{
+        const {data} = await BaseApi.patch(`/user/update/${userStore.currentUser}/`, userData);
+        return {
+            status : true,
+            data : data
+        }
+    }
+    catch (e: AxiosError) {
+        console.log(e);
+        return {
+            status : false,
+            data : e.response.data
+        }
+    }
+}	
+
+
+export const getUsersByRole = async (): Promise<User[]> => {
+    try {
+        const { data } = await BaseApi.get('/user/users/?role=BISON');
+        
+        // Mapear cada bison a un objeto User y almacenarlo en un nuevo array
+        const users: User[] = data.map((bison : User) => ({
+            id: bison.id,
+            name: bison.name,
+            email: bison.email,
+            role: Role.Bison,  // Asumiendo que Role.Bison es una constante que define el rol
+            phone: bison.phone,
+            document: bison.document,
+            vehicle: bison.vehicle,
+            available: bison.available
+        }));
+        return users;
+    } catch (e: AxiosError) {
+        console.error(e);
+        return [];
+    }
+};
+
+
