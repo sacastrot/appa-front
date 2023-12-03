@@ -3,11 +3,11 @@
 import HistoryCarriages from "@/components/citizen/history/HistoryCarriages.vue";
 import {OrderType, Service} from "@/types/intefaces";
 import {ref} from "vue";
-import {getActiveService} from "@/services/service";
+import {getActiveService, getServiceByUser} from "@/services/service";
 const loadService = async (): Promise<{status: boolean, data: Service[]}> => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
-      const response = await getActiveService(OrderType.Carriage);
+      const response = await getServiceByUser(OrderType.Carriage);
       resolve(response);
     }, 3000);
   });

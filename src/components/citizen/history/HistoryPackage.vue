@@ -135,6 +135,7 @@ if (packageValue.arrived) {
 }
 
 .package-details {
+  cursor: pointer;
   position: absolute;
   right: 0;
   display: flex;
