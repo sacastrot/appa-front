@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
-import {useUserManagementStore} from "@/stores/user";
+import {computed, onBeforeUnmount, ref} from "vue";
+import {useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
-import {getCurrentUser, deleteUser} from "@/services/user";
+import {getCurrentUser, deleteCitizen} from "@/services/user";
 import {useRouter} from "vue-router";
+import {logout} from "@/services/user";
 
 
-const userStore = useUserManagementStore();
+const userStore = useUserStore();
 const router = useRouter();
 const modalActive = ref<boolean>(false);
 const readOnly = ref<boolean>(true);
 
 const user = getCurrentUser()
+console.log(user);
 
 const name = ref<string | undefined>(user.name);
 const email = ref<string | undefined>(user.email);
@@ -19,7 +21,8 @@ const password = ref<string | undefined>(user.password);
 const phone = ref<number | undefined>(user.phone);
 
 const role = user.role;
-const document = user.id;
+const document = userStore.currentUser;
+console.log(document);
 const vehicle = user.vehicle;
 
 
@@ -99,9 +102,7 @@ function editProfile() {
 }
 
 function deleteAccount() {
-  if (document != undefined){
-    deleteUser(document)
-  }
+  deleteCitizen(document);
   router.push("/login")
 }
 

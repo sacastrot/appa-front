@@ -153,15 +153,35 @@ export const registerBison = async (): Promise<{status: boolean, data: Object}> 
     }
 }
 
-export const deleteUser = async (userId: number): Promise<{data: Object}> => {
+export const deleteBison = async (userId: number): Promise<{status:boolean, data: Object}> => {
     try {
         const {data} = await BaseApi.delete(`/user/delete/${userId}/`);
-        console.log(`/user/delete/${userId}/`);
         return {
+            status: true,
             data : data
         }
     } catch (e: any) {
         return {
+            status: false,
+            data : e.response.data
+        }
+    }
+}
+
+
+
+export const deleteCitizen = async (userId: number): Promise<{status:boolean, data: Object}> => {
+    try {
+        const {data} = await BaseApi.delete(`/user/delete/${userId}/`);
+        window.sessionStorage.removeItem("userData");
+        window.location.reload();
+        return {
+            status: true,
+            data : data
+        }
+    } catch (e: any) {
+        return {
+            status: false,
             data : e.response.data
         }
     }
