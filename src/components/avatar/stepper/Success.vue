@@ -93,18 +93,10 @@ onBeforeMount(async () => {
       <h1>!</h1>
     </div>
     <div class="title">
-      <h1>Registro Fallido</h1>
+      <h1 class="fail-message">Registro Fallido</h1>
     </div>
     <div class="summary">
-      <div class="summary-header">
-        <h1>
-          Errores
-        </h1>
-      </div>
       <div class="summary-content">
-<!--        <figure class="image is-64x64 logo">-->
-<!--          <img src="/stepper/avatar/logo-orange.png" alt="">-->
-<!--        </figure>-->
         <div v-for="(value, index) in errors" :key="index">
           <div class="summary-section">
             <h1>{{errorsTranslation[value]}}</h1>
@@ -132,8 +124,7 @@ onBeforeMount(async () => {
   .fail{
     margin-top: 30px;
     font-weight: bold;
-    color: var(--color-primary-orange);
-    border: #E47120 solid 7px;
+    border: var(--color-primary-red) solid 7px;
     border-radius: 50%;
     width: 58px;
     height: 58px;
@@ -141,7 +132,7 @@ onBeforeMount(async () => {
     & h1{
       font-size: 4.5rem;
       font-weight: bold;
-      color: var(--color-primary-orange);
+      color: var(--color-primary-red);
     }
   }
   .title{
@@ -149,6 +140,9 @@ onBeforeMount(async () => {
       font-size: 3.5rem;
       font-weight: bold;
       color: var(--color-primary-orange);
+    }
+    .fail-message {
+      color: var(--color-primary-red);
     }
   }
   .summary{
