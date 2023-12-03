@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {onBeforeMount, ref, watch} from "vue";
 import type {User} from "@/types/intefaces";
 import {Role} from "@/types/intefaces";
 import {useUserManagementStore} from "@/stores/user";
@@ -9,12 +9,21 @@ import BisonCard from "@/components/avatar/BisonCard.vue";
 const store = useUserManagementStore();
 const search = ref<string>("");
 
-const bisonList: User[] = getUsersByRole(Role.Bison);
-let filteredBisonList = ref<User[] | undefined[]>(bisonList);
+const bisonList = ref<User[] | undefined>([]);
+let filteredBisonList = ref<User[] | undefined>([]);
+
+onBeforeMount(async () => {
+  const users = await getUsersByRole();
+  bisonList.value = users;
+  filteredBisonList.value = users;
+})
+
+
+
 
 watch([search], () => {
   filteredBisonList.value = store.filterBisonByEmail(
-      search.value.toLowerCase().trim(), []
+      search.value.toLowerCase().trim(), bisonList.value || []
   )
 })
 
