@@ -7,8 +7,9 @@ import {useServiceStore} from "@/stores/service";
 const serviceStore = useServiceStore();
 
 //Data to send store
-const originNation = ref<NationType>(serviceStore.state.origin_nation)
-const originCheckpoint = ref<Checkpoint>(serviceStore.state.origin_checkpoint)
+const originNation = ref<NationType>(serviceStore.getOriginNation())
+const originCheckpoint = ref<Checkpoint>(serviceStore.getOriginCheckpoint())
+const helpMessage = ref<string>("Selecciona una nación y un punto de control válido")
 
 //Validate form
 const emit = defineEmits(["validateStep"]);
@@ -19,8 +20,10 @@ const emitValidateStep = (validateValue: boolean) => {
 watch([originNation, originCheckpoint], ([newOriginNation, newOriginCheckpoint]) => {
   if(newOriginNation !== NationType.Unknown && newOriginCheckpoint !== Checkpoint.Unknown) {
     emitValidateStep(true)
+    helpMessage.value = ""
   }else {
     emitValidateStep(false)
+    helpMessage.value = "Selecciona una nación y un punto de control válido"
   }
 })
 
@@ -46,7 +49,9 @@ onBeforeMount(() => {
   checkpointList.value = getCheckpoints(originNation.value);
 
   //Validate form if is already filled
-  emitValidateStep(Boolean(originNation.value != NationType.Unknown && originCheckpoint.value !== Checkpoint.Unknown))
+  const validate = (originNation.value !== NationType.Unknown && originCheckpoint.value !== Checkpoint.Unknown)
+  emitValidateStep(validate)
+  helpMessage.value = validate ? "" : "Selecciona una nación y un punto de control válido"
 })
 
 </script>
@@ -81,10 +86,17 @@ onBeforeMount(() => {
         </p>
       </div>
     </div>
+    <p class="help-message"> {{ helpMessage }} </p>
   </form>
 </template>
 
 <style scoped>
+.help-message {
+  color: var(--color-primary-red);
+  font-size: 1.2rem;
+  margin-top: 10px;
+
+}
 form {
   .form-header {
     max-width: 80%;

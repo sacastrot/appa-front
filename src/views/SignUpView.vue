@@ -1,22 +1,39 @@
 <script setup lang="ts">
 import Logo from '@/components/core/Logo.vue';
+import { registerCitizen } from '@/services/user';
 import {useUserManagementStore} from "@/stores/user";
-import {ref} from 'vue';
+import {onBeforeUnmount, ref} from 'vue';
 import {useRouter} from "vue-router";
 
+const router = useRouter()
 //Store to save the user data
-const user = useUserManagementStore();
+const userStore = useUserManagementStore();
 //User fields (Citizen)
 const password2 = ref<string>("")
 
 //States to validate the fields
-const emailState = ref<boolean>(true)
-const nameState = ref<boolean>(true)
+const emailState = ref<boolean>(false)
+const nameState = ref<boolean>(false)
 const password1State = ref<boolean>(true)
 const password2State = ref<boolean>(true)
 const invalidFileds = ref<boolean>(false)
 
-const router = useRouter()
+const errors: {[key: string]: ref<boolean>} = {
+  "name": nameState,
+  "email": emailState
+}
+
+//Function to validate the fields
+function checkErrors(data: Array<string>): void {
+  // Reset errors
+  nameState.value = false
+  emailState.value = false
+
+  data.forEach( (error: string) => {
+    if (errors.hasOwnProperty(error))
+      errors[error].value = true
+  })
+}
 
 //Exchange icon and password type
 const showPassword = ref<string>("password")
@@ -33,26 +50,33 @@ const togglePassword = () => {
 }
 
 function validateEmail(): void {
-  emailState.value = user.validateEmail;
+  emailState.value = !userStore.validateEmail;
 }
 
 function validateName(): void {
-  nameState.value = user.validateName
+  nameState.value = !userStore.validateName
 }
 
 function validatePassword1(): void {
-  password1State.value = user.validatePassword;
+  password1State.value = userStore.validatePassword;
 }
 
 function validatePassword2(password2: string): void {
-  password2State.value = user.state.password === password2;
+  password2State.value = userStore.state.password === password2;
 }
 
-const userRegister = () => {
-  user.addUser()
-  user.resetUser()
-  router.push("/login")
+const userRegister = async () => {
+  const { status, data } = await registerCitizen()
+  if (!status) {
+    checkErrors(Object.keys(data))
+  } else {
+    router.push("/login")
+  }
 }
+
+onBeforeUnmount(async () => {
+  userStore.resetUser()
+})
 
 </script>
 <template>
@@ -62,21 +86,21 @@ const userRegister = () => {
       <form @submit.prevent="userRegister">
         <div class="field">
           <div class="control">
-            <input v-model="user.state.email" @blur="validateEmail" class="input is-large" type="email"
+            <input v-model="userStore.state.email" @blur="validateEmail" class="input is-large" type="email"
                    placeholder="Correo eletrónico">
           </div>
-          <p v-if="!emailState" class="help is-danger">Correo electrónico inválido</p>
+          <p v-if="emailState" class="help is-danger">Correo electrónico inválido</p>
         </div>
         <div class="field">
           <div class="control">
-            <input v-model="user.state.name" @blur="validateName" class="input is-large" type="text"
+            <input v-model="userStore.state.name" @blur="validateName" class="input is-large" type="text"
                    placeholder="Nombre">
           </div>
-          <p v-if="!nameState" class="help is-danger">Nombre inválido</p>
+          <p v-if="nameState" class="help is-danger">Nombre inválido</p>
         </div>
         <div class="field password">
           <div class="control has-icons-right">
-            <input v-model="user.state.password" @blur="validatePassword1" class="input is-large" :type="showPassword"
+            <input v-model="userStore.state.password" @blur="validatePassword1" class="input is-large" :type="showPassword"
                    placeholder="Contraseña">
             <span @click="togglePassword" class="icon is-small is-right">
               <span class="material-symbols-outlined eye">
@@ -109,7 +133,7 @@ const userRegister = () => {
           <p v-if="!password2State" class="help is-danger">Las contraseñas no coinciden</p>
         </div>
         <div class="form-actions mt-6">
-          <button class="button is-large signup" :disabled="!user.validateInfoCitizen || !password2State || !password2" type="submit">
+          <button class="button is-large signup" :disabled="!userStore.validateInfoCitizen || !password2State || !password2" type="submit">
             Registrarse
           </button>
         </div>

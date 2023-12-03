@@ -32,24 +32,32 @@ export const useServiceStore = defineStore("service", () => {
     function getOriginNation() {
         if (state.value.origin_nation) {
             return state.value.origin_nation
+        } else {
+            return NationType.Unknown
         }
     }
 
     function getOriginCheckpoint() {
         if (state.value.origin_checkpoint) {
             return state.value.origin_checkpoint
+        } else {
+            return Checkpoint.Unknown
         }
     }
 
     function getDestinyNation() {
         if (state.value.destiny_nation) {
             return state.value.destiny_nation
+        } else {
+            return NationType.Unknown
         }
     }
 
     function getDestinyCheckpoint() {
         if (state.value.destiny_checkpoint) {
             return state.value.destiny_checkpoint
+        } else {
+            return Checkpoint.Unknown
         }
     }
 

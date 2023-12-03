@@ -27,26 +27,30 @@ const emitUpdate = () => {
         message: 'Ingrese el costo final del pedido asociado cuando sea oportuno',
       }"
   />
+  <main class="content-page">
+    <div class="field">
+      <p class="control has-icons-left">
+        <input v-model="price" class="input is-medium" type="number" placeholder="Precio">
+        <span class="icon is-small is-left">
+                <fa icon="dollar-sign"></fa>
+              </span>
+      </p>
+    </div>
+    <div class="button-container">
+      <button class="button back is-primary is-large" @click="emitBack">
+        Atrás
+      </button>
+      <button class="button update is-primary is-large" @click="emitUpdate">
+        Actualizar
+      </button>
+    </div>
+  </main>
 
-  <div class="field">
-    <p class="control has-icons-left">
-      <input v-model="price" class="input is-medium" type="number" placeholder="Precio">
-      <span class="icon is-small is-left">
-              <fa icon="dollar-sign"></fa>
-            </span>
-    </p>
-  </div>
-  <div class="button-container">
-    <button class="button back is-primary is-large" @click="emitBack">
-      Atrás
-    </button>
-    <button class="button update is-primary is-large" @click="emitUpdate">
-      Actualizar
-    </button>
-  </div>
 </template>
 
 <style scoped>
+
+
 .button-container {
   position: absolute;
   width: 100vw;
@@ -85,6 +89,14 @@ const emitUpdate = () => {
     cursor: pointer;
     padding: 0.5rem 3rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.field {
+  max-width: 80rem;
+  margin: 2rem auto;
+  & input{
+    font-size: 1.4rem;
   }
 }
 </style>

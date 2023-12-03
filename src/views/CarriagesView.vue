@@ -1,19 +1,9 @@
 <script setup lang="ts">
 import NewCarriage from "@/components/citizen/history/NewCarriage.vue";
-import HistoryCarriages from "@/components/citizen/history/HistoryCarriages.vue";
-import {onBeforeMount, ref} from "vue";
-import {OrderType, Service} from "@/types/intefaces";
-import {getServiceByUser} from "@/services/service";
-
+import {ref} from "vue";
+import HistoryCarriagesList from "@/components/citizen/history/HistoryCarriagesList.vue";
+import HistoryCardSekeleton from "@/components/core/HistoryCardSekeleton.vue";
 const showInformation = ref<boolean>(false);
-
-const carriages = ref<Service[]>([]);
-
-onBeforeMount(async () => {
-  carriages.value = await getServiceByUser(OrderType.Carriage);
-})
-
-
 </script>
 
 <template>
@@ -60,7 +50,14 @@ onBeforeMount(async () => {
         <button class="modal-close is-large" aria-label="close" @click="showInformation = false"></button>
       </div>
     </div>
-    <HistoryCarriages v-for="(carriage, index) in carriages"  :key="index"  :carriage="carriage"/>
+    <Suspense>
+      <template #default>
+        <HistoryCarriagesList/>
+      </template>
+      <template #fallback>
+        <HistoryCardSekeleton class="mb-6" v-for="value in 4"/>
+      </template>
+    </Suspense>
   </main>
 </template>
 
@@ -82,6 +79,12 @@ onBeforeMount(async () => {
     justify-content: space-between;
 
     .title {
+      & h1 {
+        font-size: 1.8rem;
+        color: var(--title-section);
+        font-weight: bold;
+        padding-top: 15px;
+      }
       & p {
         font-size: 1.2rem;
         padding-bottom: 15px;
@@ -157,7 +160,4 @@ onBeforeMount(async () => {
     }
   }
 }
-
-
-
 </style>

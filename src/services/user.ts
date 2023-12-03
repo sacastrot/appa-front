@@ -82,6 +82,40 @@ export const loadRouteLogin = (): void => {
     }
 }
 
+export const registerCitizen = async (): Promise<{status: boolean, data: Object}> => {
+    const userStore = useUserManagementStore()
+    if (!userStore.state)
+        return {
+            status: true,
+            data: {
+                message: "There is no data to register"
+            }
+        }
+
+    const userData: {[key: string]: any} = {
+        "name": userStore.getName(),
+        "email": userStore.getEmail(),
+        "password": userStore.getPassword(),
+        "phone": userStore.setPhone(0),
+        "document": userStore.setDocument(""),
+        "vehicle": userStore.setVehicle(""),
+    }
+    try {
+
+        const {data} = await BaseApi.post('register/', userData)
+        return {
+            status: true,
+            data: data
+        }
+
+    } catch (error: AxiosError){
+        return {
+            status: false,
+            data: error.response.data
+        }
+    }
+
+}
 
 export const registerBison = async (): Promise<{status: boolean, data: Object}> => {
     const userStore = useUserManagementStore()
@@ -90,7 +124,7 @@ export const registerBison = async (): Promise<{status: boolean, data: Object}> 
         return {
             status: true,
             data: {
-                message: "The is no data to register"
+                message: "There is no data to register"
             }
         }
 
@@ -120,7 +154,7 @@ export const registerBison = async (): Promise<{status: boolean, data: Object}> 
 }
 
 
-export const getLastService = async (userId: number): Promise<Service> => {
+export const getLastService = async (userId: number): Promise<{status: boolean, data: Service}> => {
     try {
         const {data} = await BaseApi.get(`/user/last-service/${userId}/`);
         if (data.created) {
@@ -131,33 +165,9 @@ export const getLastService = async (userId: number): Promise<Service> => {
         }
         data.type = data.type === "PACKAGE" ? OrderType.Package : OrderType.Carriage;
 
-        return data;
+        return {status: true, data: data};
     } catch (e) {
-        console.log(e);
-        return <Service>{
-            id: 0,
-            citizen: undefined,
-            bison: undefined,
-            type: OrderType.Undefined,
-            created: undefined,
-            arrived: undefined,
-            price: undefined,
-            origin_nation: NationType.Unknown,
-            origin_checkpoint: Checkpoint.Unknown,
-            destiny_nation: NationType.Unknown,
-            destiny_checkpoint: Checkpoint.Unknown,
-            package: <Package>{
-                width: undefined,
-                length: undefined,
-                height: undefined,
-                weight: undefined,
-            },
-            carriage: <Carriage>{
-                pickUp: undefined,
-                description: undefined,
-            },
-            guide: undefined,
-        };
+        return {status: false, data: {} as Service};
     }
 }
 

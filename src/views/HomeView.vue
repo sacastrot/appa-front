@@ -6,6 +6,8 @@ import type {User} from "@/types/intefaces";
 import {getCurrentUser} from "@/services/user";
 import HeaderName from "@/components/core/HeaderName.vue";
 import {useUserStore} from "@/stores/user";
+import Loader from "@/components/core/Loader.vue";
+import CardSkeleton from "@/components/core/CardSkeleton.vue";
 
 
 const isActive = ref(false);
@@ -34,7 +36,14 @@ const user = useUserStore();
     </div>
     <div class="last-order">
       <h2>Último pedido</h2>
-      <LastOrderInfo/>
+      <Suspense>
+        <template #default>
+          <LastOrderInfo/>
+        </template>
+        <template #fallback>
+          <CardSkeleton/>
+        </template>
+      </Suspense>
     </div>
 
     <h2>Calculadora</h2>
@@ -109,6 +118,7 @@ header .image {
   font-size: 1.5rem;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
 }
+
 .action-button {
   position: fixed;
   bottom: 30px;
