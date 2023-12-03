@@ -154,4 +154,12 @@ interface CheckpointCoordinates {
     x: number;
     y: number;
 }
-export type {Steps, StepComponent, PackageState,Package, Carriage,Guide, Bisonte, CheckpointCoordinates, User, Service, UserData}
+
+interface LineData {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    color: string;
+}
+export type {Steps, StepComponent, PackageState,Package, Carriage,Guide, Bisonte, CheckpointCoordinates, User, Service, UserData, LineData}

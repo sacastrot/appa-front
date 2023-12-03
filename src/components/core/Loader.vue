@@ -14,7 +14,7 @@
   width: 60px;
   height: 60px;
   margin: -76px 0 0 -76px;
-  border: 10px solid var(--color-primary-orange);
+  border: 10px solid var(--color-secondary-gray);
   border-radius: 50%;
   border-top: 10px solid var(--color-primary-orange);
   -webkit-animation: spin 2s linear infinite;

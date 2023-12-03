@@ -12,7 +12,6 @@ import {
 } from "@/types/intefaces";
 import BaseApi from "@/services/axiosInstance";
 import {useRouter} from "vue-router";
-import type {AxiosError} from "axios";
 
 export const login = async (user: UserData): Promise<boolean> => {
     const userStore = useUserStore();
@@ -108,7 +107,7 @@ export const registerCitizen = async (): Promise<{status: boolean, data: Object}
             data: data
         }
 
-    } catch (error: AxiosError){
+    } catch (error: any){
         return {
             status: false,
             data: error.response.data
@@ -144,7 +143,7 @@ export const registerBison = async (): Promise<{status: boolean, data: Object}> 
             data: data
         }
 
-    } catch (error: AxiosError){
+    } catch (error: any){
         console.log(error.response.data)
         return {
             status: false,

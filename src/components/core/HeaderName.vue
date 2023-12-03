@@ -23,6 +23,10 @@ const {data} = defineProps<{
 </template>
 
 <style scoped>
+header {
+  max-width: 80rem;
+  width: 92%;
+}
 header .image {
   padding: 2rem 1.5rem 0 0;
   height: 12rem;

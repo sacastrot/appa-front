@@ -2,6 +2,7 @@ import {useServiceStore} from "@/stores/service";
 import {Checkpoint, NationType, OrderType, type Service} from "@/types/intefaces";
 import BaseApi from "@/services/axiosInstance";
 import {useUserStore} from "@/stores/user";
+import type {AxiosError} from "axios";
 
 export const getServicePrice = async (type: OrderType): Promise<number> => {
     const service = useServiceStore();
@@ -200,7 +201,7 @@ export const updateService = async (serviceId: number, current_nation: NationTyp
 
 export const getServiceById = async (serviceId: number): Promise<Service | undefined> => {
     try {
-        const {data} = await BaseApi.get(`/services/${serviceId}/`);
+        const {data} = await BaseApi.get(`/services/get/${serviceId}/`);
         if (data.created) {
             data.created = new Date(data.created);
         }
@@ -212,6 +213,46 @@ export const getServiceById = async (serviceId: number): Promise<Service | undef
     } catch (e) {
         console.log(e);
         return undefined;
+    }
+}
+
+export const trackService = async (guide: number): Promise<{status: boolean, data: {path: string[], current_checkpoint: string}}> => {
+
+    try{
+        const guideData = await BaseApi.get(`/service/track/${guide}`);
+        const service = await getServiceById(guideData.data.service)
+        if(service){
+            let path = await getPath(service.origin_checkpoint, service.destiny_checkpoint)
+            path = path.map((elemento) => {
+                return elemento.replace(/\s/g, '');
+            });
+            const response  = {
+                path: path,
+                current_checkpoint: guideData.data.current_checkpoint.replace(/\s/g, '')
+            }
+
+            return {
+                status: true,
+                data: response
+            }
+        }
+
+        return {
+            status: false,
+            data: {
+                path: [] as string [],
+                current_checkpoint: ''
+            }
+        }
+    } catch (error: any){
+        console.log(error)
+        return {
+            status: false,
+            data: {
+                path: [error.response.data],
+                current_checkpoint: ''
+            }
+        }
     }
 }
 
