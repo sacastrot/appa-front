@@ -4,21 +4,69 @@ import type {User} from "@/types/intefaces";
 import {Role} from "@/types/intefaces";
 
 export const useUserStore = defineStore("user", () => {
+
+    const currentUser = ref<number | undefined>(undefined);
+    const currentName = ref<string | undefined>(undefined);
+    const currentRole = ref<Role>();
+    const currentToken = ref<string | undefined>(undefined);
+
+    const setToken = (token: string | undefined) => {
+        if (token) {
+            currentToken.value = token;
+        }
+    }
+
+    //actions
+    function logout() {
+        currentUser.value = undefined;
+        currentName.value = undefined;
+        currentRole.value = undefined;
+        currentToken.value = undefined;
+    }
+
+    function setCurrentName(name: string | undefined) {
+        if (name) {
+            currentName.value = name;
+        }
+    }
+
+    function setCurrentUser(id: number | undefined) {
+        if (id) {
+            currentUser.value = id;
+        }
+    }
+
+    function setCurrentRole(role: Role | undefined) {
+        if (role !== undefined) {
+            currentRole.value = role;
+        }
+    }
+
+    return {
+        logout,
+        currentUser,
+        currentRole,
+        currentName,
+        currentToken,
+        setToken,
+        setCurrentUser,
+        setCurrentRole,
+        setCurrentName,
+    }
+});
+
+
+export const useUserManagementStore = defineStore("userManagement", () => {
     const state = ref<User>({
         id: undefined,
         name: undefined,
         email: undefined,
         password: undefined,
         phone: undefined,
-        role: Role.Citizen,
         vehicle: undefined,
+        document: undefined,
         available: true,
     })
-    const loadData = ref(false);
-    const users = ref<User[]>([])
-    const currentUser = ref<number | undefined>(undefined);
-    const currentRole = ref<Role>();
-    const currentToken = ref<string | undefined>(undefined);
 
 
     //validation
@@ -33,85 +81,49 @@ export const useUserStore = defineStore("user", () => {
         return false
     });
 
-    const validateId = computed(() => {
-
-        if (state.value.id !== undefined && state.value.id !== 0 && state.value.id !== null && (state.value.id).toString().length !== 0) {
-            const response = searchUserById(state.value.id);
-            return response === undefined
-        }
-        return false
+    const validateDocument = computed(() => {
+        return (state.value.document !== undefined) && (state.value.document !== null) && ((state.value.document).toString().length !== 0)
     });
 
     const validateEmail = computed(() => {
-        if (state.value.email) {
-            if (emailRegex.test(state.value.email)) {
-                const response = searchUserByEmail(state.value.email);
-                return response === undefined
-            }
-        }
-        return false
+        return  emailRegex.test(state.value.email as string)
     });
 
     const validateVehicle = computed(() => {
-        if (state.value.vehicle) {
-            const response = searchUserByVehicle(state.value.vehicle);
-            return response === undefined
-        }
+        if (state.value.vehicle)
+            return state.value.vehicle.length > 3
+
         return false
     });
 
-    const setToken = (token: string | undefined) => {
-        if (token) {
-            currentToken.value = token;
-        }
-    }
 
     const validatePassword = computed(() => {
         return passwordRegex.test(state.value.password as string);
     });
 
 
+    //actions
+    function filterBisonByEmail(email: string, users: User[]): User[] {
+        return users.filter(user => user.email?.includes(email))
+    }
+
     const validateInfoBison = computed(() => {
-        return !(validateName.value && validateId.value && validateEmail.value && validateVehicle.value)
+        return (validateName.value) && (validateDocument.value) && (validateEmail.value && validateVehicle.value)
     });
 
     const validateInfoCitizen = computed(() => {
         return validateEmail.value && validateName.value && validatePassword.value
     });
 
-    //actions
-    function searchUserByVehicle(vehicle: string): User | undefined {
-        return users.value.find(user => user.vehicle === vehicle)
-    }
 
-    function searchUserByEmail(email: string): User | undefined {
-        return users.value.find(user => user.email === email)
-    }
-
-    function searchUserById(id: number): User | undefined {
-        return users.value.find(user => user.id === id)
-    }
-
-    function filterBisonByEmail(email: string): User[] {
-        return users.value.filter(user => user.email?.includes(email) && user.role === Role.Bison)
-    }
-
-
-    function logout() {
-        currentUser.value = undefined;
-        currentRole.value = undefined;
-        currentToken.value = undefined;
-        resetUser();
-    }
-
+    //Remove in integration with backend
     function addUser() {
-        users.value.push(state.value)
+        return
     }
 
+    //Remove in integration with backend
     function deleteUser(id: number | undefined) {
-        if (!id) return;
-        const index = users.value.findIndex(user => user.id === id);
-        users.value.splice(index, 1);
+        return
     }
 
 
@@ -139,51 +151,58 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    function setRole(role: Role) {
-        state.value.role = role;
-    }
-
     function setVehicle(vehicle: string | undefined) {
         if (vehicle) {
             state.value.vehicle = vehicle;
         }
     }
 
+    function setDocument(document: string) {
+        state.value.document = document;
+    }
+
+    //This function will be removed (backend must create a password)
     function setRandomPassword() {
-        if (state.value.vehicle && state.value.id !== undefined) {
-            state.value.password = (state.value.vehicle + state.value.id).toString();
-        }
-    }
-
-    function setDefaultId() {
-        let tempId = Math.floor(Math.random() * 1000000000000000);
-        while (searchUserById(tempId)) {
-            tempId = Math.floor(Math.random() * 1000000000000000);
-        }
-        state.value.id = tempId;
-    }
-
-    function setAvailable(available: boolean, userId: number): void {
-        const user: User | undefined = users.value.find(user => user.id === userId)
-        if (user)
-            user.available = available
-    }
-
-    function setCurrentUser(id: number | undefined) {
-        if (id) {
-            currentUser.value = id;
-        }
-    }
-
-    function setCurrentRole(role: Role | undefined) {
-        if (role !== undefined) {
-            currentRole.value = role;
+        if (state.value.vehicle && state.value.document !== undefined) {
+            state.value.password = (state.value.vehicle + state.value.document).toString();
         }
     }
 
     function getName() {
-        if (!state.value.name) return "";
+        if (!state.value.name)
+            return "";
         return state.value.name;
+    }
+
+    function getEmail(): string {
+        if (!state.value.email)
+            return ""
+        return state.value.email
+    }
+
+    function getPhone(): number | null {
+        if (!state.value.phone)
+            return null
+        return state.value.phone
+    }
+
+    function getVehicle(): string {
+        if (!state.value.vehicle)
+            return ""
+        return state.value.vehicle
+    }
+
+    function getDocument(): string {
+        if (!state.value.document)
+            return ""
+        return state.value.document
+    }
+
+    //This function will be removed (backend must create a password)
+    function getPassword(): string {
+        if (!state.value.password)
+            return ""
+        return state.value.password
     }
 
     function resetUser() {
@@ -193,8 +212,8 @@ export const useUserStore = defineStore("user", () => {
             email: undefined,
             password: undefined,
             phone: undefined,
-            role: Role.Citizen,
             vehicle: undefined,
+            document: undefined,
             available: true,
         }
     }
@@ -205,33 +224,25 @@ export const useUserStore = defineStore("user", () => {
         setEmail,
         setPassword,
         setPhone,
-        setRole,
         setVehicle,
-        logout,
+        setDocument,
         addUser,
         resetUser,
-        users,
         validateName,
-        validateId,
+        validateDocument,
         validateEmail,
         validateVehicle,
         validatePassword,
         validateInfoCitizen,
-        validateInfoUser: validateInfoBison,
-        searchUserByVehicle,
-        searchUserByEmail,
-        searchUserById,
-        currentUser,
-        currentRole,
+        validateInfoBison,
         setRandomPassword,
-        setDefaultId,
         deleteUser,
         filterBisonByEmail,
-        setAvailable,
-        setToken,
-        setCurrentUser,
-        setCurrentRole,
-        currentToken,
         getName,
+        getEmail,
+        getPhone,
+        getVehicle,
+        getDocument,
+        getPassword
     }
 });

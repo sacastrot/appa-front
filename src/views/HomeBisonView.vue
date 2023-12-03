@@ -24,7 +24,7 @@ onBeforeMount(async () => {
   <Hero :title="'Pedido asociado'"/>
   <div class="home-page">
     <HeaderName :data="{
-    name: user.getName(),
+    name: user.currentName,
     message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
     }"/>
     <BisonOrder v-if="order" :order="order"/>

@@ -1,4 +1,4 @@
-import {useUserStore} from "@/stores/user";
+import {useUserStore, useUserManagementStore} from "@/stores/user";
 import {
     type Carriage,
     Checkpoint,
@@ -12,6 +12,7 @@ import {
 } from "@/types/intefaces";
 import BaseApi from "@/services/axiosInstance";
 import {useRouter} from "vue-router";
+import type {AxiosError} from "axios";
 
 export const login = async (user: UserData): Promise<boolean> => {
     const userStore = useUserStore();
@@ -24,7 +25,7 @@ export const login = async (user: UserData): Promise<boolean> => {
         const decodedToken = JSON.parse(atob(data.access.split('.')[1]));
         userStore.setCurrentUser(decodedToken.user_id);
         userStore.setCurrentRole(stringToRole[decodedToken.user_role]);
-        userStore.state.name = decodedToken.user_name;
+        userStore.setCurrentName(decodedToken.user_name);
         window.sessionStorage.setItem('userData', btoa(JSON.stringify(data)));
         return true;
     }
@@ -57,6 +58,7 @@ export const loadToken = (): void => {
         userStore.setToken(decodedData.access);
         const decodedToken = JSON.parse(atob(decodedData.access.split('.')[1]));
         userStore.setCurrentUser(decodedToken.user_id);
+        userStore.setCurrentName(decodedToken.user_name);
         userStore.setCurrentRole(stringToRole[decodedToken.user_role]);
     }
 
@@ -80,44 +82,77 @@ export const loadRouteLogin = (): void => {
     }
 }
 
-export const getCurrentUser = (): User => {
-    const userStore = useUserStore();
+export const registerCitizen = async (): Promise<{status: boolean, data: Object}> => {
+    const userStore = useUserManagementStore()
+    if (!userStore.state)
+        return {
+            status: true,
+            data: {
+                message: "There is no data to register"
+            }
+        }
 
-    let userData: User = {
-        id: undefined,
-        name: "",
-        vehicle: "",
-        role: Role.Citizen,
-        password: undefined,
-        phone: undefined,
-        email: undefined,
-        available: true,
-    };
+    const userData: {[key: string]: any} = {
+        "name": userStore.getName(),
+        "email": userStore.getEmail(),
+        "password": userStore.getPassword(),
+        "phone": userStore.setPhone(0),
+        "document": userStore.setDocument(""),
+        "vehicle": userStore.setVehicle(""),
+    }
+    try {
 
-    if(userStore.currentUser){
-        const temp = userStore.searchUserById(userStore.currentUser);
-        if (temp){
-            userData = temp;
+        const {data} = await BaseApi.post('register/', userData)
+        return {
+            status: true,
+            data: data
+        }
+
+    } catch (error: AxiosError){
+        return {
+            status: false,
+            data: error.response.data
         }
     }
 
-    return userData;
 }
 
-export const getUsersByRole = (targetRole: Role, limit:number = -1): User[] => {
-    const userStore = useUserStore();
-    const filteredUsers = userStore.users.filter(user => user.role === targetRole);
-    if(limit !== -1){
-        return filteredUsers.slice(0,limit);
+export const registerBison = async (): Promise<{status: boolean, data: Object}> => {
+    const userStore = useUserManagementStore()
+
+    if (!userStore.state)
+        return {
+            status: true,
+            data: {
+                message: "There is no data to register"
+            }
+        }
+
+    const userData: {[key: string]: any} = {
+        "name": userStore.getName(),
+        "email": userStore.getEmail(),
+        "password": userStore.getPassword(),
+        "phone": userStore.getPhone(),
+        "document": userStore.getDocument(),
+        "vehicle": userStore.getVehicle(),
     }
-    return filteredUsers;
+    try {
+
+        const {data} = await BaseApi.post('register/bison', userData)
+        return {
+            status: true,
+            data: data
+        }
+
+    } catch (error: AxiosError){
+        console.log(error.response.data)
+        return {
+            status: false,
+            data: error.response.data
+        }
+    }
 }
 
-export const searchAvailableBison = (): User | undefined => {
-    const userStore = useUserStore();
-
-    return userStore.users.find(user => user.role === Role.Bison && user.available)
-}
 
 export const getLastService = async (userId: number): Promise<Service> => {
     try {
@@ -158,4 +193,28 @@ export const getLastService = async (userId: number): Promise<Service> => {
             guide: undefined,
         };
     }
+}
+
+
+export const getCurrentUser = (): User => {
+    //This function was modified and does not work as expected !!!!
+    const userStore = useUserStore();
+
+    let userData: User = {
+        id: undefined,
+        name: "",
+        vehicle: "",
+        password: undefined,
+        phone: undefined,
+        email: undefined,
+        document: undefined,
+        available: true,
+    };
+
+    return userData;
+}
+
+export const getUsersByRole = (targetRole: Role, limit:number = -1): User[] => {
+    //This function was modified and does not work as expected !!!!
+    return [];
 }

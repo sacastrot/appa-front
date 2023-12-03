@@ -146,8 +146,8 @@ interface User {
     email: string | undefined;
     password: string | undefined;
     phone: number | undefined;
-    role: Role;
     vehicle: string | undefined;
+    document: string | undefined;
     available: boolean;
 }
 interface CheckpointCoordinates {

@@ -17,7 +17,7 @@ const user = useUserStore();
 <template>
   <main class="home-page">
     <HeaderName :data="{
-    name: user.getName(),
+    name: user.currentName,
     message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
     }"/>
     <div class="track-order">
