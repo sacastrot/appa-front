@@ -8,9 +8,12 @@ const pickUp = serviceStore.state.carriage ? serviceStore.state.carriage.pickUp 
 let dateValue = pickUp ? pickUp.split(" ")[0]: undefined;
 let hour = pickUp ? pickUp.split(" ")[1]: undefined;
 
+const limitDate = new Date().toISOString().split('T')[0];
+
 
 const date = ref<string | undefined>(dateValue);
 const time = ref<string | undefined>(hour);
+const helpMessage = ref<string>("Selecciona una fecha y hora válida")
 
 //Event to verify if all fields are filled out
 const emit = defineEmits(["validateStep"]);
@@ -22,8 +25,10 @@ const emitValidateStep = (value: boolean) => {
 watch([date, time], () => {
   if(date.value && time.value){
     emitValidateStep(true);
+    helpMessage.value = "";
   }else{
     emitValidateStep(false);
+    helpMessage.value = "Selecciona una fecha y hora válida";
   }
 })
 
@@ -34,7 +39,9 @@ onBeforeUnmount(async () =>{
 
 //Verify if the fields was filled out before when the component is mounted
 onBeforeMount(async () =>{
-  emitValidateStep(Boolean(date.value && time.value));
+  const validate = Boolean(date.value !== undefined && time.value !== undefined);
+  emitValidateStep(Boolean(validate));
+  helpMessage.value = validate ? "" : "Selecciona una fecha y hora válida";
 })
 
 </script>
@@ -50,7 +57,13 @@ onBeforeMount(async () =>{
         <div class="field">
           <label class="label">Fecha</label>
           <div class="control has-icons-left">
-            <input v-model="date" class="input is-medium" type="date" placeholder="Fecha">
+            <input
+                v-model="date"
+                class="input is-medium"
+                type="date"
+                placeholder="Fecha"
+                :min="limitDate"
+            >
             <span class="icon is-left">
               <fa icon="calendar-plus"></fa>
             </span>
@@ -68,9 +81,16 @@ onBeforeMount(async () =>{
       </div>
     </div>
   </form>
+  <p class="help-message"> {{ helpMessage }} </p>
 </template>
 
 <style scoped>
+.help-message {
+  color: var(--color-primary-red);
+  font-size: 1.2rem;
+  margin-top: 10px;
+
+}
 .form-header{
   margin: 0 auto 60px auto;
   max-width: 80%;

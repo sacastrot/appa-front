@@ -16,7 +16,7 @@ const emitNext = () => {
   emit("next", selectedCheckpoint.value);
 };
 
-const selectedCheckpoint = ref<string>("");
+const selectedCheckpoint = ref<string>("None");
 const buttonText = ref<string>("Actualizar");
 
 watch(selectedCheckpoint, (value) => {
@@ -26,11 +26,7 @@ watch(selectedCheckpoint, (value) => {
     buttonText.value = "Actualizar";
   }
 
-  if (value == "None"){
-    disabledButton.value = true;
-  } else {
-    disabledButton.value = false;
-  }
+  disabledButton.value = value == "None";
 });
 
 </script>
