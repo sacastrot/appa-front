@@ -1,17 +1,9 @@
 <script setup lang="ts">
 import NewCarriage from "@/components/citizen/history/NewCarriage.vue";
-import HistoryCarriages from "@/components/citizen/history/HistoryCarriages.vue";
 import {ref} from "vue";
-import {getCurrentUser} from "@/services/user";
-import type {Carriage, User} from "@/types/intefaces";
-import {carriagesByCitizen} from "@/services/carriage";
-
-
-const user: User = getCurrentUser()
-const carraiges: Carriage[] = carriagesByCitizen(user?.id!)
-
-const showInfromation = ref<boolean>(false);
-
+import HistoryCarriagesList from "@/components/citizen/history/HistoryCarriagesList.vue";
+import HistoryCardSekeleton from "@/components/core/HistoryCardSekeleton.vue";
+const showInformation = ref<boolean>(false);
 </script>
 
 <template>
@@ -25,10 +17,10 @@ const showInfromation = ref<boolean>(false);
         <h1>Historial</h1>
         <p>Tus acarreos anteriores</p>
       </div>
-      <div class="action-button" @click="showInfromation = true">
+      <div class="action-button" @click="showInformation = true">
         <span class="add">?</span>
       </div>
-      <div class="modal" :class="{ 'is-active': showInfromation}">
+      <div class="modal" :class="{ 'is-active': showInformation}">
         <div class="modal-background"></div>
         <div class="modal-content">
           <div class="card">
@@ -55,10 +47,17 @@ const showInfromation = ref<boolean>(false);
             </div>
           </div>
         </div>
-        <button class="modal-close is-large" aria-label="close" @click="showInfromation = false"></button>
+        <button class="modal-close is-large" aria-label="close" @click="showInformation = false"></button>
       </div>
     </div>
-    <HistoryCarriages v-for="carriage in carraiges"  :key="carriage.guideNumber"  :carriage="carriage"/>
+    <Suspense>
+      <template #default>
+        <HistoryCarriagesList/>
+      </template>
+      <template #fallback>
+        <HistoryCardSekeleton class="mb-6" v-for="value in 4"/>
+      </template>
+    </Suspense>
   </main>
 </template>
 
@@ -80,6 +79,12 @@ const showInfromation = ref<boolean>(false);
     justify-content: space-between;
 
     .title {
+      & h1 {
+        font-size: 1.8rem;
+        color: var(--title-section);
+        font-weight: bold;
+        padding-top: 15px;
+      }
       & p {
         font-size: 1.2rem;
         padding-bottom: 15px;
@@ -155,7 +160,4 @@ const showInfromation = ref<boolean>(false);
     }
   }
 }
-
-
-
 </style>

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-import  {useCarriagesStore} from "@/stores/carriages";
+import {useServiceStore} from "@/stores/service";
+import {getServicePrice} from "@/services/service";
+import {OrderType} from "@/types/intefaces";
 
-const carriagesStore = useCarriagesStore();
+const serviceStore = useServiceStore();
 //Take the values from the store if they exist or undefined if not
-const description = ref<string | undefined>(carriagesStore.currentCarriage.description);
-
+const description = ref<string | undefined>(serviceStore.state.carriage ? serviceStore.state.carriage.description : undefined);
+const helpMessage = ref<string>("Escribe una descripción del servicio")
 //Event to verify if all fields are filled out
 const emit = defineEmits(["validateStep"]);
 
@@ -16,22 +18,30 @@ const emitValidateStep = (value: boolean) => {
 watch(description, () => {
   if(description.value){
     emitValidateStep(true);
+    helpMessage.value = "";
   }else{
     emitValidateStep(false);
+    helpMessage.value = "Escribe una descripción del servicio";
   }
 })
 
 //Save data in the store before leaving the component
 onBeforeUnmount(async () =>{
   if(description.value){
-    carriagesStore.setDescription(description.value);
+    serviceStore.setDescription(description.value);
   }
+
+  onBeforeUnmount(async () =>{
+    const status = await getServicePrice(OrderType.Carriage);
+  });
+
   emitValidateStep(false);
 })
 
 //Verify if the fields was filled out before when the component is mounted
 onBeforeMount(async () =>{
   emitValidateStep(Boolean(description.value));
+  helpMessage.value = description.value ? "" : "Escribe una descripción del servicio";
 })
 
 </script>
@@ -56,9 +66,15 @@ onBeforeMount(async () =>{
       </div>
     </div>
   </form>
+  <p class="help-message"> {{ helpMessage }} </p>
 </template>
 
 <style scoped>
+.help-message {
+  color: var(--color-primary-red);
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
 .form-header {
   margin: 0 auto 60px auto;
   max-width: 80%;

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {Checkpoint, NationType} from "@/types/intefaces";
-import {usePackagesStore} from "@/stores/packages";
-const packagesStore = usePackagesStore();
+import type {Carriage, Guide, NationType, OrderType, Package} from "@/types/intefaces";
+import {Checkpoint} from "@/types/intefaces";
+import {useServiceStore} from "@/stores/service";
+import {formatDate, formatPrice} from "../../../helpers/services";
+
+const serviceStore = useServiceStore();
 
 const expand = ref<boolean>(false);
 const toggleExpand = () => {
@@ -11,25 +14,26 @@ const toggleExpand = () => {
 
 let colorStatus = '';
 
-
-
-
 const {packageValue} = defineProps<{
   packageValue: {
-    created?: Date;
-    arrived?: Date;
-    originNation: NationType,
-    originCheckpoint: Checkpoint,
-    destinyNation: NationType,
-    destinyCheckpoint: Checkpoint,
-    guide: number,
-    length: number | undefined,
-    width: number | undefined,
-    height: number | undefined,
-    weight: number | undefined;
+    id: number;
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
+    created: Date | undefined;
+    arrived: Date | undefined;
     price: number | undefined;
+    origin_nation: NationType,
+    originCheckpoint: Checkpoint,
+    destiny_nation: NationType,
+    destinyCheckpoint: Checkpoint,
+    package: Package | undefined;
+    carriage: Carriage | undefined;
+    guide: Guide | undefined;
   }
 }>()
+
+// const {packageValue} = defineProps(['packageValue'])
 
 if (packageValue.arrived) {
   colorStatus = '#349F91FF';
@@ -45,37 +49,37 @@ if (packageValue.arrived) {
       <Transition name="fade-location">
         <div v-if="!expand" class="location-text">
           <div class="location-origin">
-            <h1>{{ packageValue.originNation }}</h1>
-            <p>{{ packagesStore.formatDate(packageValue.created) }}</p>
+            <h1>{{ packageValue.origin_nation }}</h1>
+            <p>{{ formatDate(packageValue.created) }}</p>
           </div>
           <div class="location-destination">
-            <h1>{{ packageValue.destinyNation }}</h1>
-            <p>{{ packagesStore.formatDate(packageValue.arrived) }}</p>
+            <h1>{{ packageValue.destiny_nation }}</h1>
+            <p>{{ formatDate(packageValue.arrived) }}</p>
           </div>
         </div>
       </Transition>
     </div>
     <div @click="toggleExpand" class="package-details" :class="[expand ? 'package-active' : 'package-inactive']">
       <Transition name="fade-details">
-        <span v-if="!expand" class="material-symbols-outlined" :style="{color: colorStatus}" >package_2</span>
+        <span v-if="!expand" class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
         <div v-else class="content-header">
           <div class="features">
             <span class="material-symbols-outlined" :style="{color: colorStatus}">package_2</span>
             <div class="price">
               <h1>Precio</h1>
-              <h1>{{ packagesStore.formatPrice(packageValue.price) }}</h1>
+              <h1>{{ formatPrice(packageValue.price) }}</h1>
             </div>
             <h1>Alto</h1>
-            <p>{{ packageValue.height }} cm</p>
+            <p>{{ packageValue.package.height }} cm</p>
             <h1>Largo</h1>
-            <p>{{ packageValue.length }} cm</p>
+            <p>{{ packageValue.package.length }} cm</p>
             <h1>Ancho</h1>
-            <p>{{ packageValue.width }} cm</p>
+            <p>{{ packageValue.package.width }} cm</p>
             <h1>Peso</h1>
-            <p>{{ packageValue.weight }} kg</p>
+            <p>{{ packageValue.package.weight }} kg</p>
           </div>
           <div class="guide">
-            <p>Guía No. {{ packageValue.guide }}</p>
+            <p>Guía No. {{ packageValue.guide.guide_number }}</p>
           </div>
         </div>
       </Transition>
@@ -131,6 +135,7 @@ if (packageValue.arrived) {
 }
 
 .package-details {
+  cursor: pointer;
   position: absolute;
   right: 0;
   display: flex;
@@ -178,9 +183,11 @@ if (packageValue.arrived) {
         grid-area: 1/ 1 / 2 span/ 2;
         font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
         font-size: 5rem;
+
         .package-pending {
           color: var(--pending-state);
         }
+
         .package-delivered {
           color: var(--delivered-state);
         }
@@ -212,7 +219,6 @@ if (packageValue.arrived) {
     }
   }
 }
-
 
 
 .package-details.package-inactive:hover {

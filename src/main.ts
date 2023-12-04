@@ -13,6 +13,7 @@ library.add(fas);
 
 const app = createApp(App).component("fa", FontAwesomeIcon)
 
+app.config.performance = true
 app.use(createPinia())
 app.use(router)
 

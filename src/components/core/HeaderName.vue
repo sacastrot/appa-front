@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const {data} = defineProps<{
   data: {
-    name: string,
+    name: string | undefined,
     message: string,
   }
 }>();
@@ -23,6 +23,10 @@ const {data} = defineProps<{
 </template>
 
 <style scoped>
+header {
+  max-width: 80rem;
+  width: 92%;
+}
 header .image {
   padding: 2rem 1.5rem 0 0;
   height: 12rem;

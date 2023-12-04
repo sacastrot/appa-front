@@ -13,6 +13,7 @@ const emit = defineEmits(["deleteBison"]);
 
 const deleteBison = () => {
   emit("deleteBison", bisonRemoveId.value);
+  toggleExpand();
 }
 
 
@@ -29,6 +30,7 @@ const {currentBison} = defineProps<{
     email: string | undefined;
     password: string | undefined;
     phone: number | undefined;
+    document: string | undefined;
     role: Role;
     vehicle: string | undefined;
     isAuth: boolean;
@@ -79,7 +81,7 @@ if (currentBison) {
           </div>
           <div class="item bison_id">
             <h1>Documento</h1>
-            <p v-if="currentBison">{{ currentBison.id }}</p>
+            <p v-if="currentBison">{{ currentBison.document }}</p>
           </div>
           <div class="item bison_vehicle">
             <h1>Vehiculo</h1>

@@ -2,13 +2,14 @@
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
 import {Checkpoint, NationType} from "@/types/intefaces";
 import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
-import {useCarriagesStore} from "@/stores/carriages";
+import {useServiceStore} from "@/stores/service";
 //Store to packages
-const carriageStore = useCarriagesStore()
+const serviceStore = useServiceStore();
 
 //Data to send store
-const destinyNation = ref<NationType>(carriageStore.currentCarriage.destinyNation)
-const destinyCheckpoint = ref<Checkpoint>(carriageStore.currentCarriage.destinyCheckpoint)
+const destinyNation = ref<NationType>(serviceStore.getDestinyNation())
+const destinyCheckpoint = ref<Checkpoint>(serviceStore.getDestinyCheckpoint())
+const helpMessage = ref<string>("Selecciona una nación y un punto de control válido")
 
 //Validate form
 const emit = defineEmits(["validateStep"]);
@@ -18,13 +19,16 @@ const emitValidateStep = (validateValue: boolean) => {
 //Function to validate form
 watch([destinyNation, destinyCheckpoint], ([newDestinyNation, newDestinyCheckpoint]) => {
   if (newDestinyNation !== NationType.Unknown && newDestinyCheckpoint !== Checkpoint.Unknown) {
-    if (newDestinyCheckpoint !== carriageStore.currentCarriage.originCheckpoint) {
+    if (newDestinyCheckpoint !== serviceStore.state.origin_checkpoint) {
       emitValidateStep(true)
+      helpMessage.value = ""
     } else {
       emitValidateStep(false)
+      helpMessage.value = "El punto de control de destino no puede ser el mismo que el de origen"
     }
   } else {
     emitValidateStep(false)
+    helpMessage.value = "Selecciona una nación y un punto de control válido"
   }
 })
 
@@ -39,18 +43,25 @@ const getCheckpointsList = () => {
 * Set validate to false for the next step
 * */
 onBeforeUnmount(async () => {
-  carriageStore.setDestiny(destinyNation.value, destinyCheckpoint.value)
+  serviceStore.setDestiny(destinyNation.value, destinyCheckpoint.value)
   emitValidateStep(false)
 })
 
 onBeforeMount(() => {
   //Charge values of package destiny location
-  destinyNation.value = carriageStore.currentCarriage.destinyNation;
-  destinyCheckpoint.value = carriageStore.currentCarriage.destinyCheckpoint;
+  destinyNation.value = serviceStore.state.destiny_nation;
+  destinyCheckpoint.value = serviceStore.state.destiny_checkpoint;
   checkpointList.value = getCheckpoints(destinyNation.value);
 
   //Validate form if is already filled
-  emitValidateStep(Boolean(destinyNation.value != NationType.Unknown && destinyCheckpoint.value !== Checkpoint.Unknown))
+  const validate = Boolean(destinyNation.value !== NationType.Unknown && destinyCheckpoint.value !== Checkpoint.Unknown)
+  const validateSameCheckpoint = Boolean(destinyCheckpoint.value !== serviceStore.state.origin_checkpoint)
+
+  helpMessage.value = validate ? "" : "Selecciona una nación y un punto de control válido"
+  if (!helpMessage.value){
+    helpMessage.value = validateSameCheckpoint ? "" : "El punto de control de destino no puede ser el mismo que el de origen"
+  }
+  emitValidateStep(validate && validateSameCheckpoint)
 })
 
 </script>
@@ -86,9 +97,15 @@ onBeforeMount(() => {
       </div>
     </div>
   </form>
+  <p class="help-message"> {{ helpMessage }} </p>
 </template>
 
 <style scoped>
+.help-message {
+  color: var(--color-primary-red);
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
 form {
   .form-header {
     max-width: 80%;

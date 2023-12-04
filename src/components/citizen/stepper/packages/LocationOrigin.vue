@@ -2,14 +2,13 @@
 import {onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
 import {Checkpoint, NationType} from "@/types/intefaces";
 import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
-import {usePackagesStore} from "@/stores/packages";
+import {useServiceStore} from "@/stores/service";
 //Store to packages
-const packageStore = usePackagesStore()
-
+const serviceStore = useServiceStore();
 //Data to send store
-const originNation = ref<NationType>(packageStore.state.originNation)
-const originCheckpoint = ref<Checkpoint>(packageStore.state.originCheckpoint)
-
+const originNation = ref<NationType>(serviceStore.getOriginNation())
+const originCheckpoint = ref<Checkpoint>(serviceStore.getOriginCheckpoint())
+const helpMessage = ref<string>("Selecciona una nación y un punto de control válido");
 //Validate form
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
@@ -19,8 +18,10 @@ const emitValidateStep = (validateValue: boolean) => {
 watch([originNation, originCheckpoint], ([newOriginNation, newOriginCheckpoint]) => {
   if(newOriginNation !== NationType.Unknown && newOriginCheckpoint !== Checkpoint.Unknown) {
     emitValidateStep(true)
+    helpMessage.value = "";
   }else {
     emitValidateStep(false)
+    helpMessage.value = "Selecciona una nación y un punto de control válido";
   }
 })
 
@@ -35,18 +36,20 @@ const getCheckpointsList = () => {
 * Set validate to false for the next step
 * */
 onBeforeUnmount( async () => {
-  packageStore.setOrigin(originNation.value, originCheckpoint.value)
+  serviceStore.setOrigin(originNation.value, originCheckpoint.value)
   emitValidateStep(false)
 })
 
 onBeforeMount(() => {
   //Charge values of package origin location
-  originNation.value = packageStore.state.originNation;
-  originCheckpoint.value = packageStore.state.originCheckpoint;
+  originNation.value = serviceStore.state.origin_nation;
+  originCheckpoint.value = serviceStore.state.origin_checkpoint;
   checkpointList.value = getCheckpoints(originNation.value);
+  const validate = (originNation.value !== NationType.Unknown && originCheckpoint.value !== Checkpoint.Unknown)
 
   //Validate form if is already filled
-  emitValidateStep(Boolean(originNation.value != NationType.Unknown && originCheckpoint.value !== Checkpoint.Unknown))
+  emitValidateStep(Boolean(validate));
+  helpMessage.value = validate ? "" : "Selecciona una nación y un punto de control válido";
 })
 
 </script>
@@ -82,9 +85,15 @@ onBeforeMount(() => {
       </div>
     </div>
   </form>
+  <p class="help-message"> {{ helpMessage }} </p>
 </template>
 
 <style scoped>
+.help-message {
+  color: var(--color-primary-red);
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
 form {
   .form-header {
     max-width: 80%;

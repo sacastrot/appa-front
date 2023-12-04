@@ -1,24 +1,29 @@
 <script setup lang="ts">
 
 import {ref} from "vue";
-import {Checkpoint, NationType} from "@/types/intefaces";
-import {useCarriagesStore} from "@/stores/carriages";
+import {Carriage, Checkpoint, Guide, NationType, OrderType, Package} from "@/types/intefaces";
+import {useServiceStore} from "@/stores/service";
+import {formatDate} from "../../../helpers/services";
 
-const carriageStore = useCarriagesStore();
+const serviceStore = useServiceStore();
 
 const showGuide = ref<boolean>(false);
 const {carriage} = defineProps<{
   carriage: {
-    created: Date;
-    arrived: Date;
-    guideNumber: number;
-    originNation: NationType,
+    id: number;
+    citizen: number | undefined;
+    bison: number | undefined;
+    type: OrderType;
+    created: Date | undefined;
+    arrived: Date | undefined;
+    price: number | undefined;
+    origin_nation: NationType,
     originCheckpoint: Checkpoint,
-    destinyNation: NationType,
+    destiny_nation: NationType,
     destinyCheckpoint: Checkpoint,
-    pickUpDate: Date;
-    pickUpHour: string;
-    description: string;
+    package: Package | undefined;
+    carriage: Carriage | undefined;
+    guide: Guide | undefined;
   }
 }>()
 
@@ -35,12 +40,12 @@ const toggleGuide = () => {
       <img src="/img/location-history.svg">
       <div  class="location-text">
         <div class="location-origin">
-          <h1>{{ carriage.originNation }}</h1>
-          <p>{{ carriageStore.formatDate(carriage.created) }}</p>
+          <h1>{{ carriage.origin_nation }}</h1>
+          <p>{{ formatDate(carriage.created) }}</p>
         </div>
         <div class="location-destination">
-          <h1>{{ carriage.destinyNation}}</h1>
-          <p>{{ carriageStore.formatDate(carriage.arrived) }}</p>
+          <h1>{{ carriage.destiny_nation}}</h1>
+          <p>{{ formatDate(carriage.arrived)}}</p>
         </div>
       </div>
     </div>
@@ -48,7 +53,7 @@ const toggleGuide = () => {
       <div class="content-header">
         <h1>Descripción</h1>
         <p>
-          {{ carriage.description }}
+          {{ carriage.carriage.description }}
         </p>
       </div>
     </div>
@@ -60,7 +65,7 @@ const toggleGuide = () => {
       </Transition>
       <div class="guide" :class="[showGuide ? 'active-guide': 'inactive-guide']">
         <Transition name="fade-guide">
-          <p v-if="showGuide" >Guía No. {{ carriage.guideNumber }}</p>
+          <p v-if="showGuide" >Guía No. {{ carriage.guide.guide_number }}</p>
         </Transition>
       </div>
     </div>

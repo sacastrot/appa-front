@@ -1,51 +1,29 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { getCurrentUser } from "@/services/user";
-import { packagesByCitizen } from "@/services/package";
-import { carriagesByCitizen } from "@/services/carriage";
+import {ref} from "vue";
+import {getLastService} from "@/services/user";
 import {OrderType} from "@/types/intefaces";
+import {useUserStore} from "@/stores/user";
+import {formatDate} from "@/helpers/services";
 
-const user = getCurrentUser()
-const packages = packagesByCitizen(user.id!)
-const carriages = carriagesByCitizen(user.id!)
-const existsOrder = (carriages.length != 0 || packages.length != 0) ? true : false
-const lastPackage = packages[packages.length -1]
-const lastCarriage = carriages[carriages.length -1]
-
-const getLastItem = computed(() => {
-  if (carriages.length == 0 && packages.length == 0)
-  {
-    return
-  }
-  else if (carriages.length == 0)
-  {
-    return lastPackage
-  }
-  else if (packages.length == 0)
-  {
-    return lastCarriage
-  }
-  else {
-    return Number(lastCarriage.created?.getTime()) > Number(lastPackage.created?.getTime()) ? lastCarriage : lastPackage
-  }
-})
+const service = ref(await getLastService(useUserStore().currentUser!));
 
 </script>
 
 <template>
-  <RouterLink :to="getLastItem?.type == OrderType.Package ? '/packages' : '/carriages'">
-    <div class="box" v-if="existsOrder">
+  <RouterLink v-if="service.status" :to="service.data.type == OrderType.Package ? '/packages' : '/carriages'">
+    <div class="box">
       <div id="order-state">
-        <p>{{getLastItem.arrived ? "Entregado" : "Sin entregar"}}</p>
+        <p>{{ service.data.arrived ? "Entregado" : "Sin entregar" }}</p>
       </div>
       <div id="order-detail">
-        <p style="padding-top: 1.2rem;">{{getLastItem?.type === OrderType.Package ? "Paquete": "Acarreo"}}</p>
-        <p style="padding-bottom: 1.2rem;">Destino: {{Object(getLastItem).destinyNation}}</p>
-        <p v-if="getLastItem.arrived" style="padding-bottom: 1.2rem;">Entregado el: {{getLastItem.arrived.toLocaleDateString()}}</p>
+        <p style="padding-top: 1.2rem;">{{ service.data.type === OrderType.Package ? "Paquete" : "Acarreo" }}</p>
+        <p style="padding-bottom: 1.2rem;">Destino: {{ service.data.destiny_nation }}</p>
+        <p v-if="service.data.arrived" style="padding-bottom: 1.2rem;">Entregado el:
+          {{ formatDate(service.data.arrived) }}</p>
       </div>
     </div>
   </RouterLink>
-  <div class="box" v-if="existsOrder == false">
+  <div class="box" v-if="!service.status">
     <h2>Aún no ha realizado ningún pedido</h2>
   </div>
 </template>

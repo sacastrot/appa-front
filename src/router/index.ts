@@ -17,9 +17,10 @@ import LoginLayout from "@/layouts/LoginLayout.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 import AvatarHomeView from "@/views/HomeAvatarView.vue";
 import RegisteredBisontesView from "@/views/RegisteredBisontesView.vue";
-import {getCurrentUser} from "@/services/user";
-import BisonUpdateLocationView from "@/views/BisonUpdateLocationView.vue";
 import OrdersHistoryView from "@/views/OrdersHistoryView.vue";
+import {useUserStore} from "@/stores/user";
+import UpdatePackageView from "@/views/UpdatePackageView.vue";
+import UpdateCarriageView from "@/views/UpdateCarriageView.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -184,9 +185,20 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
-        path: "/bison/updateLocation",
-        name: "bison-update-location",
-        component: BisonUpdateLocationView,
+        path: "/bison/update/package/:id/:current/:dest",
+        name: "update_package",
+        component: UpdatePackageView,
+        meta: {
+            requiredAuth: true,
+            title: "Actualizar ubicación",
+            layout: MainLayout,
+            roles: [Role.Bison]
+        }
+    },
+    {
+        path: "/bison/update/carriage/:id/:current/:dest",
+        name: "update_carriage",
+        component: UpdateCarriageView,
         meta: {
             requiredAuth: true,
             title: "Actualizar ubicación",
@@ -205,18 +217,18 @@ const router = createRouter({
 router.beforeEach(async (to, from,next) => {
     const layoutStore = useLayoutStore();
 
-    const userData = getCurrentUser();
+    const userStore = useUserStore();
     layoutStore.setLayout(to.meta.layout);
 
     document.title = to.meta.title as string;
 
-    if(userData) {
+    if(userStore.currentUser) {
         if(to.meta.requiredAuth){
-            if (!userData.isAuth) {
+            if (!userStore.currentToken) {
                 return next({name: "login"});
             } else {
                 //@ts-ignore
-                if (!to.meta.roles.includes(userData.role)) {
+                if (!to.meta.roles.includes(userStore.currentRole)) {
                     return next({name: "access-denied"});
                 } else {
                     return next();

@@ -1,26 +1,57 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
-import {useUserStore} from "@/stores/user";
+import {computed, ref, onMounted, onBeforeUnmount} from "vue";
+import {useUserManagementStore, useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
-import {getCurrentUser} from "@/services/user";
+import {getCurrentUser, deleteCitizenById, patchProfile} from "@/services/user";
 import {useRouter} from "vue-router";
 
 
-const userStore = useUserStore();
+const currentUser = useUserManagementStore();
 const router = useRouter();
 const modalActive = ref<boolean>(false);
 const readOnly = ref<boolean>(true);
+const userStore = useUserStore();
+const role = userStore.currentRole;
+const document = ref<string | undefined>(currentUser.state.document);
+const vehicle = ref<string | undefined>(currentUser.state.vehicle);
+const name = ref<string | undefined>(currentUser.state.name);
+const email = ref<string | undefined>(currentUser.state.email);
+const password = ref<string | undefined>("******");
+const phone = ref<number | undefined>(currentUser.state.phone);
 
-const user = getCurrentUser()
 
-const name = ref<string | undefined>(user.name);
-const email = ref<string | undefined>(user.email);
-const password = ref<string | undefined>(user.password);
-const phone = ref<number | undefined>(user.phone);
+onMounted(async () => {
+    const { data } = await getCurrentUser();
+    name.value = data.name;
+    email.value = data.email;
+    phone.value = data.phone;
+    document.value = data.document;
+    vehicle.value = data.vehicle;
+  });
 
-const role = user.role;
-const document = user.id;
-const vehicle = user.vehicle;
+
+const id = userStore.currentUser;
+
+const phoneError = ref<boolean>(false)
+const emailError = ref<boolean>(false)
+
+const errors: {[key: string]: ref<boolean>} = {
+  "phone": phoneError,
+  "email": emailError,
+}
+
+//Function to validate the fields
+function checkErrors(data: Array<string>): void {
+  // Reset errors
+  phoneError.value = false
+  emailError.value = false
+
+  data.forEach( (error: string) => {
+    if (errors.hasOwnProperty(error))
+      errors[error].value = true
+  })
+}
+
 
 
 //To edit profile
@@ -61,18 +92,20 @@ const nameValidation = computed(() => {
 const phoneValidation = computed(() => {
   if (phone.value != undefined) {
     if (phone.value.toString().trim().length > 0) {
-      return phone.value.toString().length >= 7 && !isNaN(phone.value);
+      if( phone.value.toString().length >= 7 && !isNaN(phone.value)){
+        phoneError.value = false
+        return true
+      }
     }
-    //Only a citizen can have no phone
-    return role === Role.Citizen
   }
-  return true;
+  return false;
 });
 
 const emailValidation = computed(() => {
   if (email.value != undefined) {
     if (email.value.trim().length > 0) {
       if (validateEmail(email.value)) {
+        emailError.value = false;
         return true;
       }
     }
@@ -91,15 +124,9 @@ const passwordValidation = computed(() => {
   return false;
 });
 
-function editProfile() {
-  user.name = name.value;
-  user.email = email.value;
-  user.password = password.value;
-  user.phone = phone.value;
-}
 
-function deleteUser() {
-  userStore.deleteUser(user.id)
+function deleteAccount() {
+  deleteCitizenById(id);
   router.push("/login")
 }
 
@@ -112,166 +139,185 @@ const togglePassword = () => {
     iconPassword.value = "visibility"
   }
 }
+const editProfile = async () => {
+  const { status, data } = await patchProfile(name.value, email.value, phone.value, password.value, document.value, vehicle.value )
+  if(!status){
+      checkErrors(Object.keys(data))
+    }
+  else{
+    readOnly.value = true
+    password.value = "******"
+    togglePassword()
+  }
 
+}
+
+onBeforeUnmount(() =>{
+  currentUser.resetUser();
+})
 </script>
 
-<template>
-  <div class="profile-container">
-    <div class="columns is-centered">
-      <div class="column is-5">
-        <div class="card">
-          <div class="squared">
-            <div class="avatar_container">
-              <div class="avatar"></div>
+  <template>
+    <div class="profile-container">
+      <div class="columns is-centered">
+        <div class="column is-5">
+          <div class="card">
+            <div class="squared">
+              <div class="avatar_container">
+                <div class="avatar"></div>
+              </div>
+            </div>
+            <div class="rotate"></div>
+            <div class="citizen_information">
+              <span>{{ name }}</span>
+              <div class="box_information">
+                <span class="icon is-small is-left material-symbols-outlined">
+                  Email
+                </span>
+                <p>{{ email }}</p>
+              </div>
             </div>
           </div>
-          <div class="rotate"></div>
-          <div class="citizen_information">
-            <span>{{ user.name }}</span>
-            <div class="box_information">
-              <span class="icon is-small is-left material-symbols-outlined">
-                Email
-              </span>
-              <p>{{ user.email }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="form">
-          <h1 class="title is-4 has-text-centered">Detalles del Perfil</h1>
-          <div class="field">
-            <label class="label">Nombre</label>
-            <div class="control has-icons-left">
-              <input
-                  class="input custom-input"
-                  type="text"
-                  :readonly="readOnly"
-                  v-model="name"
-              />
-              <span
-                  class="icon is-small is-left form_icons material-symbols-outlined"
-              >
-              Person
-            </span>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">Teléfono</label>
-            <div class="control has-icons-left">
-              <input
-                  class="input custom-input"
-                  type="tel"
-                  :readonly="readOnly"
-                  v-model="phone"
-              />
-              <span
-                  class="icon is-small is-left form_icons material-symbols-outlined"
-              >
-              call
-            </span>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">Correo electrónico</label>
-            <div class="control has-icons-left">
-              <input
-                  class="input custom-input"
-                  type="email"
-                  :readonly="readOnly"
-                  v-model="email"
-              />
-              <span
-                  class="icon is-small is-left form_icons material-symbols-outlined"
-              >
-              Mail
-            </span>
-            </div>
-          </div>
-          <div v-if="role===Role.Bison">
+          <div class="form">
+            <h1 class="title is-4 has-text-centered">Detalles del Perfil</h1>
             <div class="field">
-              <label class="label">Documento</label>
+              <label class="label">Nombre</label>
               <div class="control has-icons-left">
                 <input
                     class="input custom-input"
                     type="text"
-                    readonly
-                    :value="document"
+                    :readonly="readOnly"
+                    v-model="name"
                 />
                 <span
                     class="icon is-small is-left form_icons material-symbols-outlined"
                 >
-                badge
+                Person
+              </span>
+              </div>
+              <p v-if="!nameValidation && !readOnly" class="help is-danger is-size-6">Nombre inválido</p>
+            </div>
+            <div class="field">
+              <label class="label">Teléfono</label>
+              <div class="control has-icons-left">
+                <input
+                    class="input custom-input"
+                    type="tel"
+                    :readonly="readOnly"
+                    v-model="phone"
+                />
+                <span
+                    class="icon is-small is-left form_icons material-symbols-outlined"
+                >
+                call
+              </span>
+              </div>
+                <p v-if="!phoneValidation && !readOnly  || phoneError" class="help is-danger is-size-6">Teléfono inválido</p>
+            </div>
+            <div class="field">
+              <label class="label">Correo electrónico</label>
+              <div class="control has-icons-left">
+                <input
+                    class="input custom-input"
+                    type="email"
+                    :readonly="readOnly"
+                    v-model="email"
+                />
+                <span
+                    class="icon is-small is-left form_icons material-symbols-outlined"
+                >
+                Mail
+              </span>
+              </div>
+              <p v-if="!emailValidation && !readOnly || emailError" class="help is-danger is-size-6">Correo inválido</p>
+            </div>
+            <div v-if="role===Role.Bison">
+              <div class="field">
+                <label class="label">Documento</label>
+                <div class="control has-icons-left">
+                  <input
+                      class="input custom-input"
+                      type="text"
+                      readonly
+                      :value="document"
+                  />
+                  <span
+                      class="icon is-small is-left form_icons material-symbols-outlined"
+                  >
+                  badge
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Vehículo</label>
+                <div class="control has-icons-left">
+                  <input
+                      class="input custom-input"
+                      type="text"
+                      readonly
+                      :value="vehicle"
+                  />
+                  <span
+                      class="icon is-small is-left form_icons material-symbols-outlined"
+                  >
+                local_shipping
+              </span>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Contraseña</label>
+              <div class="control has-icons-left has-icons-right">
+                <input
+                    class="input custom-input"
+                    :type="showPassword"
+                    :readonly="readOnly"
+                    v-model="password"
+                />
+                <span
+                    class="icon is-small is-left form_icons material-symbols-outlined"
+                >
+                  Lock
+                </span>
+                <span @click="togglePassword" v-if="!readOnly" class="icon is-small is-right password-icon">
+                  <span class="material-symbols-outlined eye"> {{ iconPassword }} </span>
                 </span>
               </div>
+              <p v-if="!passwordValidation && !readOnly" class="help is-danger is-size-6">Contraseña inválida</p>
             </div>
-            <div class="field">
-              <label class="label">Vehículo</label>
-              <div class="control has-icons-left">
-                <input
-                    class="input custom-input"
-                    type="text"
-                    readonly
-                    :value="vehicle"
-                />
-                <span
-                    class="icon is-small is-left form_icons material-symbols-outlined"
-                >
-              local_shipping
+          </div>
+          <button v-if="readOnly" @click="readOnly=!readOnly" class="button is-fullwidth edit_profile_buttom">
+          <span
+              class="icon is-small is-left buttom_icons material-symbols-outlined mr-3"
+          >
+            Manage_accounts
+          </span>
+            Editar perfil
+          </button>
+          <button v-if="readOnly && role==Role.Citizen" class="button is-fullwidth delete_profile_buttom" @click="modalActive=true">
+            <span
+                class="icon is-small is-left buttom_icons material-symbols-outlined mr-3"
+            >
+              Delete
             </span>
-              </div>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">Contraseña</label>
-            <div class="control has-icons-left has-icons-right">
-              <input
-                  class="input custom-input"
-                  :type="showPassword"
-                  :readonly="readOnly"
-                  v-model="password"
-              />
-              <span
-                  class="icon is-small is-left form_icons material-symbols-outlined"
-              >
-                Lock
-              </span>
-              <span @click="togglePassword" v-if="!readOnly" class="icon is-small is-right password-icon">
-                <span class="material-symbols-outlined eye"> {{ iconPassword }} </span>
-              </span>
-            </div>
-          </div>
+              Eliminar cuenta
+          </button>
+          <button
+              v-if="readOnly===false"
+              class="button is-fullwidth save_changes_buttom"
+              @click="[editProfile()]"
+              :disabled="
+              !nameValidation ||
+              !phoneValidation ||
+              !emailValidation ||
+              !passwordValidation
+            "
+          >
+            <span class="material-symbols-outlined buttom_icon">save</span>
+            <p>Guardar cambios</p>
+          </button>
         </div>
-        <button v-if="readOnly" @click="readOnly=!readOnly" class="button is-fullwidth edit_profile_buttom">
-        <span
-            class="icon is-small is-left buttom_icons material-symbols-outlined mr-3"
-        >
-          Manage_accounts
-        </span>
-          Editar perfil
-        </button>
-        <button v-if="readOnly && role!==Role.Bison" class="button is-fullwidth delete_profile_buttom" @click="modalActive=true">
-        <span
-            class="icon is-small is-left buttom_icons material-symbols-outlined mr-3"
-        >
-          Delete
-        </span>
-          Eliminar cuenta
-        </button>
-        <button
-            v-if="!readOnly"
-            class="button is-fullwidth save_changes_buttom"
-            @click="[editProfile(), readOnly=!readOnly]"
-            :disabled="
-            !nameValidation ||
-            !phoneValidation ||
-            !emailValidation ||
-            !passwordValidation
-          "
-        >
-          <span class="material-symbols-outlined buttom_icon">save</span>
-          <p>Guardar cambios</p>
-        </button>
       </div>
-    </div>
 
     <div class="modal" :class="[modalActive?'is-active':'']">
       <div class="modal-background"></div>
@@ -283,7 +329,7 @@ const togglePassword = () => {
             </figure>
             <p>¿Está seguro que desea eliminar su perfil?</p>
             <div class="button-container">
-              <button @click="deleteUser" class="button_left">Si</button>
+              <button @click="deleteAccount" class="button_left">Si</button>
               <button class="button_right" @click="modalActive=false">No</button>
             </div>
           </div>

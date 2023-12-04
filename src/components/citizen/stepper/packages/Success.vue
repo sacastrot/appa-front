@@ -1,34 +1,15 @@
 <script setup lang="ts">
-import {usePackagesStore} from "@/stores/packages";
+
 import {onBeforeUnmount} from "vue";
-import {getCurrentUser, searchAvailableBison} from "@/services/user";
-import type {User} from "@/types/intefaces";
-import {useUserStore} from "@/stores/user";
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
   emit("validateStep", validateValue)
 }
 
-const userStore = useUserStore()
-const user: User = getCurrentUser()
-const bison: User | undefined = searchAvailableBison()
-
-const packageStore = usePackagesStore()
 
 onBeforeUnmount(async () => {
   emitValidateStep(false);
-  if(user.id){
-    packageStore.setCitizen(user.id)
-  }
-  packageStore.addPackage();
-
-  if(bison){
-    packageStore.setBison(bison.id, packageStore.state.id)
-    userStore.setAvailable(false, bison?.id!)
-  }
-
-  packageStore.resetState();
 })
 </script>
 

@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import {watch} from "vue";
-import {useUserStore} from "@/stores/user";
+import {watch, onBeforeMount, ref} from "vue";
+import {useUserManagementStore} from "@/stores/user";
 
-const user = useUserStore();
+const user = useUserManagementStore();
+
+const nameState = ref<boolean>(true)
+
+//validations
+function validateName(): void {
+  nameState.value = user.validateName
+}
 
 const emit = defineEmits(["validateStep"]);
 const emitValidateStep = (validateValue: boolean) => {
@@ -13,27 +20,32 @@ watch(user.state, () => {
   emitValidateStep(user.validateName)
 })
 
+onBeforeMount(async () =>{
+  emitValidateStep(user.validateName)
+})
+
 </script>
 
 <template>
-    <div class="form-header">
-      <h1>Nombre</h1>
-      <p>
-        Ingresa el nombre del bisonte
-      </p>
-    </div>
-    <div class="form-content">
-      <div class="form-inputs">
-        <div class="field">
-          <div class="control has-icons-left">
-            <input v-model.trim="user.state.name" class="input is-medium" type="text" placeholder="Nombre">
-            <span class="icon is-medium is-left">
-              <fa icon="user"></fa>
-            </span>
-          </div>
+  <div class="form-header">
+    <h1>Nombre</h1>
+    <p>
+      Ingresa el nombre del bisonte
+    </p>
+  </div>
+  <div class="form-content">
+    <div class="form-inputs">
+      <div class="field">
+        <div class="control has-icons-left">
+          <input v-model.trim="user.state.name" @blur="validateName" class="input is-medium" type="text" placeholder="Nombre">
+          <span class="icon is-medium is-left">
+            <fa icon="user"></fa>
+          </span>
         </div>
+        <p v-if="!nameState" class="help is-danger is-size-6">Nombre inválido</p>
       </div>
     </div>
+  </div>
 </template>
 
 <style scoped>

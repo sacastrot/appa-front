@@ -1,85 +1,56 @@
 <script setup lang="ts">
-import {onBeforeMount, computed, ref} from 'vue';
-import {Checkpoint, NationType} from "@/types/intefaces";
+import {onBeforeMount, onBeforeUnmount, computed, ref} from 'vue';
+import {Checkpoint, NationType, OrderType} from "@/types/intefaces";
 import {getCheckpoints, stringToCheckpoint, stringToNation} from "@/data/directions";
-import {getCoordinates} from "@/data/coordinates";
+import {useServiceStore} from "@/stores/service";
+import {formatPrice} from "@/helpers/services";
+import {getServicePrice} from "@/services/service";
 
 const isActive = ref(false)
 
-const originNation = ref<NationType>(NationType.Unknown)
-const originCheckpoint = ref<Checkpoint>(Checkpoint.Unknown)
-const destinationNation = ref<NationType>(NationType.Unknown)
-const destinationCheckpoint = ref<Checkpoint>(Checkpoint.Unknown)
-const width = ref();
-const length = ref();
-const height = ref();
-const weight = ref();
+const serviceStore = useServiceStore()
 
-const basePriceShortDistance = ref(20000)
-const basePriceLongDistance = ref(50000)
+const calculatedPrice = ref<number>(0)
 
-// Coordinates per checkpoint
-const coordinates = getCoordinates()
-// compute distance (x2-x1)^2 + (y2-y1)^2
-const calculateDistance = computed(() => {
-  if (originCheckpoint.value != Checkpoint.Unknown && destinationCheckpoint.value != Checkpoint.Unknown) {
-    const checkpoint1Coordinates = coordinates.value.get(originCheckpoint.value)
-    const checkpoint2Coordinates = coordinates.value.get(destinationCheckpoint.value)
-    return Math.pow((checkpoint2Coordinates!.x - checkpoint1Coordinates!.x), 2) + Math.pow((checkpoint2Coordinates!. y- checkpoint1Coordinates!.y), 2)
+const showPrice = async () => {
+  const price: number = await getServicePrice(OrderType.Package);
+  if(price){
+    calculatedPrice.value = price
+    isActive.value = true
+  } else {
+    isActive.value = false
   }
-  return 0
-})
-
-// calculate base price based on dimensions
-const calculatePriceDimensions = computed(() => {
-  // how big the package is
-  const packageVolume = width.value * length.value * height.value
-  if (packageVolume != 0 && (weight.value != 0 && weight.value != null)) {
-    // if the package is big and it weights little the base price is 10000
-    return packageVolume > weight.value ? 10000 : 7000
-  }
-  return 0
-})
-
-// calculate price
-const calculatePrice = computed(() => {
-  if (calculateDistance.value != 0 && calculatePriceDimensions.value != 0) {
-    // 80 is an estimate of the shortest distance range between checkpoints
-    return calculateDistance.value >= 80 ? basePriceLongDistance.value + (calculateDistance.value * 3.141592) : basePriceShortDistance.value + calculatePriceDimensions.value
-  }
-  return 0
-})
-
-const showPrice = () => {
-  isActive.value = calculatePrice.value != 0 ? true : false
-  return isActive.value
 }
 
 // show error messages
 const nationHelp = ref("Seleccione una nación.")
-const originNationShowHelp = computed(() => originNation.value != NationType.Unknown ? false : true)
-const destinationNationShowHelp = computed(() => destinationNation.value != NationType.Unknown ? false : true)
+const originNationShowHelp = computed(() => serviceStore.state.origin_nation == NationType.Unknown)
+const destinationNationShowHelp = computed(() => serviceStore.state.destiny_nation == NationType.Unknown)
 const checkpointHelp = ref("Seleccione un punto de referencia de esa nación.")
-const originCheckpointShowHelp = computed(() => originCheckpoint.value != Checkpoint.Unknown ? false : true)
-const destinationCheckpointShowHelp = computed(() => destinationCheckpoint.value != Checkpoint.Unknown ? false : true)
+const originCheckpointShowHelp = computed(() => serviceStore.state.origin_checkpoint == Checkpoint.Unknown)
+const destinationCheckpointShowHelp = computed(() => serviceStore.state.destiny_checkpoint == Checkpoint.Unknown)
 
 //Get checkpoints by nation
 const origincheckpointList = ref<Checkpoint[]>()
 const destinationcheckpointList = ref<Checkpoint[]>()
 
 const getOriginCheckpointsList = () => {
-  origincheckpointList.value = getCheckpoints(originNation.value);
-  originCheckpoint.value = Checkpoint.Unknown;
+  origincheckpointList.value = getCheckpoints(serviceStore.state.origin_nation);
+  serviceStore.state.origin_checkpoint = Checkpoint.Unknown;
 }
 const getDestinationCheckpointsList = () => {
-  destinationcheckpointList.value = getCheckpoints(destinationNation.value);
-  destinationCheckpoint.value = Checkpoint.Unknown;
+  destinationcheckpointList.value = getCheckpoints(serviceStore.state.destiny_nation);
+  serviceStore.state.destiny_checkpoint = Checkpoint.Unknown;
 }
 
 onBeforeMount(() => {
   //Charge values of package origin location
-  origincheckpointList.value = getCheckpoints(originNation.value);
-  destinationcheckpointList.value = getCheckpoints(destinationNation.value);
+  origincheckpointList.value = getCheckpoints(serviceStore.state.origin_nation);
+  destinationcheckpointList.value = getCheckpoints(serviceStore.state.origin_nation);
+})
+
+onBeforeUnmount( async () => {
+  serviceStore.resetState();
 })
 
 </script>
@@ -92,86 +63,87 @@ onBeforeMount(() => {
           <h2>Lugar de origen</h2>
           <div class="field">
             <p class="control has-icons-left">
-                            <span class="select is-medium">
-                                <select v-model="originNation" @change="getOriginCheckpointsList">
-                                    <option v-for="value in NationType" :value="stringToNation[value]"
-                                            required> {{ value }}</option>
-                                </select>
-                                <p v-if="originNationShowHelp" class="help">{{ nationHelp }}</p>
-                            </span>
+              <span class="select is-medium">
+                <select v-model="serviceStore.state.origin_nation" @change="getOriginCheckpointsList">
+                  <option v-for="value in NationType" :value="stringToNation[value]"
+                          required> {{ value }}
+                  </option>
+                </select>
+                <p v-if="originNationShowHelp" class="help">{{ nationHelp }}</p>
+              </span>
               <span class="icon is-small is-left">
-                                <fa icon="map"></fa>
-                            </span>
+                <fa icon="map"></fa>
+              </span>
             </p>
           </div>
           <div class="field">
             <p class="control has-icons-left">
-                            <span class="select is-medium">
-                                <select v-model="originCheckpoint">
-                                    <option v-for="value in origincheckpointList" :value="stringToCheckpoint[value]"
-                                            required>{{ value }}</option>
-                                </select>
-                                <p v-if="originCheckpointShowHelp" class="help">{{ checkpointHelp }}</p>
-                            </span>
+              <span class="select is-medium">
+                  <select v-model="serviceStore.state.origin_checkpoint">
+                      <option v-for="value in origincheckpointList" :value="stringToCheckpoint[value]"
+                              required>{{ value }}</option>
+                  </select>
+                  <p v-if="originCheckpointShowHelp" class="help">{{ checkpointHelp }}</p>
+              </span>
               <span class="icon is-small is-left">
-                                <fa icon="location-dot"></fa>
-                            </span>
+                  <fa icon="location-dot"></fa>
+              </span>
             </p>
           </div>
 
           <h2>Lugar de destino</h2>
           <div class="field">
             <p class="control has-icons-left">
-                            <span class="select is-medium">
-                                <select v-model="destinationNation" @change="getDestinationCheckpointsList" required>
-                                    <option v-for="value in NationType" :value="stringToNation[value]"> {{
-                                        value
-                                      }}</option>
-                                </select>
-                                <p v-if="destinationNationShowHelp" class="help">{{ nationHelp }}</p>
-                            </span>
+              <span class="select is-medium">
+                <select v-model="serviceStore.state.destiny_nation" @change="getDestinationCheckpointsList" required>
+                    <option v-for="value in NationType" :value="stringToNation[value]">
+                      {{value }}
+                    </option>
+                </select>
+                <p v-if="destinationNationShowHelp" class="help">{{ nationHelp }}</p>
+              </span>
               <span class="icon is-small is-left">
-                                <fa icon="map"></fa>
-                            </span>
+                <fa icon="map"></fa>
+              </span>
             </p>
           </div>
           <div class="field">
             <p class="control has-icons-left">
-                            <span class="select is-medium">
-                                <select v-model="destinationCheckpoint">
-                                    <option v-for="value in destinationcheckpointList"
-                                            :value="stringToCheckpoint[value]" required>{{ value }}</option>
-                                </select>
-                                <p v-if="destinationCheckpointShowHelp" class="help">{{ checkpointHelp }}</p>
-                            </span>
+              <span class="select is-medium">
+                <select v-model="serviceStore.state.destiny_checkpoint">
+                  <option v-for="value in destinationcheckpointList"
+                    :value="stringToCheckpoint[value]" required>{{ value }}
+                  </option>
+                </select>
+                <p v-if="destinationCheckpointShowHelp" class="help">{{ checkpointHelp }}</p>
+              </span>
               <span class="icon is-small is-left">
-                                <fa icon="location-dot"></fa>
-                            </span>
+                <fa icon="location-dot"></fa>
+              </span>
             </p>
           </div>
 
           <h2>Dimensiones del paquete (cm)</h2>
           <div class="field is-grouped">
             <p class="control has-icons-left">
-              <input name="height" class="input is-medium" type="number" placeholder="Alto" v-model="height" min="1"
+              <input name="height" class="input is-medium" type="number" placeholder="Alto" v-model="serviceStore.state.package.height" min="1"
                      max="500" required>
               <span class="icon is-small is-left">
-                                <fa icon="ruler-vertical"></fa>
-                            </span>
+                <fa icon="ruler-vertical"></fa>
+              </span>
             </p>
             <p class="control has-icons-left">
-              <input name="width" class="input is-medium" type="number" placeholder="Ancho" v-model="width" min="1"
-                     max="500" required>
+              <input name="width" class="input is-medium" type="number" placeholder="Ancho" v-model="serviceStore.state.package.width" min="1" max="500" required>
               <span class="icon is-small is-left">
-                                <fa icon="ruler"></fa>
-                            </span>
+                <fa icon="ruler"></fa>
+              </span>
             </p>
             <p class="control has-icons-left">
-              <input name="length" class="input is-medium" type="number" placeholder="Largo" v-model="length" min="1"
+              <input name="length" class="input is-medium" type="number" placeholder="Largo" v-model="serviceStore.state.package.length" min="1"
                      max="500" required>
               <span class="icon is-small is-left">
-                                <fa icon="ruler-horizontal"></fa>
-                            </span>
+                <fa icon="ruler-horizontal"></fa>
+              </span>
             </p>
           </div>
 
@@ -179,11 +151,11 @@ onBeforeMount(() => {
           <h2>Peso estimado (kg)</h2>
           <div class="field">
             <p class="control has-icons-left">
-              <input name="weight" class="input is-medium" type="number" placeholder="Peso estimado" v-model="weight"
+              <input name="weight" class="input is-medium" type="number" placeholder="Peso estimado" v-model="serviceStore.state.package.weight"
                      required>
               <span class="icon is-small is-left">
-                                <fa icon="weight-hanging"></fa>
-                            </span>
+                <fa icon="weight-hanging"></fa>
+              </span>
             </p>
           </div>
 
@@ -192,7 +164,7 @@ onBeforeMount(() => {
               <button class="button is-link" type="submit">Calcular</button>
             </div>
             <div class="estimated-calculation">
-              <p v-if="isActive">$ {{ calculatePrice.toLocaleString('es-CO') }}</p>
+              <p v-if="isActive">{{formatPrice(calculatedPrice)}}</p>
             </div>
           </div>
         </div>

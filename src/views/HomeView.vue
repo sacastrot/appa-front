@@ -1,73 +1,146 @@
 <script setup lang="ts">
-import {ref, onBeforeMount} from "vue";
+import {ref, onBeforeMount, watch} from "vue";
 import LastOrderInfo from "@/components/citizen/LastOrderInfo.vue";
 import PriceCalculator from "@/components/citizen/PriceCalculator.vue";
 import type {User} from "@/types/intefaces";
-import {useCarriagesStore} from "@/stores/carriages";
-import {usePackagesStore} from "@/stores/packages";
 import {getCurrentUser} from "@/services/user";
 import HeaderName from "@/components/core/HeaderName.vue";
+import {useUserStore} from "@/stores/user";
+import Loader from "@/components/core/Loader.vue";
+import CardSkeleton from "@/components/core/CardSkeleton.vue";
+import Map from "@/components/citizen/tracking/Map.vue";
 
-const carriageStore = useCarriagesStore()
-const packageStore = usePackagesStore()
 
 const isActive = ref(false);
+const showMap = ref<boolean>(false)
+const guide = ref<string>()
+const user = useUserStore();
+const key = ref();
 
-const user: User = getCurrentUser()
+const trackService = (): void => {
+  showMap.value = true
+  key.value = guide.value
+}
+
+watch(guide, (newGuide) => {
+  if (!newGuide) {
+    showMap.value = false
+  }
+})
+
 
 </script>
 
 <template>
   <main class="home-page">
-    <HeaderName v-if="user.name" :data="{
-    name: user.name,
+    <HeaderName :data="{
+    name: user.currentName,
     message: 'Bienvenido a la mejor aplicación de pedidos y acarreos.'
     }"/>
+
     <div class="track-order">
       <h2>Rastrear envío</h2>
-      <div class="field">
-        <p class="control has-icons-left">
-          <input class="input is-medium" type="text" placeholder="Número de guía">
-          <span class="icon is-small is-left">
+      <form @submit.prevent="trackService">
+        <div class="field">
+          <p class="control has-icons-left">
+            <input ref="input" class="input is-medium" type="text"  autofocus v-model="guide" placeholder="Número de guía">
+            <span class="icon is-small is-left">
             <fa icon="magnifying-glass"></fa>
           </span>
-        </p>
+          </p>
+        </div>
+      </form>
+
+    </div>
+
+    <div class="tracking-container" v-if="showMap">
+      <Suspense :key="key">
+        <template #default>
+          <div class="map">
+            <Map :guideNumber="Number(guide)" />
+          </div>
+        </template>
+        <template #fallback>
+          <Loader/>
+        </template>
+      </Suspense>
+    </div>
+
+    <div class="home-content" v-if="!showMap">
+      <div class="last-order">
+        <h2>Último pedido</h2>
+        <Suspense>
+          <template #default>
+            <LastOrderInfo/>
+          </template>
+          <template #fallback>
+            <CardSkeleton/>
+          </template>
+        </Suspense>
       </div>
-    </div>
-    <div class="last-order">
-      <h2>Último pedido</h2>
-      <LastOrderInfo/>
-    </div>
-
-    <h2>Calculadora</h2>
-    <p>Te damos un estimado del valor de tu paquete</p>
-    <PriceCalculator/>
-
-    <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
-      <span class="add">+</span>
-      <ul>
-        <RouterLink to="/carriages/register">
-          <li>
-            <p>Nuevo Acarreo&nbsp;</p>
-            <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
-          </li>
-        </RouterLink>
-        <RouterLink to="/packages/register">
-          <li>
-            <p>Nuevo Paquete</p>
-            <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
-          </li>
-        </RouterLink>
-      </ul>
+      <h2>Calculadora</h2>
+      <p>Te damos un estimado del valor de tu paquete</p>
+      <PriceCalculator/>
+      <div class="action-button" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
+        <span class="add">+</span>
+        <ul>
+          <RouterLink to="/carriages/register">
+            <li>
+              <p>Nuevo Acarreo&nbsp;</p>
+              <div class="symbol"><span class="material-symbols-outlined">local_shipping</span></div>
+            </li>
+          </RouterLink>
+          <RouterLink to="/packages/register">
+            <li>
+              <p>Nuevo Paquete</p>
+              <div class="symbol"><span class="material-symbols-outlined">package_2</span></div>
+            </li>
+          </RouterLink>
+        </ul>
+      </div>
     </div>
   </main>
 </template>
 
 <style scoped>
-.home-page {
+.track-order {
   width: 92%;
   max-width: 80rem;
-  margin: 0 auto;
+}
+.tracking-container{
+  padding: 2em;
+  max-width: 100%;
+  min-width: 100%;
+
+  margin-top: 70px;
+  position: relative;
+  min-height: 850px;
+  overflow: auto;
+  /*overflow-x: visible;*/
+
+  .map {
+    /*position: absolute;*/
+    overflow: hidden;
+    /*left: calc(50% - 939px/2);*/
+    min-width: 939px;
+    min-height: 788px;
+    /*overflow: scroll;*/
+  }
+
+}
+.home-page {
+  /*width: 92%;
+  max-width: 80rem;
+  margin: 0 auto;*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.home-content {
+  max-width: 80rem;
+  width: 92%;
 }
 
 h1 {
@@ -106,11 +179,13 @@ header .image {
 
 .control.has-icons-left .input {
   padding-left: 3rem;
-  width: 80rem;
+  width: 100%;
+  min-width: 300px;
   background-color: var(--input-field);
   font-size: 1.5rem;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
 }
+
 .action-button {
   position: fixed;
   bottom: 30px;

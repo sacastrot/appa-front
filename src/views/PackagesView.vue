@@ -1,16 +1,9 @@
 <script setup lang="ts">
 import NewPackage from "@/components/citizen/history/NewPackage.vue";
-import HistoryPackage from "@/components/citizen/history/HistoryPackage.vue";
 import {ref} from "vue";
-import {getCurrentUser} from "@/services/user";
-import {packagesByCitizen} from "@/services/package";
-import type {PackageState, User} from "@/types/intefaces";
-
-const user: User = getCurrentUser()
-const packages: PackageState[] = packagesByCitizen(user?.id!)
-
+import HistoryPackagesList from "@/components/citizen/history/HistoryPackagesList.vue";
+import HistoryCardSekeleton from "@/components/core/HistoryCardSekeleton.vue";
 const modalActive = ref<boolean>(false);
-
 </script>
 
 <template>
@@ -21,7 +14,7 @@ const modalActive = ref<boolean>(false);
     </RouterLink>
     <div class="header">
       <h1>Historial</h1>
-      <span class="material-symbols-outlined" @click="modalActive = true">help</span>
+      <span class=" icon material-symbols-outlined" @click="modalActive = true">help</span>
     </div>
     <p>Tus paquetes anteriores</p>
     <transition name="fade">
@@ -43,7 +36,14 @@ const modalActive = ref<boolean>(false);
         </div>
       </div>
     </transition>
-    <HistoryPackage class="my-4" v-for="(value, index) in packages" :packageValue="value" :key="index"/>
+    <Suspense>
+      <template #default>
+        <HistoryPackagesList/>
+      </template>
+      <template #fallback>
+        <HistoryCardSekeleton class="mb-6" v-for="value in 4"/>
+      </template>
+    </Suspense>
   </main>
 </template>
 
@@ -109,6 +109,7 @@ const modalActive = ref<boolean>(false);
     font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
     font-size: 2.5rem;
     color: var(--color-primary-brown);
+    cursor: pointer;
   }
 }
 
