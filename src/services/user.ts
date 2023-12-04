@@ -1,9 +1,6 @@
 import {useUserStore, useUserManagementStore} from "@/stores/user";
 import {
-    type Carriage,
-    Checkpoint,
-    NationType,
-    OrderType, type Package,
+    OrderType,
     Role,
     type Service,
     stringToRole,
@@ -12,7 +9,6 @@ import {
 } from "@/types/intefaces";
 import BaseApi from "@/services/axiosInstance";
 import {useRouter} from "vue-router";
-import type {AxiosError} from "axios";
 
 export const login = async (user: UserData): Promise<boolean> => {
     const userStore = useUserStore();
@@ -108,7 +104,7 @@ export const registerCitizen = async (): Promise<{status: boolean, data: Object}
             data: data
         }
 
-    } catch (error: AxiosError){
+    } catch (error: any){
         return {
             status: false,
             data: error.response.data
@@ -144,7 +140,7 @@ export const registerBison = async (): Promise<{status: boolean, data: Object}> 
             data: data
         }
 
-    } catch (error: AxiosError){
+    } catch (error: any){
         console.log(error.response.data)
         return {
             status: false,
@@ -153,6 +149,38 @@ export const registerBison = async (): Promise<{status: boolean, data: Object}> 
     }
 }
 
+export const deleteBisonById = async (userId: number): Promise<{status:boolean, data: Object}> => {
+    try {
+        const {data} = await BaseApi.delete(`/user/delete/${userId}/`);
+        return {
+            status: true,
+            data : data
+        }
+    } catch (e: any) {
+        return {
+            status: false,
+            data : e.response.data
+        }
+    }
+}
+
+
+export const deleteCitizenById = async (userId: number): Promise<{status:boolean, data: Object}> => {
+    try {
+        const {data} = await BaseApi.delete(`/user/delete/${userId}/`);
+        window.sessionStorage.removeItem("userData");
+        window.location.reload();
+        return {
+            status: true,
+            data : data
+        }
+    } catch (e: any) {
+        return {
+            status: false,
+            data : e.response.data
+        }
+    }
+}
 
 export const getLastService = async (userId: number): Promise<{status: boolean, data: Service}> => {
     try {
@@ -190,7 +218,7 @@ export const getCurrentUser = async (): Promise<{status: boolean, data: Object}>
             data : data
         }
     }
-    catch (e: AxiosError) {
+    catch (e: any) {
         console.log(e);
         return {
             status : false,
@@ -201,9 +229,7 @@ export const getCurrentUser = async (): Promise<{status: boolean, data: Object}>
 
 
 export const patchProfile = async (name: String, email: String, phone: String, password: String, document: String, vehicle: String): Promise<{status: boolean, data: Object}> => {
-    //This function was modified and does not work as expected !!!!
     const userStore = useUserStore();
-    const managementStore = useUserManagementStore();
 
     const userData: {[key: string]: any} = {
         "name": name,
@@ -221,7 +247,7 @@ export const patchProfile = async (name: String, email: String, phone: String, p
             data : data
         }
     }
-    catch (e: AxiosError) {
+    catch (e: any) {
         console.log(e);
         return {
             status : false,
@@ -231,7 +257,7 @@ export const patchProfile = async (name: String, email: String, phone: String, p
 }	
 
 
-export const getUsersByRole = async (): Promise<User[]> => {
+export const getListBison = async (): Promise<User[]> => {
     try {
         const { data } = await BaseApi.get('/user/users/?role=BISON');
         
@@ -247,7 +273,7 @@ export const getUsersByRole = async (): Promise<User[]> => {
             available: bison.available
         }));
         return users;
-    } catch (e: AxiosError) {
+    } catch (e: any) {
         console.error(e);
         return [];
     }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {useRouter} from "vue-router";
-import {getCurrentUser, getUsersByRole} from "@/services/user";
+import {getListBison} from "@/services/user";
 import HeaderName from "@/components/core/HeaderName.vue";
-import {Role, type User} from "@/types/intefaces";
+import {type User} from "@/types/intefaces";
 import BisonCardHome from "@/components/avatar/BisonCardHome.vue";
 import { useUserStore } from "@/stores/user";
 import { onBeforeMount, ref } from "vue";
@@ -18,7 +18,7 @@ const headerData = {
 const bisonList = ref<User[] | undefined>([]);
 
 onBeforeMount(async () => {
-  bisonList.value = await getUsersByRole();
+  bisonList.value = await getListBison();
 })
 </script>
 <template>

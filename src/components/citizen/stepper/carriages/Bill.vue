@@ -45,7 +45,7 @@ onBeforeMount(async () => {
       </div>
     </div>
     <div class="price">
-      <p class="price-title">Precio máximo</p>
+      <p class="price-title">Precio mínimo</p>
       <p class="price-title">{{ serviceStore.getPrice() }}</p>
     </div>
   </div>

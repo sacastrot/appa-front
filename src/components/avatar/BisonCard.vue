@@ -13,6 +13,7 @@ const emit = defineEmits(["deleteBison"]);
 
 const deleteBison = () => {
   emit("deleteBison", bisonRemoveId.value);
+  toggleExpand();
 }
 
 
