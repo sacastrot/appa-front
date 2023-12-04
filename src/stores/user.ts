@@ -69,7 +69,6 @@ export const useUserManagementStore = defineStore("userManagement", () => {
     })
 
 
-
     //validation
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -87,7 +86,7 @@ export const useUserManagementStore = defineStore("userManagement", () => {
     });
 
     const validateEmail = computed(() => {
-        return  emailRegex.test(state.value.email as string)
+        return emailRegex.test(state.value.email as string)
     });
 
     const validateVehicle = computed(() => {
@@ -116,17 +115,6 @@ export const useUserManagementStore = defineStore("userManagement", () => {
     const validateInfoCitizen = computed(() => {
         return validateEmail.value && validateName.value && validatePassword.value
     });
-
-
-    //Remove in integration with backend
-    function addUser() {
-        return
-    }
-
-    //Remove in integration with backend
-    function deleteUser(id: number | undefined) {
-        return
-    }
 
 
     function setName(name: string | undefined) {
@@ -228,7 +216,6 @@ export const useUserManagementStore = defineStore("userManagement", () => {
         setPhone,
         setVehicle,
         setDocument,
-        addUser,
         resetUser,
         validateName,
         validateDocument,
@@ -238,7 +225,6 @@ export const useUserManagementStore = defineStore("userManagement", () => {
         validateInfoCitizen,
         validateInfoBison,
         setRandomPassword,
-        deleteUser,
         filterBisonByEmail,
         getName,
         getEmail,

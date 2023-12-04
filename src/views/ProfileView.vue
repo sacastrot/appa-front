@@ -2,7 +2,7 @@
 import {computed, ref, onMounted} from "vue";
 import {useUserManagementStore, useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
-import {getCurrentUser, deleteCitizen, patchProfile} from "@/services/user";
+import {getCurrentUser, deleteCitizenById, patchProfile} from "@/services/user";
 import {useRouter} from "vue-router";
 
 
@@ -126,7 +126,7 @@ const passwordValidation = computed(() => {
 
 
 function deleteAccount() {
-  deleteCitizen(id);
+  deleteCitizenById(id);
   router.push("/login")
 }
 
@@ -297,13 +297,13 @@ const editProfile = async () => {
           </span>
             Editar perfil
           </button>
-          <button v-if="readOnly && role!==Role.Bison" class="button is-fullwidth delete_profile_buttom" @click="modalActive=true">
-          <span
-              class="icon is-small is-left buttom_icons material-symbols-outlined mr-3"
-          >
-            Delete
-          </span>
-            Eliminar cuenta
+          <button v-if="readOnly && role==Role.Citizen" class="button is-fullwidth delete_profile_buttom" @click="modalActive=true">
+            <span
+                class="icon is-small is-left buttom_icons material-symbols-outlined mr-3"
+            >
+              Delete
+            </span>
+              Eliminar cuenta
           </button>
           <button
               v-if="readOnly===false"

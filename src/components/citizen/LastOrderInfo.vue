@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {onBeforeMount, ref} from "vue";
+import {ref} from "vue";
 import {getLastService} from "@/services/user";
-import {type Carriage, Checkpoint, NationType, OrderType, type Package, type Service} from "@/types/intefaces";
+import {OrderType} from "@/types/intefaces";
 import {useUserStore} from "@/stores/user";
 import {formatDate} from "@/helpers/services";
 

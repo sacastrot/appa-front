@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import {onBeforeMount, ref, watch} from "vue";
 import type {User} from "@/types/intefaces";
-import {Role} from "@/types/intefaces";
 import {useUserManagementStore} from "@/stores/user";
-import {getUsersByRole} from "@/services/user";
+import {deleteBisonById, getListBison} from "@/services/user";
 import BisonCard from "@/components/avatar/BisonCard.vue";
 
 const store = useUserManagementStore();
@@ -12,14 +11,6 @@ const search = ref<string>("");
 const bisonList = ref<User[] | undefined>([]);
 let filteredBisonList = ref<User[] | undefined>([]);
 
-onBeforeMount(async () => {
-  const users = await getUsersByRole();
-  bisonList.value = users;
-  filteredBisonList.value = users;
-})
-
-
-
 
 watch([search], () => {
   filteredBisonList.value = store.filterBisonByEmail(
@@ -27,10 +18,26 @@ watch([search], () => {
   )
 })
 
-function deleteBison(bisonId: number) {
-  store.deleteUser(bisonId)
-  // filteredBisonList.value = store.users.filter((user) => user.role === Role.Bison)
+async function deleteBison(bisonId: number) {
+  const {status, data} = await deleteBisonById(bisonId)
+  if(status){
+    await loadBison();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    })
+  }
 }
+
+async function loadBison() {
+  const users = await getListBison();
+  bisonList.value = users;
+  filteredBisonList.value = users;
+}
+
+onBeforeMount(async () => {
+  await loadBison();
+})
 </script>
 
 <template>
