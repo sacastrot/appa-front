@@ -33,16 +33,14 @@ npm install
 ```sh
 npm run dev
 ```
+### Crear archivo .env
 
-## Credenciales
+Crear un archivo .env y colocarlo en la raiz del proyecto con el siguiente contenido
 
-La aplicación cuenta con tres usuarios de prueba:
+```sh
+VITE_API_URL=http://3.88.242.164:8000/
+```
 
-| Correo electrónico | Contraseña | Rol                 |
-|--------------------|------------|---------------------|
-| aang@appa.com      | Aang*1234  | Avatar              |
-| katara@appa.com    | Katara*234 | Habitante de nación |
-| appa@appa.com      | Appa*1234  | Bisonte             |
 
 ## Función de cada rol
 
