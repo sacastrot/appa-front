@@ -52,14 +52,15 @@ onBeforeMount(async () => {
 <style scoped>
 .loader{
   position: absolute;
-  top: calc(50% - -43px);
-  left: calc(50% - -38px);
+  top: calc(50% - -162px);
+  left: calc(50% - -48px);
 }
 
 .card-wrapper {
   width: 92%;
   max-width: 80rem;
   margin: 0 auto;
+  height: 100px;
 }
 
 .success-title {

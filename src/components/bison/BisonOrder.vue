@@ -71,6 +71,7 @@ const {order} = defineProps<{
       font-weight: bold;
       color: white;
       padding: 1rem 2rem;
+      cursor: pointer;
     }
   }
 }

@@ -10,7 +10,7 @@ const loadActiveService = async (): Promise<{ status: boolean, data: Service }> 
     setTimeout(async () => {
       const response = await getActiveService();
       resolve(response);
-    }, 3000);
+    }, 500);
   });
 }
 

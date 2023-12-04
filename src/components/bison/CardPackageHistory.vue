@@ -37,7 +37,7 @@ const {currentPackage} = defineProps<{
 </script>
 
 <template>
-  <div class="order-card">
+  <div class="order-card" v-if="currentPackage.arrived">
     <Transition name="fade-location">
       <div v-if="!expand" class="location">
         <img src="/img/location-history.svg">

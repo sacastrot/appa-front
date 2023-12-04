@@ -1,36 +1,24 @@
 <script setup lang="ts">
 import Hero from '@/components/core/Hero.vue';
-import CardPackageHistory from "@/components/bison/CardPackageHistory.vue"
-import CardCarriageHistory from "@/components/bison/CardCarriageHistory.vue"
-import {getCurrentUser} from "@/services/user";
-import type {Service} from "@/types/intefaces";
-import {OrderType} from "@/types/intefaces";
-import {onBeforeMount, ref} from "vue";
-import {getServiceByUser} from "@/services/service";
-import {useUserStore} from "@/stores/user";
-
-const packages = ref<Service[]>([]);
-const carriages = ref<Service[]>([]);
-const userStore = useUserStore();
-
-
-onBeforeMount(async () => {
-  if (userStore.currentUser){
-    packages.value = await getServiceByUser(OrderType.Package)
-    carriages.value = await getServiceByUser(OrderType.Carriage)
-  }
-});
+import HistoryServiceList from "@/components/bison/HistoryServiceList.vue";
+import HistoryCardSekeleton from "@/components/core/HistoryCardSekeleton.vue";
 </script>
 
 <template>
   <Hero :title="'Pedidos Asociados'"/>
   <main>
-      <div class="content">
-          <h1>Historial</h1>
-          <p>Pedidos completados</p>
-          <CardPackageHistory class="my-4" v-for="(pkgvalue, pkgindex) in packages" :key="pkgindex" :current-package="pkgvalue"/>
-          <CardCarriageHistory class="my-4" v-for="(value, index) in carriages" :key="index" :currentCarriage="value"/>
-      </div>
+    <div class="content">
+      <h1>Historial</h1>
+      <p>Pedidos completados</p>
+      <Suspense>
+        <template #default>
+          <HistoryServiceList/>
+        </template>
+        <template #fallback>
+          <HistoryCardSekeleton class="mb-6" v-for="value in 4"/>
+        </template>
+      </Suspense>
+    </div>
   </main>
 
 </template>

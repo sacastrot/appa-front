@@ -126,6 +126,9 @@ export const getServiceByUser = async (type: OrderType): Promise< {status: boole
 
     try {
         const {data} = await BaseApi.get(`/user/services/${user.currentUser}/${requestType}`);
+        if (data.length === 0) {
+            return {status: false, data: [] as Service[]};
+        }
         data.map((service: Service) => {
             if (service.created) {
                 service.created = new Date(service.created);

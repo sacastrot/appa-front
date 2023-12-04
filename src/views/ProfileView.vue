@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref, onMounted} from "vue";
+import {computed, ref, onMounted, onBeforeUnmount} from "vue";
 import {useUserManagementStore, useUserStore} from "@/stores/user";
 import {Role} from "@/types/intefaces";
 import {getCurrentUser, deleteCitizenById, patchProfile} from "@/services/user";
@@ -141,12 +141,6 @@ const togglePassword = () => {
 }
 const editProfile = async () => {
   const { status, data } = await patchProfile(name.value, email.value, phone.value, password.value, document.value, vehicle.value )
-  // if (status) {
-  //   //isRegister.value = userStore.validateInfoBison
-  // } else {
-  //   //isRegister.value = false
-  //   //checkErrors(Object.keys(data))
-  // }
   if(!status){
       checkErrors(Object.keys(data))
     }
@@ -158,7 +152,10 @@ const editProfile = async () => {
 
 }
 
-  </script>
+onBeforeUnmount(() =>{
+  currentUser.resetUser();
+})
+</script>
 
   <template>
     <div class="profile-container">
