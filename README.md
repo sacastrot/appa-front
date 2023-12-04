@@ -54,6 +54,6 @@ VITE_API_URL=http://3.88.242.164:8000/
 
 Cuando un avatar registra un bisonte el sistema asigna una contraseña compuesta por la placa del vehiculo y el id del bisonte, por ejemplo: 
 
-| Placa | ID | Contraseña |
-|-------|----|------------|
-| BC4   | 12 | BC412      |
+| Placa | Documento | Contraseña |
+|-------|-----------|------------|
+| BC4   | 127 | BC4127      |
