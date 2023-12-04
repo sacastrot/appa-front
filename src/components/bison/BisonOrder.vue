@@ -60,8 +60,8 @@ const {order} = defineProps<{
   .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 9rem;
+    height: 40px;
 
     & button {
       background-color: var(--color-primary-orange);
@@ -78,11 +78,5 @@ const {order} = defineProps<{
 .avatar {
   display: flex;
   align-items: center;
-}
-
-.update-button {
-  position: absolute;
-  bottom: 50px;
-  cursor: pointer;
 }
 </style>

@@ -2,7 +2,6 @@ import {useServiceStore} from "@/stores/service";
 import {Checkpoint, NationType, OrderType, type Service} from "@/types/intefaces";
 import BaseApi from "@/services/axiosInstance";
 import {useUserStore} from "@/stores/user";
-import type {AxiosError} from "axios";
 
 export const getServicePrice = async (type: OrderType): Promise<number> => {
     const service = useServiceStore();
@@ -202,6 +201,7 @@ export const updateService = async (serviceId: number, current_nation: NationTyp
 export const getServiceById = async (serviceId: number): Promise<Service | undefined> => {
     try {
         const {data} = await BaseApi.get(`/services/get/${serviceId}/`);
+        console.log(data)
         if (data.created) {
             data.created = new Date(data.created);
         }

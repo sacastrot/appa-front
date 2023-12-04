@@ -3,16 +3,29 @@
 import Hero from "@/components/core/Hero.vue";
 import {onBeforeMount, ref} from "vue";
 import {Service} from "@/types/intefaces";
-import {getActiveService, getServiceById} from "@/services/service";
+import {getServiceById} from "@/services/service";
 import ServiceCard from "@/components/bison/update/ServiceCard.vue";
 import {useRoute} from "vue-router";
+import Loader from "@/components/core/Loader.vue";
 
 const route = useRoute();
-const orderId = parseInt(route.params.id, 10);
 const order = ref<Service>();
+const loading = ref<boolean>(true);
+
+const loadService = async (orderId: number): Promise<{status: boolean, data: Service[]}> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      const response = await getServiceById(orderId);
+      resolve(response);
+    }, 3000);
+    loading.value = false;
+  });
+}
 
 onBeforeMount(async () => {
-  order.value = await getServiceById(orderId);
+  loading.value = true;
+  const orderId = parseInt(route.params.id, 10);
+  order.value = await loadService(orderId);
 });
 </script>
 
@@ -24,6 +37,7 @@ onBeforeMount(async () => {
     <p>La actualización se completo con éxito</p>
   </div>
   <div class="card-wrapper">
+    <Loader class="loader" v-if="!order"/>
     <ServiceCard :order="order" v-if="order"/>
   </div>
   <div class="button-container">
@@ -36,7 +50,11 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
-
+.loader{
+  position: absolute;
+  top: calc(50% - -43px);
+  left: calc(50% - -38px);
+}
 
 .card-wrapper {
   width: 92%;
@@ -71,9 +89,8 @@ onBeforeMount(async () => {
 .button-container {
   display: flex;
   justify-content: center;
-  position: absolute;
   width: 100vw;
-  bottom: 50px;
+  margin-top: 9rem;
   .update {
     width: 15rem;
     height: 3.5rem;

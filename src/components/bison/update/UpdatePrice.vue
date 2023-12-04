@@ -52,12 +52,10 @@ const emitUpdate = () => {
 
 
 .button-container {
-  position: absolute;
   width: 100vw;
-  bottom: 50px;
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 9rem;
 
   .button {
     margin: 0 4rem;
