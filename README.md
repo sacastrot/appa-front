@@ -38,7 +38,7 @@ npm run dev
 Crear un archivo .env y colocarlo en la raiz del proyecto con el siguiente contenido
 
 ```sh
-VITE_API_URL=http://3.88.242.164:8000/
+VITE_API_URL=http://54.152.75.208:8000/
 ```
 
 
